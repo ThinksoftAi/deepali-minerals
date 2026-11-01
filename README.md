@@ -234,7 +234,7 @@ For commercial procurement, bulk logistics, and sample dispatches:
 - **Telephone / WhatsApp:** +91-9810516065 / +91-9810715129
 - **Email:** [info@deepaliminerals.in](mailto:info@deepaliminerals.in)
 - **Business Hours:** Monday to Saturday: 9:00 AM – 7:30 PM IST (Closed Sundays)
-- **Office & Dispatch Depot:** C-2/29 C Lawrence Road, Rampura / Keshav Puram, New Delhi – 110035, India
+- **Corporate Office:** C-2/29 C Lawrence Road, Rampura / Keshav Puram, New Delhi – 110035, India
 
 ---
 

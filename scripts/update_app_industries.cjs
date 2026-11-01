@@ -367,7 +367,7 @@ const newIndustriesCode = `
               <p style="margin: 0 0 0.5rem;"><strong>CEO Desk:</strong> Mr. Neeraj Monga</p>
               <p style="margin: 0 0 0.5rem;"><strong>Direct Commercial Hotline:</strong> <a href="tel:+919810516065" style="color: #174A70; font-weight: 700;">+91 9810516065</a> / <a href="tel:+919810715129" style="color: #174A70; font-weight: 700;">+91 9810715129</a></p>
               <p style="margin: 0 0 0.5rem;"><strong>Sales Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #174A70;">info@deepaliminerals.in</a></p>
-              <p style="margin: 0 0 0.5rem;"><strong>Central Dispatch Depot:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</p>
+              <p style="margin: 0 0 0.5rem;"><strong>Corporate Office:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</p>
               <p style="margin: 0;"><strong>GST Registration:</strong> 07AIMPM0458Q1ZL</p>
             </div>
 

@@ -954,10 +954,11 @@
 
         <div class="product-card-actions">
           <a class="product-card-link" href="${productUrl(p, industryCtx, appCtx, routeCtx)}">
-            View Details <span aria-hidden="true">&rarr;</span>
+            Explore Product <span aria-hidden="true">&rarr;</span>
           </a>
-          <a class="product-card-btn-enquire" href="${productUrl(p, industryCtx, appCtx, routeCtx)}#rfq">
-            Enquire Now
+          <a class="product-card-btn-quickbuy" href="${getWhatsAppUrl(`Hello Deepali Minerals, I would like to quickly buy / enquire about ${p.name}. Please share pricing and dispatch availability.`)}" target="_blank" rel="noopener noreferrer" aria-label="Quick Buy ${esc(p.name)} via WhatsApp Sales Desk">
+            ${whatsappIconSvg(13, 13)}
+            <span>Quick Buy</span>
           </a>
         </div>
       </article>
@@ -1089,7 +1090,7 @@
             </div>
 
             <div>
-              <label>Delivery Destination / Depot *</label>
+              <label>Delivery Destination / Unloading Point *</label>
               <input type="text" name="destination" placeholder="City / State / Port" required>
             </div>
 
@@ -1266,7 +1267,7 @@
                 <div class="exp-hero-overlay-badge">
                   <div>
                     <strong>Deepali Minerals Central Processing &amp; Dispatch</strong>
-                    <span>Lawrence Road Depot &bull; Keshav Puram, New Delhi</span>
+                    <span>Corporate Office &bull; Keshav Puram, New Delhi</span>
                   </div>
                   <div style="display: flex; align-items: center; gap: 0.5rem;">
                     <button
@@ -1323,7 +1324,7 @@
                 Deepali Minerals Sourcing Network
               </h3>
               <p style="font-size: 0.88rem; color: var(--slate); line-height: 1.6; margin-bottom: 1.5rem;">
-                Operating from our central commercial depot at <strong>Lawrence Road, Rampura / Keshav Puram, New Delhi</strong>, Deepali Minerals coordinates raw material extraction, pulverization, testing, and multi-state transport dispatches.
+                Operating from our Corporate Office at <strong>Lawrence Road, Rampura / Keshav Puram, New Delhi</strong>, Deepali Minerals coordinates raw material extraction, pulverization, testing, and multi-state transport dispatches.
               </p>
 
               <div style="padding: 1.25rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; margin-bottom: 1.25rem;">
@@ -1376,7 +1377,7 @@
                 </div>
                 <div class="inst-pillar-item" style="border-left-color: #D5A43A;">
                   <strong>Reliable Fleet Logistics</strong>
-                  <p>Central depot at Lawrence Road, New Delhi with buffer inventory for prompt regional and national delivery.</p>
+                  <p>Corporate Office at Lawrence Road, New Delhi with buffer inventory for prompt regional and national delivery.</p>
                 </div>
               </div>
 
@@ -1438,10 +1439,11 @@
 
                     <div class="flagship-actions">
                       <a href="${productUrl(p)}" class="product-card-link" style="font-weight: 700;">
-                        View Technical Details &rarr;
+                        Explore Product &rarr;
                       </a>
-                      <a href="${productUrl(p)}#rfq" class="product-card-btn-enquire">
-                        Enquire
+                      <a href="${getWhatsAppUrl(`Hello Deepali Minerals, I would like to quickly buy / enquire about ${p.name}. Please share pricing and dispatch availability.`)}" target="_blank" rel="noopener noreferrer" class="product-card-btn-quickbuy" aria-label="Quick Buy ${esc(p.name)} via WhatsApp Sales Desk">
+                        ${whatsappIconSvg(13, 13)}
+                        <span>Quick Buy</span>
                       </a>
                     </div>
                   </div>
@@ -1755,7 +1757,7 @@
 
             <article class="why-card">
               <b>04 / Strategic Hub</b>
-              <h3>Lawrence Rd Depot &amp; Fleet</h3>
+              <h3>Corporate Office &amp; Fleet</h3>
               <p>Equipped with central buffer warehousing in Delhi NCT, sample dispatch capability, and pan-India full-truckload (FTL) transport coordination.</p>
             </article>
           </div>
@@ -1823,10 +1825,10 @@
         <div class="shell">
           <div class="section-head">
             <div>
-              <span class="eyebrow">DEPOT INFRASTRUCTURE &bull; NEW DELHI</span>
-              <h2 class="section-title">Packaging Standards &amp; Central Depot Logistics</h2>
+              <span class="eyebrow">CORPORATE OFFICE &bull; NEW DELHI</span>
+              <h2 class="section-title">Packaging Standards &amp; Corporate Logistics</h2>
             </div>
-            <p class="lede">Robust packaging options and buffer inventory at our Lawrence Road depot ensuring seamless logistics without production downtime.</p>
+            <p class="lede">Robust packaging options and buffer inventory managed from our Corporate Office ensuring seamless logistics without production downtime.</p>
           </div>
 
           <div class="facility-showcase-grid">
@@ -1874,7 +1876,7 @@
 
             <div class="facility-card">
               <div class="facility-card-head">
-                <h4>Central Lawrence Rd Depot</h4>
+                <h4>Corporate Office &amp; Facility</h4>
                 <span>CENTRAL BUFFER STOCK &bull; SAME-DAY DISPATCH</span>
               </div>
               <div class="facility-card-body">
@@ -2052,7 +2054,7 @@
             <p class="lede">Submit your required mineral, target volume, and delivery destination for wholesale pricing and laboratory sample dispatch.</p>
             
             <div style="margin-top: 2rem; padding: 1.5rem; background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 4px 14px rgba(15, 43, 72, 0.05);">
-              <span style="font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; color: #174A70; font-weight: 700; display: block; margin-bottom: 0.35rem;">Central Corporate Depot</span>
+              <span style="font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; color: #174A70; font-weight: 700; display: block; margin-bottom: 0.35rem;">Corporate Office</span>
               <p style="font-size: 0.92rem; color: var(--ink); margin: 0 0 1rem; line-height: 1.5; font-weight: 600;">
                 Deepali Minerals<br>
                 C-2/29 C Lawrence Road, Rampura / Keshav Puram,<br>
@@ -2262,7 +2264,7 @@
               <span style="background: rgba(213,164,58,0.2); border: 1px solid #D5A43A; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.68rem; font-weight: 700; color: #F8DF8A;">DEEPALI MINERALS</span>
               <div>
                 <h3>Central Processing &amp; Dispatch Facility</h3>
-                <span>Lawrence Road Depot &bull; Keshav Puram, New Delhi</span>
+                <span>Corporate Office &bull; Keshav Puram, New Delhi</span>
               </div>
             </div>
             <button type="button" class="video-theater-close-btn" id="btn-close-theater" aria-label="Close Full Screen Theater">
@@ -3053,7 +3055,7 @@
               <p style="margin: 0 0 0.5rem;"><strong>CEO Desk:</strong> Mr. Neeraj Monga</p>
               <p style="margin: 0 0 0.5rem;"><strong>Direct Commercial Hotline:</strong> <a href="tel:+919810516065" style="color: #174A70; font-weight: 700;">+91 9810516065</a> / <a href="tel:+919810715129" style="color: #174A70; font-weight: 700;">+91 9810715129</a></p>
               <p style="margin: 0 0 0.5rem;"><strong>Sales Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #174A70;">info@deepaliminerals.in</a></p>
-              <p style="margin: 0 0 0.5rem;"><strong>Central Dispatch Depot:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</p>
+              <p style="margin: 0 0 0.5rem;"><strong>Corporate Office:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</p>
               <p style="margin: 0;"><strong>GST Registration:</strong> 07AIMPM0458Q1ZL</p>
             </div>
 
@@ -3426,7 +3428,7 @@
             <span style="color: rgba(255,255,255,0.25);">&bull;</span>
             <span>ISO 9001:2015 &amp; ISO 14001:2015 Accredited</span>
             <span style="color: rgba(255,255,255,0.25);">&bull;</span>
-            <span>Lawrence Road, Delhi Central Depot</span>
+            <span>Lawrence Road, Delhi Corporate Office</span>
           </div>
         </div>
       </section>
@@ -3641,7 +3643,7 @@
                   <span class="product-spec-quick-val">ISO 9001:2015 &bull; 14001</span>
                 </div>
                 <div class="product-spec-quick-item">
-                  <span class="product-spec-quick-label">Central Depot</span>
+                  <span class="product-spec-quick-label">Corporate Office</span>
                   <span class="product-spec-quick-val">Lawrence Road, Delhi</span>
                 </div>
               </div>

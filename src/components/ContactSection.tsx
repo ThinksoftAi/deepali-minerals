@@ -57,7 +57,7 @@ export const ContactSection: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-heading font-bold text-base text-white">
-                    Head Office & Depot
+                    Corporate Office
                   </h3>
                   <span className="text-xs text-amber-400">Deepali Minerals (Proprietorship)</span>
                 </div>
