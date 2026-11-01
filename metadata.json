@@ -1,0 +1,8 @@
+{
+  "name": "Deepali Minerals - Industrial Minerals & Chemicals",
+  "description": "Premium industrial minerals and chemicals manufacturer & supplier including Talc Powder, Calcium Carbonate, China Clay, Dolomite, Calcite, and Lime.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

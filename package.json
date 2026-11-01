@@ -1,0 +1,27 @@
+{
+  "name": "deepali-minerals",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "vite build && mkdir -p dist/assets/js dist/assets/images dist/assets/certificates dist/videos dist/images && cp -r assets/js/* dist/assets/js/ && cp -r assets/images/* dist/assets/images/ && cp -r assets/certificates/* dist/assets/certificates/ 2>/dev/null || true && cp -r public/videos/* dist/videos/ 2>/dev/null || true && cp -r public/images/* dist/images/ 2>/dev/null || true && cp robots.txt robots.prod.txt .htaccess sitemap.xml dist/",
+    "lint": "vite build --mode development",
+    "preview": "vite preview --host 0.0.0.0 --port 3000"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.2"
+  }
+}

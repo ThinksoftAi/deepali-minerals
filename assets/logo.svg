@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1000" width="2000" height="1000">
+  <defs>
+    <!-- Vibrant Blue Gradients for Monogram -->
+    <linearGradient id="dSpineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#009aff" />
+      <stop offset="45%" stop-color="#0072ea" />
+      <stop offset="100%" stop-color="#0042b4" />
+    </linearGradient>
+
+    <linearGradient id="dBowlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0094ff" />
+      <stop offset="40%" stop-color="#006adc" />
+      <stop offset="100%" stop-color="#003c9e" />
+    </linearGradient>
+
+    <linearGradient id="mOuterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0096ff" />
+      <stop offset="45%" stop-color="#006edc" />
+      <stop offset="100%" stop-color="#003ea0" />
+    </linearGradient>
+
+    <!-- 3D Bevel Facets for Center V Fold of M -->
+    <linearGradient id="mFoldLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ac0ff" />
+      <stop offset="50%" stop-color="#0090ff" />
+      <stop offset="100%" stop-color="#005ec8" />
+    </linearGradient>
+
+    <linearGradient id="mFoldDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0050aa" />
+      <stop offset="50%" stop-color="#003886" />
+      <stop offset="100%" stop-color="#002058" />
+    </linearGradient>
+
+    <!-- Orbital Cyan Swoosh Gradient -->
+    <linearGradient id="swooshGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#00f2ff" />
+      <stop offset="22%" stop-color="#00beff" />
+      <stop offset="60%" stop-color="#0072ea" />
+      <stop offset="100%" stop-color="#003ea6" />
+    </linearGradient>
+
+    <linearGradient id="swooshRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#7cf6ff" />
+      <stop offset="100%" stop-color="#00b4ff" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- 3D Glossy Sphere Radial Gradient -->
+    <radialGradient id="sphereGrad" cx="36%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="14%" stop-color="#74d4ff" />
+      <stop offset="42%" stop-color="#0084f8" />
+      <stop offset="78%" stop-color="#004eb8" />
+      <stop offset="100%" stop-color="#00286e" />
+    </radialGradient>
+
+    <radialGradient id="specularGrad" cx="35%" cy="30%" r="35%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98" />
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Chrome Lettering Gradient for "DEEPALI MINERALS" -->
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="45%" stop-color="#e2f5ff" />
+      <stop offset="70%" stop-color="#a6ddfb" />
+      <stop offset="100%" stop-color="#0058b8" />
+    </linearGradient>
+
+    <!-- Soft Drop Shadow for Realistic 3D Depth -->
+    <filter id="shadowFilter" x="-15%" y="-15%" width="135%" height="135%">
+      <feDropShadow dx="4" dy="10" stdDeviation="8" flood-color="#001838" flood-opacity="0.32" />
+    </filter>
+  </defs>
+
+  <!-- ==================== 1. ORBITAL SWOOSH ARC ==================== -->
+  <g id="swoosh-layer" filter="url(#shadowFilter)">
+    <!-- Main sweeping ribbon under the DM monogram -->
+    <path d="M 120,740 
+             C 80,660 120,570 320,515 
+             C 375,500 420,505 385,535 
+             C 210,600 160,680 205,745 
+             C 265,835 560,865 1060,815 
+             C 1340,790 1540,750 1650,715 
+             C 1520,775 1280,835 1000,855 
+             C 520,895 210,875 140,780 
+             C 125,760 120,750 120,740 
+             Z"
+          fill="url(#swooshGrad)" />
+
+    <!-- Luminous highlight rim along inner curve -->
+    <path d="M 320,518 
+             C 165,600 150,695 195,755 
+             C 265,845 590,870 1090,820 
+             C 1350,795 1530,755 1640,715"
+          fill="none" 
+          stroke="url(#swooshRim)" 
+          stroke-width="7" 
+          stroke-linecap="round" />
+  </g>
+
+  <!-- ==================== 2. DM MONOGRAM ==================== -->
+  <g id="dm-monogram" filter="url(#shadowFilter)" transform="translate(200, 150) skewX(-16.2)">
+    
+    <!-- LETTER D -->
+    <!-- D Left Spine -->
+    <path d="M 120,490 L 120,70 L 225,70 L 225,490 Z" fill="url(#dSpineGrad)" />
+
+    <!-- D Curved Loop / Bowl with clean 32px vertical slit -->
+    <path d="M 258,70 
+             L 365,70 
+             C 490,70 580,155 580,280 
+             C 580,405 490,490 365,490 
+             L 258,490 
+             L 258,410 
+             L 360,410 
+             C 435,410 485,350 485,280 
+             C 485,210 435,150 360,150 
+             L 258,150 
+             Z" 
+          fill="url(#dBowlGrad)" />
+
+    <!-- LETTER M (Continuous, Symmetrical 4-Legged Bold Italic M) -->
+    <g transform="translate(640, 0)">
+      <!-- Main Solid M Ribbon Structure -->
+      <path d="M 0,490 
+               L 0,70 
+               L 105,70 
+               L 255,335 
+               L 405,70 
+               L 510,70 
+               L 510,490 
+               L 405,490 
+               L 405,210 
+               L 280,430 
+               L 230,430 
+               L 105,210 
+               L 105,490 
+               Z" 
+            fill="url(#mOuterGrad)" />
+
+      <!-- Left 3D Fold of the V (Illuminated Facet) -->
+      <path d="M 105,70 
+               L 255,335 
+               L 230,430 
+               L 105,210 
+               Z" 
+            fill="url(#mFoldLight)" 
+            opacity="0.9" />
+
+      <!-- Right 3D Fold of the V (Shaded Depth Facet) -->
+      <path d="M 255,335 
+               L 405,70 
+               L 405,210 
+               L 280,430 
+               Z" 
+            fill="url(#mFoldDark)" 
+            opacity="0.9" />
+
+      <!-- Specular Shimmer along Top Peaks -->
+      <line x1="0" y1="70" x2="105" y2="70" stroke="#88d4ff" stroke-width="4" stroke-linecap="round" />
+      <line x1="405" y1="70" x2="510" y2="70" stroke="#88d4ff" stroke-width="4" stroke-linecap="round" />
+    </g>
+
+    <!-- Top Specular Shimmer on D Edges -->
+    <line x1="120" y1="70" x2="225" y2="70" stroke="#88d4ff" stroke-width="4" stroke-linecap="round" />
+    <line x1="258" y1="70" x2="365" y2="70" stroke="#88d4ff" stroke-width="4" stroke-linecap="round" />
+  </g>
+
+  <!-- ==================== 3. MOLECULAR CLUSTER ==================== -->
+  <g id="molecule-cluster" filter="url(#shadowFilter)">
+    <!-- Cylindrical Connecting Struts / Chemical Bonds -->
+    <line x1="1580" y1="140" x2="1480" y2="255" stroke="#053880" stroke-width="38" stroke-linecap="round" />
+    <line x1="1580" y1="140" x2="1480" y2="255" stroke="#0070d6" stroke-width="22" stroke-linecap="round" />
+
+    <line x1="1480" y1="255" x2="1620" y2="375" stroke="#053880" stroke-width="42" stroke-linecap="round" />
+    <line x1="1480" y1="255" x2="1620" y2="375" stroke="#0070d6" stroke-width="24" stroke-linecap="round" />
+
+    <line x1="1620" y1="375" x2="1535" y2="595" stroke="#053880" stroke-width="36" stroke-linecap="round" />
+    <line x1="1620" y1="375" x2="1535" y2="595" stroke="#0070d6" stroke-width="18" stroke-linecap="round" />
+
+    <!-- Sphere 1: Top (highest point) -->
+    <g transform="translate(1580, 140)">
+      <circle cx="0" cy="0" r="55" fill="url(#sphereGrad)" />
+      <ellipse cx="-15" cy="-15" rx="22" ry="11" fill="url(#specularGrad)" transform="rotate(-30, -15, -15)" />
+      <path d="M 14,-41 A 44 44 0 0 1 42,3" stroke="#ffffff" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.88" />
+    </g>
+
+    <!-- Sphere 2: Upper-Left -->
+    <g transform="translate(1480, 255)">
+      <circle cx="0" cy="0" r="52" fill="url(#sphereGrad)" />
+      <ellipse cx="-14" cy="-14" rx="20" ry="10" fill="url(#specularGrad)" transform="rotate(-30, -14, -14)" />
+      <path d="M 13,-39 A 42 42 0 0 1 39,3" stroke="#ffffff" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.88" />
+    </g>
+
+    <!-- Sphere 3: Middle-Right (Biggest Central Atom) -->
+    <g transform="translate(1620, 375)">
+      <circle cx="0" cy="0" r="80" fill="url(#sphereGrad)" />
+      <ellipse cx="-22" cy="-22" rx="32" ry="16" fill="url(#specularGrad)" transform="rotate(-30, -22, -22)" />
+      <path d="M 20,-60 A 65 65 0 0 1 64,6" stroke="#ffffff" stroke-width="9.5" stroke-linecap="round" fill="none" opacity="0.9" />
+    </g>
+
+    <!-- Sphere 4: Bottom-Left -->
+    <g transform="translate(1535, 595)">
+      <circle cx="0" cy="0" r="50" fill="url(#sphereGrad)" />
+      <ellipse cx="-13" cy="-13" rx="19" ry="10" fill="url(#specularGrad)" transform="rotate(-30, -13, -13)" />
+      <path d="M 13,-37 A 40 40 0 0 1 37,3" stroke="#ffffff" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.88" />
+    </g>
+  </g>
+
+  <!-- ==================== 4. TYPOGRAPHY: DEEPALI MINERALS ==================== -->
+  <g filter="url(#shadowFilter)">
+    <text x="835" y="935" 
+          font-family="'Liberation Sans', 'Montserrat', 'Arial Black', Arial, sans-serif" 
+          font-size="80" 
+          font-weight="900" 
+          letter-spacing="0.16em" 
+          text-anchor="middle" 
+          fill="url(#textGrad)"
+          stroke="#00245e"
+          stroke-width="3.5"
+          paint-order="stroke fill">
+      DEEPALI MINERALS
+    </text>
+  </g>
+</svg>

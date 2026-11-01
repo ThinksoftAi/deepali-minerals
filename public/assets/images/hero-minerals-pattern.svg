@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <linearGradient id="heroBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#F8FAFC" />
+      <stop offset="80%" stop-color="#EFF6FF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+
+    <!-- Mineral crystal facets -->
+    <linearGradient id="crystal1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#174A70" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#248C91" stop-opacity="0.03" />
+    </linearGradient>
+    <linearGradient id="crystal2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D5A43A" stop-opacity="0.09" />
+      <stop offset="100%" stop-color="#A84E2B" stop-opacity="0.02" />
+    </linearGradient>
+    <linearGradient id="crystal3" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#248C91" stop-opacity="0.07" />
+      <stop offset="100%" stop-color="#174A70" stop-opacity="0.02" />
+    </linearGradient>
+    <pattern id="gridDots" width="32" height="32" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#174A70" fill-opacity="0.06" />
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#heroBg)" />
+  <rect width="1600" height="900" fill="url(#gridDots)" />
+
+  <!-- Abstract Crystalline Mineral Geometries (Rhomboids & Cleavage planes) -->
+  <g id="crystals">
+    <!-- Top Right Mineral Facet Cluster -->
+    <polygon points="1100,50 1450,120 1600,380 1350,480 1150,300" fill="url(#crystal1)" stroke="#174A70" stroke-width="1" stroke-opacity="0.12" />
+    <polygon points="1350,480 1600,380 1550,700 1280,680" fill="url(#crystal3)" stroke="#248C91" stroke-width="1" stroke-opacity="0.12" />
+    <polygon points="1020,220 1150,300 1350,480 1180,600 950,420" fill="url(#crystal2)" stroke="#D5A43A" stroke-width="1" stroke-opacity="0.12" />
+    <polygon points="1280,680 1550,700 1480,880 1180,850" fill="url(#crystal1)" stroke="#174A70" stroke-width="1" stroke-opacity="0.08" />
+
+    <!-- Connecting Cleavage Lines & Lattice Nodes -->
+    <line x1="1100" y1="50" x2="1350" y2="480" stroke="#174A70" stroke-width="1" stroke-opacity="0.15" stroke-dasharray="4,4" />
+    <line x1="950" y1="420" x2="1600" y2="380" stroke="#248C91" stroke-width="1" stroke-opacity="0.15" stroke-dasharray="6,4" />
+    <line x1="1150" y1="300" x2="1280" y2="680" stroke="#D5A43A" stroke-width="1.2" stroke-opacity="0.2" />
+
+    <circle cx="1100" cy="50" r="3" fill="#174A70" fill-opacity="0.4" />
+    <circle cx="1450" cy="120" r="4" fill="#248C91" fill-opacity="0.4" />
+    <circle cx="1600" cy="380" r="5" fill="#174A70" fill-opacity="0.4" />
+    <circle cx="1350" cy="480" r="4" fill="#D5A43A" fill-opacity="0.5" />
+    <circle cx="1150" cy="300" r="3.5" fill="#A84E2B" fill-opacity="0.4" />
+    <circle cx="950" cy="420" r="4" fill="#174A70" fill-opacity="0.3" />
+    <circle cx="1280" cy="680" r="3.5" fill="#248C91" fill-opacity="0.4" />
+
+    <!-- Subtle Bottom Left Mineral Prism Silhouette -->
+    <polygon points="-50,600 250,550 400,750 200,920 -100,850" fill="url(#crystal2)" stroke="#D5A43A" stroke-width="1" stroke-opacity="0.08" />
+    <polygon points="250,550 500,680 400,750" fill="url(#crystal1)" stroke="#174A70" stroke-width="1" stroke-opacity="0.08" />
+  </g>
+</svg>

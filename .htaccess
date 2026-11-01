@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # On production hostname (deepaliminerals.in), serve production robots.txt
+  RewriteCond %{HTTP_HOST} ^(www\.)?deepaliminerals\.in$ [NC]
+  RewriteRule ^robots\.txt$ robots.prod.txt [L]
+</IfModule>
