@@ -3,8 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Deepali Minerals — industrial materials product discovery and business enquiries." />
-    <title>Deepali Minerals | Industrial Materials</title>
+    <meta name="description" content="Established in 2004, Deepali Minerals is an ISO 9001:2015 &amp; ISO 14001:2015 certified B2B supplier of industrial minerals, pulverized powders, and functional chemicals in Delhi." />
+    <title>Deepali Minerals | Industrial Minerals &amp; Pulverized Chemicals Supplier</title>
+    <link rel="canonical" href="https://www.deepaliminerals.com/" />
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:site_name" content="Deepali Minerals" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Deepali Minerals | Industrial Minerals &amp; Pulverized Chemicals Supplier" />
+    <meta property="og:description" content="B2B supplier of 22+ processed non-metallic minerals, pulverized extenders, and functional additives serving 18+ manufacturing sectors across India." />
+    <meta property="og:url" content="https://www.deepaliminerals.com/" />
+    <meta property="og:image" content="https://www.deepaliminerals.com/assets/images/brand/logo.png" />
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Deepali Minerals | Industrial Minerals &amp; Pulverized Chemicals Supplier" />
+    <meta name="twitter:description" content="B2B supplier of 22+ processed non-metallic minerals, pulverized extenders, and functional additives serving 18+ manufacturing sectors across India." />
+    <meta name="twitter:image" content="https://www.deepaliminerals.com/assets/images/brand/logo.png" />
+
+    <!-- Google Fonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="assets/css/styles.css?v=20261020_purewhite" />
     <style>
       :root {
@@ -47,13 +66,79 @@
         border-color: #E5E7EB !important;
       }
     </style>
+
+    <!-- Schema.org Organization Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Deepali Minerals",
+        "legalName": "Deepali Minerals",
+        "foundingDate": "2004",
+        "founder": {
+          "@type": "Person",
+          "name": "Mr. Neeraj Monga",
+          "jobTitle": "CEO / Proprietor"
+        },
+        "description": "Supplier and wholesale distributor of non-metallic industrial minerals, pulverized powders, and functional chemicals.",
+        "url": "https://www.deepaliminerals.com/",
+        "logo": "https://www.deepaliminerals.com/assets/images/brand/logo.png",
+        "hasCredential": [
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "ISO 9001:2015 Quality Management Systems",
+            "credentialCategory": "Certificate"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "ISO 14001:2015 Environmental Management Systems",
+            "credentialCategory": "Certificate"
+          }
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "C-2/29 C Lawrence Road, Rampura / Keshav Puram",
+          "addressLocality": "New Delhi",
+          "postalCode": "110035",
+          "addressCountry": "IN"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-9810516065",
+          "contactType": "sales",
+          "email": "info@deepaliminerals.com",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      }
+    </script>
+
+    <!-- Schema.org WebSite Structured Data with SearchAction -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Deepali Minerals",
+        "url": "https://www.deepaliminerals.com/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.deepaliminerals.com/products/?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- Preview Environment Search Engine Protection (Strict NOINDEX on non-production hosts) -->
     <script>
       (function () {
-        if (typeof window !== 'undefined' && window.location && window.location.hostname === 'preview.deepaliminerals.in') {
-          var meta = document.createElement('meta');
-          meta.name = 'robots';
-          meta.content = 'noindex,nofollow';
-          document.head.appendChild(meta);
+        if (typeof window !== 'undefined' && window.location) {
+          var h = (window.location.hostname || '').toLowerCase();
+          var isProduction = (h === 'www.deepaliminerals.com' || h === 'deepaliminerals.com' || h === 'www.deepaliminerals.in' || h === 'deepaliminerals.in');
+          if (!isProduction) {
+            var meta = document.createElement('meta');
+            meta.name = 'robots';
+            meta.content = 'noindex,nofollow';
+            document.head.appendChild(meta);
+          }
         }
       })();
     </script>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://deepaliminerals.in/sitemap.xml
+Sitemap: https://www.deepaliminerals.com/sitemap.xml

@@ -1,132 +1,227 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core Corporate Pages -->
   <url>
-    <loc>https://deepaliminerals.in/</loc>
+    <loc>https://www.deepaliminerals.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/products/</loc>
+    <loc>https://www.deepaliminerals.com/products/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/industries/</loc>
+    <loc>https://www.deepaliminerals.com/industries/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/about.html</loc>
+    <loc>https://www.deepaliminerals.com/about.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- 22 Verified Mineral & Chemical Products -->
+  <url>
+    <loc>https://www.deepaliminerals.com/product.html?product=talc</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=talc</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=soap-stone</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/product.html?product=chalk-powder</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/product.html?product=hydrated-lime</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=soap-stone</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://deepaliminerals.in/product.html?product=chalk-powder</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://deepaliminerals.in/product.html?product=hydrated-lime</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=china-clay</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=china-clay</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=kaoline</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/product.html?product=marble-powder</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/product.html?product=quartz-powder</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/product.html?product=calcium-carbonate</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=kaoline</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=redoxide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=marble-powder</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=polyester-resin</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=quartz-powder</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://deepaliminerals.in/product.html?product=calcium-carbonate</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=zinc-oxide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=redoxide</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=zinc-stearates</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=polyester-resin</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=magnesium-carbonate</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=zinc-oxide</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=dolomite-powder</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/product.html?product=silica</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/product.html?product=titanium-dioxide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=zinc-stearates</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=quartz-sand</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=magnesium-carbonate</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=marble-chips</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=dolomite-powder</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=barytes</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=silica</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=french-chalk-powder</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=titanium-dioxide</loc>
+    <loc>https://www.deepaliminerals.com/product.html?product=starch</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 18 Canonical Industry Application Landing Pages -->
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=paints-coatings</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=quartz-sand</loc>
+    <loc>https://www.deepaliminerals.com/industries/?industry=plastics-polymers</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=rubber-footwear</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=construction-building-materials</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=ceramics</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=marble-chips</loc>
+    <loc>https://www.deepaliminerals.com/industries/?industry=paper-stationery</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=barytes</loc>
+    <loc>https://www.deepaliminerals.com/industries/?industry=frp-composites</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=french-chalk-powder</loc>
+    <loc>https://www.deepaliminerals.com/industries/?industry=agriculture-allied</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deepaliminerals.in/product.html?product=starch</loc>
+    <loc>https://www.deepaliminerals.com/industries/?industry=detergents-household</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=foundry-industrial</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=plywood</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=wall-putty-nc-putty</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=fibre-murti</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=gulal-rangoli</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=tile-adhesives</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=cattle-feed</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=fire-safety</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.deepaliminerals.com/industries/?industry=gym-powder</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

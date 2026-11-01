@@ -37,3 +37,7 @@ __pycache__/
 *.py[cod]
 test_logo.py
 test_rsvg.py
+
+# Backups
+backups/
+*.tar.gz

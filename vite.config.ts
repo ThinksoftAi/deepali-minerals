@@ -12,8 +12,10 @@ function deploymentRobotsPlugin(): Plugin {
         const host = rawHost.toString().toLowerCase();
         const url = (req.url || '').split('?')[0];
 
+        const isProdDomain = (host.includes('deepaliminerals.com') || host.includes('deepaliminerals.in')) && !host.includes('preview.');
+
         if (url === '/robots.txt') {
-          if (host.includes('deepaliminerals.in') && !host.includes('preview.')) {
+          if (isProdDomain) {
             const prodRobotsPath = resolve(__dirname, 'robots.prod.txt');
             if (fs.existsSync(prodRobotsPath)) {
               res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -21,7 +23,7 @@ function deploymentRobotsPlugin(): Plugin {
               return;
             }
             res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-            res.end('User-agent: *\nAllow: /\n\nSitemap: https://deepaliminerals.in/sitemap.xml\n');
+            res.end('User-agent: *\nAllow: /\n\nSitemap: https://www.deepaliminerals.com/sitemap.xml\n');
             return;
           }
           res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -30,7 +32,7 @@ function deploymentRobotsPlugin(): Plugin {
         }
 
         if (url === '/sitemap.xml') {
-          if (host.includes('deepaliminerals.in') && !host.includes('preview.')) {
+          if (isProdDomain) {
             const sitemapPath = resolve(__dirname, 'sitemap.xml');
             if (fs.existsSync(sitemapPath)) {
               res.setHeader('Content-Type', 'application/xml; charset=utf-8');
@@ -52,9 +54,10 @@ function deploymentRobotsPlugin(): Plugin {
         const rawHost = req.headers['x-forwarded-host'] || req.headers.host || '';
         const host = rawHost.toString().toLowerCase();
         const url = (req.url || '').split('?')[0];
+        const isProdDomain = (host.includes('deepaliminerals.com') || host.includes('deepaliminerals.in')) && !host.includes('preview.');
 
         if (url === '/robots.txt') {
-          if (host.includes('deepaliminerals.in') && !host.includes('preview.')) {
+          if (isProdDomain) {
             const prodRobotsPath = resolve(__dirname, 'robots.prod.txt');
             if (fs.existsSync(prodRobotsPath)) {
               res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -62,7 +65,7 @@ function deploymentRobotsPlugin(): Plugin {
               return;
             }
             res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-            res.end('User-agent: *\nAllow: /\n\nSitemap: https://deepaliminerals.in/sitemap.xml\n');
+            res.end('User-agent: *\nAllow: /\n\nSitemap: https://www.deepaliminerals.com/sitemap.xml\n');
             return;
           }
           res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -71,7 +74,7 @@ function deploymentRobotsPlugin(): Plugin {
         }
 
         if (url === '/sitemap.xml') {
-          if (host.includes('deepaliminerals.in') && !host.includes('preview.')) {
+          if (isProdDomain) {
             const sitemapPath = resolve(__dirname, 'sitemap.xml');
             if (fs.existsSync(sitemapPath)) {
               res.setHeader('Content-Type', 'application/xml; charset=utf-8');

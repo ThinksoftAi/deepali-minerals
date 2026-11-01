@@ -7,11 +7,13 @@
 (function () {
   'use strict';
 
-  // Deployment-Aware Robots Policy (Preview-Only SEO Control)
+  // Deployment-Aware Robots Policy (Strict Preview-Only NOINDEX Protection)
   (function applyDeploymentRobotsPolicy() {
     if (typeof window === 'undefined' || !window.location) return;
     var host = (window.location.hostname || '').toLowerCase();
-    if (host === 'preview.deepaliminerals.in') {
+    // Protect ALL preview environments (preview.deepaliminerals.com, Cloud Run, localhost, staging) from indexing
+    var isProduction = (host === 'www.deepaliminerals.com' || host === 'deepaliminerals.com' || host === 'www.deepaliminerals.in' || host === 'deepaliminerals.in');
+    if (!isProduction) {
       var existing = document.querySelector('meta[name="robots"]');
       if (!existing) {
         var meta = document.createElement('meta');
@@ -23,6 +25,79 @@
       }
     }
   })();
+
+  // SEO & Structured Data Management Helpers
+  function setMetaTag(name, content, isProperty) {
+    if (!content) return;
+    const selector = isProperty ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+    let el = document.querySelector(selector);
+    if (!el) {
+      el = document.createElement('meta');
+      if (isProperty) el.setAttribute('property', name);
+      else el.setAttribute('name', name);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  }
+
+  function setCanonicalUrl(url) {
+    if (!url) return;
+    let el = document.querySelector('link[rel="canonical"]');
+    if (!el) {
+      el = document.createElement('link');
+      el.setAttribute('rel', 'canonical');
+      document.head.appendChild(el);
+    }
+    el.setAttribute('href', url);
+  }
+
+  function updateSeoMeta(config) {
+    if (!config) return;
+    if (config.title) {
+      document.title = config.title;
+      setMetaTag('og:title', config.title, true);
+      setMetaTag('twitter:title', config.title, false);
+    }
+    if (config.description) {
+      setMetaTag('description', config.description, false);
+      setMetaTag('og:description', config.description, true);
+      setMetaTag('twitter:description', config.description, false);
+    }
+    if (config.canonical) {
+      setCanonicalUrl(config.canonical);
+      setMetaTag('og:url', config.canonical, true);
+    }
+    if (config.ogType) {
+      setMetaTag('og:type', config.ogType, true);
+    }
+    if (config.ogImage) {
+      setMetaTag('og:image', config.ogImage, true);
+      setMetaTag('twitter:image', config.ogImage, false);
+    }
+    setMetaTag('twitter:card', 'summary_large_image', false);
+    setMetaTag('og:site_name', 'Deepali Minerals', true);
+  }
+
+  function setBreadcrumbsJsonLd(items) {
+    if (!items || !items.length) return;
+    let script = document.getElementById('breadcrumbs-jsonld');
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'breadcrumbs-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": items.map((item, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "name": item.name,
+        "item": item.url
+      }))
+    });
+  }
 
   // Enforce Clean Bright White Theme System Tokens
   (function enforceWhiteThemeTokens() {
@@ -938,6 +1013,14 @@
    * HOMEPAGE (REDESIGN EXPERIMENT - MODERN INDUSTRIAL B2B STANDARD)
    * ========================================================================= */
   function home() {
+    updateSeoMeta({
+      title: 'Deepali Minerals | Industrial Minerals & Pulverized Chemicals Supplier',
+      description: 'Established in 2004, Deepali Minerals is an ISO 9001:2015 & ISO 14001:2015 certified B2B supplier of industrial minerals, pulverized powders, and functional chemicals in Delhi.',
+      canonical: 'https://www.deepaliminerals.com/',
+      ogType: 'website',
+      ogImage: 'https://www.deepaliminerals.com/assets/images/brand/logo.png'
+    });
+
     const allProducts = data.products || [];
     const industries = data.industries || [];
 
@@ -2158,16 +2241,19 @@
    * INDIVIDUAL INDUSTRY LANDING PAGE VIEW
    * ------------------------------------------------------------------------- */
   function renderIndividualIndustryPage(ind, mainEl, allIndustries) {
-    document.title = `${ind.name} Raw Minerals & Compounding Materials | Deepali Minerals`;
+    updateSeoMeta({
+      title: `${ind.name} Raw Minerals & Compounding Materials | Deepali Minerals`,
+      description: `Discover verified industrial minerals for ${ind.name}. Deepali Minerals supplies high-whiteness extenders, functional fillers, and raw materials from Delhi with ISO certified quality.`,
+      canonical: `https://www.deepaliminerals.com/industries/?industry=${ind.slug}`,
+      ogType: 'website',
+      ogImage: 'https://www.deepaliminerals.com/assets/images/brand/logo.png'
+    });
 
-    // Dynamic Meta Description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta');
-      metaDesc.name = 'description';
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.content = `Discover verified industrial minerals for ${ind.name}. Deepali Minerals supplies high-whiteness extenders, functional fillers, and raw materials from Delhi with ISO certified quality.`;
+    setBreadcrumbsJsonLd([
+      { name: 'Home', url: 'https://www.deepaliminerals.com/' },
+      { name: 'Industries', url: 'https://www.deepaliminerals.com/industries/' },
+      { name: ind.name, url: `https://www.deepaliminerals.com/industries/?industry=${ind.slug}` }
+    ]);
 
     // Schema.org CollectionPage / ItemList JSON-LD
     let schemaScript = document.getElementById('industry-schema-jsonld');
@@ -2182,7 +2268,7 @@
       "@type": "CollectionPage",
       "name": `${ind.name} Minerals — Deepali Minerals`,
       "description": ind.description,
-      "url": `https://deepaliminerals.in/industries/?industry=${ind.slug}`,
+      "url": `https://www.deepaliminerals.com/industries/?industry=${ind.slug}`,
       "mainEntity": {
         "@type": "ItemList",
         "name": `Industrial Minerals for ${ind.name}`,
@@ -2191,7 +2277,7 @@
           "@type": "ListItem",
           "position": idx + 1,
           "name": p.name,
-          "url": `https://deepaliminerals.in/product.html?product=${p.slug}`
+          "url": `https://www.deepaliminerals.com/product.html?product=${p.slug}`
         }))
       }
     };
@@ -2484,7 +2570,18 @@
    * ALL 18 CANONICAL INDUSTRIES DISCOVERY HUB
    * ------------------------------------------------------------------------- */
   function renderIndustryDiscoveryHub(mainEl, allIndustries) {
-    document.title = `Industries & Manufacturing Applications | Deepali Minerals`;
+    updateSeoMeta({
+      title: 'Industries & Manufacturing Applications | Deepali Minerals',
+      description: 'Explore all 18 manufacturing sectors and discover verified industrial minerals, pulverized extenders, and compounding chemicals from Deepali Minerals.',
+      canonical: 'https://www.deepaliminerals.com/industries/',
+      ogType: 'website',
+      ogImage: 'https://www.deepaliminerals.com/assets/images/brand/logo.png'
+    });
+
+    setBreadcrumbsJsonLd([
+      { name: 'Home', url: 'https://www.deepaliminerals.com/' },
+      { name: 'Industries', url: 'https://www.deepaliminerals.com/industries/' }
+    ]);
 
     mainEl.innerHTML = `
       <!-- 1. HUB HERO BANNER -->
@@ -2759,12 +2856,19 @@
     const mainEl = document.querySelector('#main');
     if (!mainEl) return;
 
-    // Set SEO Meta
-    document.title = 'Industrial Minerals & Chemicals Master Catalogue | Deepali Minerals';
-    const metaDescEl = document.querySelector('meta[name="description"]');
-    if (metaDescEl) {
-      metaDescEl.setAttribute('content', 'Explore all 22 industrial minerals, pulverized powders, and functional chemicals from Deepali Minerals. Filter by category, manufacturing sector, or application.');
-    }
+    // Set SEO Meta & Structured Breadcrumbs
+    updateSeoMeta({
+      title: 'Industrial Minerals & Chemicals Master Catalogue | Deepali Minerals',
+      description: 'Explore all 22 industrial minerals, pulverized powders, and functional chemicals from Deepali Minerals. Filter by category, manufacturing sector, or application.',
+      canonical: 'https://www.deepaliminerals.com/products/',
+      ogType: 'website',
+      ogImage: 'https://www.deepaliminerals.com/assets/images/brand/logo.png'
+    });
+
+    setBreadcrumbsJsonLd([
+      { name: 'Home', url: 'https://www.deepaliminerals.com/' },
+      { name: 'Products', url: 'https://www.deepaliminerals.com/products/' }
+    ]);
 
     const commonApps = data.getCommonApplications ? data.getCommonApplications() : [];
 
@@ -2880,21 +2984,22 @@
 
     const p = data.getProductBySlug(slug) || data.products[0];
 
-    // SEO Dynamic Update
-    document.title = `${p.name} - Technical Specifications & B2B Supply | Deepali Minerals`;
-    const metaDescEl = document.querySelector('meta[name="description"]');
-    if (metaDescEl) {
-      metaDescEl.setAttribute('content', `${p.name} technical specifications, manufacturing applications, mesh classification, and B2B wholesale pricing from Deepali Minerals, Delhi.`);
-    }
-    let canonicalEl = document.querySelector('link[rel="canonical"]');
-    if (!canonicalEl) {
-      canonicalEl = document.createElement('link');
-      canonicalEl.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalEl);
-    }
-    canonicalEl.setAttribute('href', `https://deepaliminerals.in/product.html?product=${p.slug}`);
+    // SEO Dynamic Update & Structured Data
+    updateSeoMeta({
+      title: `${p.name} - Technical Specifications & B2B Supply | Deepali Minerals`,
+      description: `${p.name} technical specifications, manufacturing applications, mesh classification, and B2B wholesale supply from Deepali Minerals, Delhi.`,
+      canonical: `https://www.deepaliminerals.com/product.html?product=${p.slug}`,
+      ogType: 'product',
+      ogImage: 'https://www.deepaliminerals.com' + resolveProductImg(p.image)
+    });
 
-    // Dynamic Schema.org Product Structured Data
+    setBreadcrumbsJsonLd([
+      { name: 'Home', url: 'https://www.deepaliminerals.com/' },
+      { name: 'Products', url: 'https://www.deepaliminerals.com/products/' },
+      { name: p.name, url: `https://www.deepaliminerals.com/product.html?product=${p.slug}` }
+    ]);
+
+    // Dynamic Schema.org Product Structured Data (Strictly without fabricated reviews, ratings, or prices)
     let schemaScript = document.getElementById('product-schema-jsonld');
     if (!schemaScript) {
       schemaScript = document.createElement('script');
@@ -2906,9 +3011,11 @@
       "@context": "https://schema.org/",
       "@type": "Product",
       "name": p.name,
-      "image": "https://deepaliminerals.in" + resolveProductImg(p.image),
+      "image": "https://www.deepaliminerals.com" + resolveProductImg(p.image),
       "description": p.description || p.shortDescription,
       "category": p.category,
+      "sku": `DM-${p.slug.toUpperCase()}`,
+      "mpn": `DM-${p.slug.toUpperCase()}`,
       "brand": {
         "@type": "Brand",
         "name": "Deepali Minerals"
@@ -2916,7 +3023,7 @@
       "manufacturer": {
         "@type": "Organization",
         "name": "Deepali Minerals",
-        "url": "https://deepaliminerals.in",
+        "url": "https://www.deepaliminerals.com",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "C2/29C Lawrence Road, Keshav Puram",

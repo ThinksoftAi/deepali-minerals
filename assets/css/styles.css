@@ -24,6 +24,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -32,6 +33,10 @@ body {
   color: var(--ink);
   font-family: var(--sans);
   line-height: 1.55;
+  overflow-x: hidden;
+  max-width: 100vw;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .skip-link {
@@ -4072,7 +4077,10 @@ html, body {
   .button.alt,
   .about-cert-action-btn,
   .whatsapp-btn,
-  .footer-whatsapp-btn {
+  .footer-whatsapp-btn,
+  .canonical-btn-primary,
+  .canonical-btn-rfq,
+  .canonical-btn-wa {
     min-height: 44px;
     display: inline-flex;
     align-items: center;

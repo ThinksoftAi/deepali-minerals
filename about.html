@@ -7,10 +7,13 @@
     <meta property="og:title" content="About Deepali Minerals | Industrial Minerals & Chemical Products" />
     <meta property="og:description" content="Established in 2004, Deepali Minerals is a Delhi-based B2B supplier of industrial minerals, mineral powders, and functional chemicals. ISO 9001:2015 & ISO 14001:2015 certified." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://deepaliminerals.in/about.html" />
-    <meta property="og:image" content="https://deepaliminerals.in/assets/images/brand/logo.png" />
-    <link rel="canonical" href="https://deepaliminerals.in/about.html" />
-    <title>About Deepali Minerals | Industrial Minerals & Chemical Products</title>
+    <meta property="og:url" content="https://www.deepaliminerals.com/about.html" />
+    <meta property="og:image" content="https://www.deepaliminerals.com/assets/images/brand/logo.png" />
+    <link rel="canonical" href="https://www.deepaliminerals.com/about.html" />
+    <title>About Deepali Minerals | Industrial Minerals &amp; Chemical Products</title>
+    <!-- Google Fonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="assets/css/styles.css?v=20261030_visual_profile" />
     <style>
       :root {
@@ -45,8 +48,8 @@
           "jobTitle": "CEO / Proprietor"
         },
         "description": "Supplier and wholesale distributor of non-metallic industrial minerals, pulverized powders, and functional chemicals.",
-        "url": "https://deepaliminerals.in/about.html",
-        "logo": "https://deepaliminerals.in/assets/images/brand/logo.png",
+        "url": "https://www.deepaliminerals.com/about.html",
+        "logo": "https://www.deepaliminerals.com/assets/images/brand/logo.png",
         "hasCredential": [
           {
             "@type": "EducationalOccupationalCredential",
@@ -74,18 +77,52 @@
           "@type": "ContactPoint",
           "telephone": "+91-9810516065",
           "contactType": "sales",
-          "email": "info@deepaliminerals.in",
+          "email": "info@deepaliminerals.com",
           "availableLanguage": ["English", "Hindi"]
         }
       }
     </script>
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="About Deepali Minerals | Industrial Minerals &amp; Chemical Products" />
+    <meta name="twitter:description" content="Established in 2004, Deepali Minerals is a Delhi-based B2B supplier of industrial minerals, mineral powders, and functional chemicals. ISO 9001:2015 &amp; ISO 14001:2015 certified." />
+    <meta name="twitter:image" content="https://www.deepaliminerals.com/assets/images/brand/logo.png" />
+
+    <!-- Schema.org BreadcrumbList -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.deepaliminerals.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "About Us",
+            "item": "https://www.deepaliminerals.com/about.html"
+          }
+        ]
+      }
+    </script>
+
+    <!-- Preview Environment Search Engine Protection -->
     <script>
       (function () {
-        if (typeof window !== 'undefined' && window.location && window.location.hostname === 'preview.deepaliminerals.in') {
-          var meta = document.createElement('meta');
-          meta.name = 'robots';
-          meta.content = 'noindex,nofollow';
-          document.head.appendChild(meta);
+        if (typeof window !== 'undefined' && window.location) {
+          var h = (window.location.hostname || '').toLowerCase();
+          var isProduction = (h === 'www.deepaliminerals.com' || h === 'deepaliminerals.com' || h === 'www.deepaliminerals.in' || h === 'deepaliminerals.in');
+          if (!isProduction) {
+            var meta = document.createElement('meta');
+            meta.name = 'robots';
+            meta.content = 'noindex,nofollow';
+            document.head.appendChild(meta);
+          }
         }
       })();
     </script>
