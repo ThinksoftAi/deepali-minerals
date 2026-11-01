@@ -146,15 +146,15 @@ a {
   position: relative;
   background: var(--paper);
   border-bottom: 1px solid var(--line);
-  z-index: 5;
+  z-index: 900;
 }
 
 .header-inner {
   min-height: 80px;
-  height: auto;
-  padding: .6rem 0;
+  height: 80px;
+  padding: 0;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   gap: 2rem;
 }
@@ -163,6 +163,7 @@ a {
   display: inline-flex;
   align-items: center;
   gap: .75rem;
+  align-self: center;
   font-weight: 800;
   letter-spacing: -.04em;
   text-decoration: none;
@@ -345,11 +346,18 @@ a {
 .nav-links {
   display: flex;
   gap: 1.5rem;
-  align-items: center;
+  align-items: stretch;
+  height: 100%;
   font-size: .72rem;
   font-weight: 800;
   letter-spacing: .03em;
   text-transform: uppercase;
+}
+
+.nav-links > a {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .nav-links a {
@@ -4240,6 +4248,9 @@ html, body {
 /* 2. Products Mega Menu Navigation */
 .nav-has-megamenu {
   position: static;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .nav-link-with-icon {
@@ -4247,6 +4258,7 @@ html, body {
   align-items: center;
   gap: 0.35rem;
   cursor: pointer;
+  height: 100%;
 }
 
 .nav-chevron {
@@ -4264,15 +4276,28 @@ html, body {
   left: 0;
   right: 0;
   background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
   border-bottom: 2px solid #174A70;
   box-shadow: 0 16px 36px rgba(15, 43, 72, 0.14);
   padding: 2.25rem 0 2.5rem;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(0);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
-  z-index: 100;
+  z-index: 1000;
+}
+
+/* Invisible bridge extending 25px above the mega menu into the header so mouse hover is never lost */
+.mega-menu-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -25px;
+  left: 0;
+  right: 0;
+  height: 25px;
+  background: transparent;
+  pointer-events: auto;
 }
 
 .nav-has-megamenu:hover .mega-menu-dropdown,
@@ -4280,7 +4305,6 @@ html, body {
 .nav-has-megamenu.is-open .mega-menu-dropdown {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
   pointer-events: auto;
 }
 
@@ -6042,6 +6066,504 @@ html, body {
   color: #D5A43A;
   border-color: #0A1E34;
 }
+
+/* =========================================================================
+ * CORPORATE SHOWROOM & MEGA NAVIGATION EXTENSIONS (BENCHMARKED TO RAJSHILA)
+ * ========================================================================= */
+
+/* Nav Industries Dropdown Menu */
+.nav-has-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+}
+
+.nav-has-dropdown:hover .nav-chevron,
+.nav-has-dropdown.is-open .nav-chevron,
+.nav-has-megamenu:hover .nav-chevron,
+.nav-has-megamenu.is-open .nav-chevron {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 420px;
+  background: #FFFFFF;
+  border-top: 2px solid #174A70;
+  box-shadow: 0 16px 36px rgba(15, 43, 72, 0.16);
+  border-radius: 0 0 6px 6px;
+  padding: 1.25rem 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0);
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Invisible bridge extending 20px above dropdown */
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.nav-has-dropdown:hover .dropdown-menu,
+.nav-has-dropdown:focus-within .dropdown-menu,
+.nav-has-dropdown.is-open .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.dropdown-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1.25rem;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background: #F1F5F9;
+  color: #174A70;
+  transform: translateX(2px);
+}
+
+/* Flagship Mineral Showroom Cards */
+.flagship-showroom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.flagship-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 4px 16px rgba(15, 43, 72, 0.05);
+}
+
+.flagship-card:hover {
+  transform: translateY(-4px);
+  border-color: #174A70;
+  box-shadow: 0 16px 32px rgba(15, 43, 72, 0.12);
+}
+
+.flagship-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #F8FAFC;
+  overflow: hidden;
+}
+
+.flagship-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.flagship-card:hover .flagship-media img {
+  transform: scale(1.04);
+}
+
+.flagship-mesh-tag {
+  position: absolute;
+  bottom: 0.85rem;
+  left: 0.85rem;
+  background: rgba(15, 43, 72, 0.92);
+  color: #FFFFFF;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  border: 1px solid rgba(213, 164, 58, 0.4);
+}
+
+.flagship-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.flagship-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+
+.flagship-title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0A1E34;
+  margin: 0;
+}
+
+.flagship-formula {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #174A70;
+}
+
+.flagship-desc {
+  font-size: 0.86rem;
+  color: var(--slate);
+  line-height: 1.55;
+  margin: 0 0 1.25rem;
+  flex: 1;
+}
+
+.flagship-spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin-bottom: 1.25rem;
+  background: #F8FAFC;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.flagship-spec-table tr {
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.flagship-spec-table tr:last-child {
+  border-bottom: none;
+}
+
+.flagship-spec-table td {
+  padding: 0.45rem 0.75rem;
+}
+
+.flagship-spec-table td:first-child {
+  font-weight: 700;
+  color: #334155;
+  width: 45%;
+}
+
+.flagship-spec-table td:last-child {
+  color: #0A1E34;
+  font-family: var(--mono);
+}
+
+.flagship-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E2E8F0;
+}
+
+/* Compounding Functions Grid */
+.compounding-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+}
+
+.compounding-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-top: 3px solid #174A70;
+  border-radius: 6px;
+  padding: 1.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.compounding-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(15, 43, 72, 0.08);
+}
+
+.compounding-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  background: rgba(23, 74, 112, 0.08);
+  color: #174A70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.15rem;
+}
+
+.compounding-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0A1E34;
+  margin: 0 0 0.5rem;
+}
+
+.compounding-desc {
+  font-size: 0.85rem;
+  color: var(--slate);
+  line-height: 1.55;
+  margin: 0 0 1rem;
+}
+
+.compounding-minerals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.compounding-min-tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #174A70;
+  background: #F1F5F9;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+}
+
+/* Facilities & Warehousing Showcase */
+.facility-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.facility-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15, 43, 72, 0.05);
+}
+
+.facility-card-head {
+  padding: 1.5rem;
+  background: #0F2B48;
+  color: #FFFFFF;
+}
+
+.facility-card-head h4 {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 0.35rem;
+}
+
+.facility-card-head span {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #D5A43A;
+}
+
+.facility-card-body {
+  padding: 1.5rem;
+}
+
+.facility-feature-item {
+  display: flex;
+  gap: 0.65rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: #334155;
+  margin-bottom: 0.85rem;
+}
+
+.facility-feature-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Leadership Presentation Card */
+.leadership-showcase-box {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 2.5rem;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(15, 43, 72, 0.06);
+}
+
+@media (max-width: 768px) {
+  .leadership-showcase-box {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+}
+
+.leadership-photo-wrap {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid #E2E8F0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.leadership-photo-wrap img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.leadership-title-group {
+  margin-bottom: 1rem;
+}
+
+.leadership-name {
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #0A1E34;
+  margin: 0 0 0.25rem;
+}
+
+.leadership-role {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #174A70;
+  letter-spacing: 0.05em;
+}
+
+.leadership-quote {
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: #334155;
+  margin: 0 0 1.5rem;
+  font-style: italic;
+  border-left: 3px solid #D5A43A;
+  padding-left: 1rem;
+}
+
+.leadership-contact-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+
+/* Corporate Downloads Grid */
+.downloads-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.download-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.download-card:hover {
+  border-color: #174A70;
+  background: #F8FAFC;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(15, 43, 72, 0.08);
+}
+
+.download-info h5 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0A1E34;
+  margin: 0 0 0.2rem;
+}
+
+.download-info span {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--slate);
+}
+
+.download-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background: rgba(23, 74, 112, 0.08);
+  color: #174A70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Distribution Corridors Grid */
+.corridors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+}
+
+.corridor-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.corridor-hub-name {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #174A70;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.corridor-hubs-list {
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.55;
+  margin: 0;
+}
+
 
 
 

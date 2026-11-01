@@ -294,9 +294,35 @@
               </div>
             </div>
 
-            <a href="${industriesUrl}" class="${page === 'industries' ? 'active' : ''}">Industries &amp; Applications</a>
-            <a href="${root}/about.html" class="${page === 'about' ? 'active' : ''}">About Deepali Minerals</a>
-            <a href="${root}/about.html#quality">Quality &amp; Lab</a>
+            <!-- Industries Dropdown Menu -->
+            <div class="nav-has-dropdown" id="nav-industries-dropdown">
+              <a href="${industriesUrl}" class="nav-link-with-icon ${page === 'industries' ? 'active' : ''}" aria-expanded="false" aria-haspopup="true">
+                <span>Industries</span>
+                <svg class="nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </a>
+              <div class="dropdown-menu">
+                <div class="dropdown-grid">
+                  <a href="${industriesUrl}?industry=paints-coatings" class="dropdown-item">Paints &amp; Coatings</a>
+                  <a href="${industriesUrl}?industry=plastics-polymers" class="dropdown-item">Plastics &amp; Masterbatch</a>
+                  <a href="${industriesUrl}?industry=rubber-footwear" class="dropdown-item">Rubber &amp; Tyres</a>
+                  <a href="${industriesUrl}?industry=rigid-pvc" class="dropdown-item">Rigid &amp; Flexible PVC</a>
+                  <a href="${industriesUrl}?industry=ceramics" class="dropdown-item">Ceramics &amp; Sanitaryware</a>
+                  <a href="${industriesUrl}?industry=paper-mills" class="dropdown-item">Paper &amp; Pulp Mills</a>
+                  <a href="${industriesUrl}?industry=wall-putty-nc-putty" class="dropdown-item">Wall Putty &amp; Mortars</a>
+                  <a href="${industriesUrl}?industry=foundry-industrial" class="dropdown-item">Foundry &amp; Metallurgy</a>
+                  <a href="${industriesUrl}?industry=cosmetics-pharma" class="dropdown-item">Cosmetics &amp; Pharma</a>
+                  <a href="${industriesUrl}?industry=agrochemicals-fertilizers" class="dropdown-item">Agrochemicals</a>
+                  <a href="${industriesUrl}" class="dropdown-item-all" style="grid-column: 1 / -1; font-weight: 700; color: #174A70; border-top: 1px solid #E5E7EB; padding-top: 0.5rem; margin-top: 0.25rem;">
+                    View All 18 Manufacturing Sectors &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <a href="${root}/about.html" class="${page === 'about' ? 'active' : ''}">About Us</a>
+            <a href="${root}/#quality">Quality</a>
+            <a href="${root}/#facilities">Facilities</a>
+            <a href="${root}/#resources">Resources</a>
             <a href="${root}/#contact">Contact</a>
           </nav>
 
@@ -367,6 +393,102 @@
         }
       });
     }
+
+    // Initialize Desktop Nav Hover Intent & Grace Period
+    initDesktopNavDropdowns();
+  }
+
+  /* =========================================================================
+   * DESKTOP NAV DROPDOWN & MEGA MENU CONTROLLER (HOVER INTENT & GRACE DELAY)
+   * ========================================================================= */
+  function initDesktopNavDropdowns() {
+    const dropdownTriggers = [
+      {
+        wrap: document.querySelector('#nav-products-megamenu'),
+        menu: document.querySelector('#nav-products-megamenu .mega-menu-dropdown')
+      },
+      {
+        wrap: document.querySelector('#nav-industries-dropdown'),
+        menu: document.querySelector('#nav-industries-dropdown .dropdown-menu')
+      }
+    ];
+
+    dropdownTriggers.forEach(({ wrap, menu }) => {
+      if (!wrap || !menu) return;
+
+      let closeTimer = null;
+
+      const openDropdown = () => {
+        if (closeTimer) {
+          clearTimeout(closeTimer);
+          closeTimer = null;
+        }
+        wrap.classList.add('is-open');
+        const link = wrap.querySelector('.nav-link-with-icon');
+        if (link) link.setAttribute('aria-expanded', 'true');
+      };
+
+      const queueCloseDropdown = () => {
+        if (closeTimer) clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => {
+          wrap.classList.remove('is-open');
+          const link = wrap.querySelector('.nav-link-with-icon');
+          if (link) link.setAttribute('aria-expanded', 'false');
+        }, 280);
+      };
+
+      wrap.addEventListener('mouseenter', openDropdown);
+      wrap.addEventListener('mouseleave', queueCloseDropdown);
+
+      menu.addEventListener('mouseenter', openDropdown);
+      menu.addEventListener('mouseleave', queueCloseDropdown);
+
+      // Support clicking chevron to toggle
+      const link = wrap.querySelector('.nav-link-with-icon');
+      if (link) {
+        link.addEventListener('click', (e) => {
+          if (e.target.closest('.nav-chevron')) {
+            e.preventDefault();
+            if (wrap.classList.contains('is-open')) {
+              wrap.classList.remove('is-open');
+              link.setAttribute('aria-expanded', 'false');
+            } else {
+              openDropdown();
+            }
+          }
+        });
+      }
+
+      // Keyboard accessibility
+      wrap.addEventListener('focusin', openDropdown);
+      wrap.addEventListener('focusout', (e) => {
+        if (!wrap.contains(e.relatedTarget)) {
+          wrap.classList.remove('is-open');
+          if (link) link.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    // Close on Escape or click outside
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-has-megamenu.is-open, .nav-has-dropdown.is-open').forEach(el => {
+          el.classList.remove('is-open');
+          const link = el.querySelector('.nav-link-with-icon');
+          if (link) link.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-has-megamenu') && !e.target.closest('.nav-has-dropdown')) {
+        document.querySelectorAll('.nav-has-megamenu.is-open, .nav-has-dropdown.is-open').forEach(el => {
+          el.classList.remove('is-open');
+          const link = el.querySelector('.nav-link-with-icon');
+          if (link) link.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
   }
 
   // Global Reusable DM Interactive Logo Controller
@@ -1024,6 +1146,10 @@
     const allProducts = data.products || [];
     const industries = data.industries || [];
 
+    // Flagship materials for Section 3
+    const flagshipSlugs = ['talc', 'calcium-carbonate', 'china-clay', 'dolomite', 'zinc-stearates', 'barytes'];
+    const flagshipProducts = flagshipSlugs.map(slug => data.getProductBySlug(slug)).filter(Boolean);
+
     document.querySelector('#main').innerHTML = `
       <!-- 1. HIGH-IMPACT INDUSTRIAL HERO SECTION -->
       <section class="exp-hero" id="hero">
@@ -1045,8 +1171,8 @@
               </p>
 
               <div class="exp-hero-btn-group">
-                <a href="#portfolio" class="button" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">Explore Product Portfolio &rarr;</a>
-                <a href="#rfq" class="button alt" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">Request Commercial Quotation</a>
+                <a href="#portfolio" class="button" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">Explore Product Showroom &rarr;</a>
+                <a href="#about-company" class="button alt" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">Company Profile</a>
                 <button
                   type="button"
                   class="button hero-fullscreen-cta-btn"
@@ -1187,114 +1313,12 @@
         </div>
       </section>
 
-      <!-- 2. DUAL TECHNICAL DISCOVERY ENGINE -->
-      <div class="shell material-strip" id="materials" style="margin-top: 2.5rem; margin-bottom: 2.5rem;">
-        <div class="discovery-engine-box">
-          <div class="discovery-engine-head">
-            <h2 class="discovery-title">
-              <span class="dm-interactive-logo" data-dm-logo="true" style="display: inline-block; vertical-align: middle; cursor: pointer;">
-                <img src="${root}/assets/images/brand/logo.png" alt="Deepali Minerals" style="height: 28px; width: auto; vertical-align: middle; margin-right: .5rem; display: inline-block; object-fit: contain; border-radius: 4px;" referrerpolicy="no-referrer" />
-              </span>
-              Technical Material Discovery Engine
-            </h2>
-            <div class="discovery-mode-nav">
-              <button type="button" class="discovery-mode-btn active" id="btn-mode-guided">1. Guided Discovery</button>
-              <button type="button" class="discovery-mode-btn" id="btn-mode-freetext">2. Describe Requirement</button>
-            </div>
-          </div>
-
-          <!-- Mode 1: Guided Discovery -->
-          <div id="panel-guided" class="discovery-panel">
-            <form id="discovery-guided-form" class="discovery-grid-form">
-              <div class="discovery-field-group">
-                <label for="discovery-question-select">What are you looking for?</label>
-                <select id="discovery-question-select">
-                  <option value="material">What material do you need?</option>
-                  <option value="manufacturing">What are you manufacturing?</option>
-                  <option value="industry">Which industry are you in?</option>
-                  <option value="application">What application is the material for?</option>
-                  <option value="filler">Do you need a filler or extender?</option>
-                  <option value="white">Do you need a white mineral?</option>
-                  <option value="micronized">Do you need a fine/micronized powder?</option>
-                  <option value="plastics">Do you need a material for plastics?</option>
-                  <option value="paints">Do you need a material for paints/coatings?</option>
-                  <option value="rubber">Do you need a material for rubber?</option>
-                  <option value="pvc">Do you need a material for PVC?</option>
-                  <option value="ceramics">Do you need a material for ceramics?</option>
-                  <option value="construction">Do you need a material for construction?</option>
-                  <option value="paper">Do you need a material for paper?</option>
-                  <option value="custom">I have a specific requirement</option>
-                </select>
-              </div>
-
-              <div class="discovery-field-group" id="discovery-dynamic-field-group">
-                <label id="discovery-dynamic-label" for="discovery-dynamic-select">Select Material</label>
-                <div id="discovery-dynamic-input-container">
-                  <select id="discovery-dynamic-select">
-                    <!-- Populated dynamically -->
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <button type="submit" class="button" style="width: 100%;">Discover Materials</button>
-              </div>
-            </form>
-
-            <div class="discovery-quick-links">
-              <strong>Popular routes:</strong>
-              <button type="button" class="discovery-quick-btn" data-set-q="pvc">PVC Manufacturing</button>
-              <button type="button" class="discovery-quick-btn" data-set-q="paints">Paints &amp; Coatings</button>
-              <button type="button" class="discovery-quick-btn" data-set-q="rubber">Rubber Compounding</button>
-              <button type="button" class="discovery-quick-btn" data-set-q="white">White Minerals</button>
-            </div>
-          </div>
-
-          <!-- Mode 2: Free-Text Requirement Search -->
-          <div id="panel-freetext" class="discovery-panel" style="display: none;">
-            <form id="discovery-freetext-form">
-              <div class="discovery-field-group">
-                <label for="discovery-freetext-input">Describe your requirement in natural language</label>
-                <div style="display: grid; grid-template-columns: 1fr auto; gap: .75rem;">
-                  <input id="discovery-freetext-input" type="text" placeholder="e.g. Need fine white mineral filler for PVC compound, or high brightness powder for wall putty..." autocomplete="off">
-                  <button type="submit" class="button">Find Materials</button>
-                </div>
-              </div>
-            </form>
-
-            <div class="discovery-quick-links">
-              <strong>Examples:</strong>
-              <button type="button" class="discovery-quick-btn" data-freetext-example="White mineral powder for plastic manufacturing">"White mineral powder for plastic manufacturing"</button>
-              <button type="button" class="discovery-quick-btn" data-freetext-example="Looking for mineral filler for PVC compound">"Mineral filler for PVC compound"</button>
-              <button type="button" class="discovery-quick-btn" data-freetext-example="Need fine powder for paint application">"Need fine powder for paint application"</button>
-            </div>
-          </div>
-
-          <!-- Discovery Results Container -->
-          <div id="discovery-results" class="discovery-results-section" style="display: none;">
-            <div class="discovery-results-header">
-              <div>
-                <span class="discovery-results-badge" id="discovery-results-badge">POTENTIALLY RELEVANT MATERIALS</span>
-                <span id="discovery-results-count" style="font: 500 .75rem var(--mono); color: var(--slate); margin-left: .5rem;"></span>
-              </div>
-              <div class="discovery-active-criteria" id="discovery-active-criteria"></div>
-            </div>
-
-            <div class="discovery-grid" id="discovery-results-grid"></div>
-
-            <div style="margin-top: 1.5rem; text-align: right;">
-              <a href="${productsUrl}" class="text-link" id="discovery-view-all-link">View all 22 materials in full catalogue &rarr;</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. INSTITUTIONAL INTRODUCTION & SOURCING STRENGTHS -->
-      <section style="padding: 4.5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
+      <!-- 2. COMPANY INTRODUCTION AND CORPORATE POSITIONING -->
+      <section class="showroom-section" id="about-company" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
         <div class="shell">
           <div class="institutional-split">
             <div class="institutional-visual-card">
-              <span class="eyebrow" style="color: #174A70;">CORPORATE PROFILE &bull; NEW DELHI</span>
+              <span class="eyebrow" style="color: #174A70;">CORPORATE PROFILE &bull; ESTABLISHED 2004</span>
               <h3 style="font-family: var(--serif); font-size: 1.65rem; color: var(--ink); margin: 0.35rem 0 1rem;">
                 Deepali Minerals Sourcing Network
               </h3>
@@ -1308,7 +1332,7 @@
                   <span style="font-family: var(--mono); font-size: 0.72rem; color: #174A70; font-weight: 700;">CEO &amp; PROPRIETOR</span>
                 </div>
                 <p style="font-size: 0.8rem; color: var(--slate); margin: 0; line-height: 1.45;">
-                  Leading industrial supply and material trading since 2004 with a focus on long-term client partnerships and technical transparency.
+                  Leading industrial supply and material trading since 2004 with a focus on long-term client partnerships, transparent specifications, and consistent raw material feed.
                 </p>
               </div>
 
@@ -1326,48 +1350,115 @@
             </div>
 
             <div>
-              <span class="eyebrow" style="color: #A84E2B;">OVER TWO DECADES OF RELIABLE SUPPLY</span>
+              <span class="eyebrow" style="color: #A84E2B;">OVER TWO DECADES OF DEPENDABLE SUPPLY</span>
               <h2 class="section-title" style="margin-bottom: 1.25rem;">
-                Bridging Mineral Mines &amp; Industrial Formulations
+                Bridging Mineral Mines &amp; Industrial Manufacturing
               </h2>
-              <p class="lede" style="margin-bottom: 2rem;">
-                We eliminate the uncertainty in raw material procurement by maintaining dependable mine sourcing, continuous pulverization control, and batch-wise quality documentation.
+              <p class="lede" style="margin-bottom: 1.5rem;">
+                Deepali Minerals is a recognized manufacturer, processor, and bulk distributor of non-metallic industrial minerals, micronized functional extenders, and specialty chemical additives.
+              </p>
+              <p style="font-size: 0.92rem; color: #334155; line-height: 1.65; margin-bottom: 1.75rem;">
+                We eliminate the uncertainty in raw material procurement by maintaining dependable mine linkages across mineral-rich zones in Rajasthan and Gujarat, continuous pulverization control, and batch-wise quality documentation. Every consignment is supported by comprehensive Certificates of Analysis (COA) to guarantee chemical purity and particle fineness.
               </p>
 
               <div class="institutional-pillars-grid">
                 <div class="inst-pillar-item" style="border-left-color: #174A70;">
-                  <strong>Direct Quarry Partnerships</strong>
-                  <p>Secured long-term sourcing arrangements with trusted mining zones in Rajasthan, Gujarat, and mineral corridors.</p>
+                  <strong>Direct Quarry Sourcing</strong>
+                  <p>Secured mine tie-ups across Rajasthan, Gujarat, and key mining zones ensuring uninterrupted raw mineral supply.</p>
                 </div>
                 <div class="inst-pillar-item" style="border-left-color: #248C91;">
                   <strong>Particle Size Consistency</strong>
                   <p>Micronized and pulverized grades sieved from 100 mesh up to 1250 mesh for demanding compounding.</p>
                 </div>
                 <div class="inst-pillar-item" style="border-left-color: #A84E2B;">
-                  <strong>Lab Batch Testing</strong>
-                  <p>Quality parameters including whiteness, brightness, oil absorption, and calcium carbonate content verified per batch.</p>
+                  <strong>Laboratory Quality Assay</strong>
+                  <p>In-house testing for whiteness, brightness, sieve residue, moisture, and chemical purity.</p>
                 </div>
                 <div class="inst-pillar-item" style="border-left-color: #D5A43A;">
                   <strong>Reliable Fleet Logistics</strong>
-                  <p>Strategically situated in North India for rapid full truckload (FTL) and multi-ton consignments.</p>
+                  <p>Central depot at Lawrence Road, New Delhi with buffer inventory for prompt regional and national delivery.</p>
                 </div>
               </div>
 
               <div style="margin-top: 2.25rem;">
-                <a href="${root}/about.html" class="button alt" style="padding: 0.85rem 1.65rem;">Explore Full Corporate Profile &amp; ISO Certificates &rarr;</a>
+                <a href="${root}/about.html" class="button alt" style="padding: 0.85rem 1.65rem;">Explore Full Corporate Profile &amp; ISO Credentials &rarr;</a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 4. MASTER PRODUCT PORTFOLIO SHOWCASE (INTERACTIVE TABBED DISPLAY) -->
-      <section class="featured" id="portfolio" style="padding: 5rem 0; background: #F8FAFC; border-bottom: 1px solid var(--line);">
+      <!-- 3. FEATURED MINERALS SHOWROOM (FLAGSHIP MATERIALS) -->
+      <section class="showroom-section" id="flagships" style="padding: 5rem 0; background: #F8FAFC; border-bottom: 1px solid var(--line);">
         <div class="shell">
           <div class="section-head" style="margin-bottom: 1.5rem;">
             <div>
-              <span class="eyebrow">MASTER CATALOGUE &bull; VERIFIED INDUSTRIAL SPECIFICATIONS</span>
-              <h2 class="section-title">Industrial Raw Material Portfolio</h2>
+              <span class="eyebrow">FLAGSHIP MINERAL SHOWROOM &bull; VERIFIED SPECIFICATIONS</span>
+              <h2 class="section-title">Featured Industrial Materials &amp; Micronized Extenders</h2>
+            </div>
+            <p class="lede">High-brightness pulverized minerals, surface-treated extenders, and specialized compounding additives processed to strict mesh tolerances.</p>
+          </div>
+
+          <div class="flagship-showroom-grid">
+            ${flagshipProducts.map(p => {
+              const imgSrc = resolveProductImg(p.image);
+              const meshTag = (p.specifications && p.specifications.mesh) ? p.specifications.mesh : '100–1250 Mesh';
+              const purityVal = (p.specifications && p.specifications.purity) ? p.specifications.purity : 'High Industrial Assay';
+              const whitenessVal = (p.specifications && p.specifications.whiteness) ? p.specifications.whiteness : '88% – 98% Hunter Scale';
+              
+              return `
+                <div class="flagship-card">
+                  <div class="flagship-media">
+                    <img src="${imgSrc}" alt="${esc(p.name)} - Deepali Minerals Flagship" loading="lazy" />
+                    <span class="flagship-mesh-tag">${esc(meshTag)}</span>
+                  </div>
+                  <div class="flagship-body">
+                    <div class="flagship-title-row">
+                      <h3 class="flagship-title">${esc(p.name)}</h3>
+                      <span class="flagship-formula">${esc(p.category)}</span>
+                    </div>
+                    <p class="flagship-desc">${esc(p.shortDescription)}</p>
+                    
+                    <table class="flagship-spec-table">
+                      <tbody>
+                        <tr>
+                          <td>Chemical Purity</td>
+                          <td>${esc(purityVal)}</td>
+                        </tr>
+                        <tr>
+                          <td>Whiteness / Brightness</td>
+                          <td>${esc(whitenessVal)}</td>
+                        </tr>
+                        <tr>
+                          <td>Core Applications</td>
+                          <td>${esc(p.applications ? p.applications.slice(0, 3).join(', ') : 'Industrial Compounding')}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div class="flagship-actions">
+                      <a href="${productUrl(p)}" class="product-card-link" style="font-weight: 700;">
+                        View Technical Details &rarr;
+                      </a>
+                      <a href="${productUrl(p)}#rfq" class="product-card-btn-enquire">
+                        Enquire
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. MASTER PRODUCT PORTFOLIO SHOWROOM (ALL 22 PRODUCTS) -->
+      <section class="showroom-section" id="portfolio" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
+        <div class="shell">
+          <div class="section-head" style="margin-bottom: 1.5rem;">
+            <div>
+              <span class="eyebrow">MASTER CATALOGUE &bull; ALL 22 MATERIALS UNDER ONE ROOF</span>
+              <h2 class="section-title">Explore Complete Product Showroom</h2>
             </div>
             <p class="lede">Explore all 22 catalogued non-metallic minerals, pulverized extenders, and functional additives with verified photography.</p>
           </div>
@@ -1400,13 +1491,13 @@
         </div>
       </section>
 
-      <!-- 5. INDUSTRY APPLICATIONS 8-CARD MATRIX -->
-      <section id="industries" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
+      <!-- 5. INDUSTRIES WE SERVE MATRIX -->
+      <section class="showroom-section" id="industries" style="padding: 5rem 0; background: #F8FAFC; border-bottom: 1px solid var(--line);">
         <div class="shell">
           <div class="section-head">
             <div>
               <span class="eyebrow">APPLICATION DISCOVERY &bull; 38 INDUSTRIAL SECTORS</span>
-              <h2 class="section-title">Discover Materials by Industry Application</h2>
+              <h2 class="section-title">Serving Critical Industrial Manufacturing Sectors</h2>
             </div>
             <p class="lede">Every manufacturing formulation demands specific chemical purity, brightness, and particle size distribution.</p>
           </div>
@@ -1428,7 +1519,7 @@
                   <span class="ind-matrix-mineral-pill">Barytes</span>
                 </div>
               </div>
-              <a href="${productsUrl}?industry=Paints" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <a href="${industriesUrl}?industry=paints-coatings" class="ind-matrix-action">View Matching Minerals &rarr;</a>
             </div>
 
             <!-- Sector 2: Plastics & Masterbatch -->
@@ -1446,7 +1537,7 @@
                   <span class="ind-matrix-mineral-pill">Titanium Dioxide</span>
                 </div>
               </div>
-              <a href="${productsUrl}?industry=Plastic" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <a href="${industriesUrl}?industry=plastics-polymers" class="ind-matrix-action">View Matching Minerals &rarr;</a>
             </div>
 
             <!-- Sector 3: Rubber & Tyres -->
@@ -1456,15 +1547,15 @@
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
                 </div>
                 <h3 class="ind-matrix-title">Rubber &amp; Elastomers</h3>
-                <p class="ind-matrix-desc">Vulcanization activators, anti-blocking dusting agents, and reinforcing fillers for automotive rubber goods and soles.</p>
+                <p class="ind-matrix-desc">Vulcanization activators, anti-blocking dusting agents, and reinforcing fillers for automotive rubber goods and footwear soles.</p>
                 <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Zinc Oxide (Active)</span>
+                  <span class="ind-matrix-mineral-pill">Zinc Oxide</span>
                   <span class="ind-matrix-mineral-pill">Magnesium Carbonate</span>
                   <span class="ind-matrix-mineral-pill">Barytes</span>
                   <span class="ind-matrix-mineral-pill">French Chalk</span>
                 </div>
               </div>
-              <a href="${productsUrl}?industry=Rubber" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <a href="${industriesUrl}?industry=rubber-footwear" class="ind-matrix-action">View Matching Minerals &rarr;</a>
             </div>
 
             <!-- Sector 4: PVC Compounding -->
@@ -1474,7 +1565,7 @@
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h10"/><path d="M12 7v10"/></svg>
                 </div>
                 <h3 class="ind-matrix-title">Rigid &amp; Flexible PVC</h3>
-                <p class="ind-matrix-desc">Impact modifiers, cost-reducing mineral extenders, and thermal stabilizers for PVC pipes, conduits, and profiles.</p>
+                <p class="ind-matrix-desc">Impact modifiers, cost-reducing mineral extenders, and thermal stabilizers for PVC pipes, conduits, and cable insulation.</p>
                 <div class="ind-matrix-minerals-list">
                   <span class="ind-matrix-mineral-pill">Calcium Carbonate</span>
                   <span class="ind-matrix-mineral-pill">Zinc Stearate</span>
@@ -1482,7 +1573,7 @@
                   <span class="ind-matrix-mineral-pill">Hydrated Lime</span>
                 </div>
               </div>
-              <a href="${industriesUrl}?industry=plastics-polymers" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <a href="${industriesUrl}?industry=rigid-pvc" class="ind-matrix-action">View Matching Minerals &rarr;</a>
             </div>
 
             <!-- Sector 5: Ceramics & Glass -->
@@ -1500,7 +1591,7 @@
                   <span class="ind-matrix-mineral-pill">China Clay</span>
                 </div>
               </div>
-              <a href="${productsUrl}?industry=Ceramics" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <a href="${industriesUrl}?industry=ceramics" class="ind-matrix-action">View Matching Minerals &rarr;</a>
             </div>
 
             <!-- Sector 6: Paper & Board Mills -->
@@ -1518,7 +1609,7 @@
                   <span class="ind-matrix-mineral-pill">Calcium Carbonate</span>
                 </div>
               </div>
-              <a href="${productsUrl}?industry=Paper" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <a href="${industriesUrl}?industry=paper-mills" class="ind-matrix-action">View Matching Minerals &rarr;</a>
             </div>
 
             <!-- Sector 7: Wall Putty & Construction -->
@@ -1528,7 +1619,7 @@
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 </div>
                 <h3 class="ind-matrix-title">Wall Putty &amp; Construction</h3>
-                <p class="ind-matrix-desc">High whiteness calcite, fine dolomite, and natural chalk powder for polymer wall putty, dry-mix mortars, and grouts.</p>
+                <p class="ind-matrix-desc">High whiteness calcite, fine dolomite, and natural chalk powder for polymer wall putty, dry-mix mortars, and architectural grouts.</p>
                 <div class="ind-matrix-minerals-list">
                   <span class="ind-matrix-mineral-pill">Dolomite Powder</span>
                   <span class="ind-matrix-mineral-pill">Chalk Powder</span>
@@ -1559,104 +1650,80 @@
           </div>
 
           <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <a href="${industriesUrl}" class="button alt">Explore All 38 Manufacturing Sectors Directory &rarr;</a>
+            <a href="${industriesUrl}" class="button alt">Explore All 18 Canonical Manufacturing Sectors &rarr;</a>
             <a href="${productsUrl}" class="text-link">View Full 22-Product Catalogue &rarr;</a>
           </div>
         </div>
       </section>
 
-      <!-- 6. QUALITY ASSURANCE, LAB TESTING & INFRASTRUCTURE -->
-      <section id="quality-assurance" style="padding: 5rem 0; background: #F8FAFC; border-bottom: 1px solid var(--line);">
+      <!-- 6. PRODUCT APPLICATIONS & COMPOUNDING FUNCTIONS -->
+      <section class="showroom-section" id="applications" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
         <div class="shell">
           <div class="section-head">
             <div>
-              <span class="eyebrow">ACCREDITED QUALITY CONTROL &bull; ISO 9001:2015 &amp; ISO 14001:2015</span>
-              <h2 class="section-title">Institutional Quality Assurance &amp; Logistics</h2>
+              <span class="eyebrow" style="color: #174A70;">TECHNICAL COMPOUNDING SCIENCE</span>
+              <h2 class="section-title">How Our Minerals Function in Industrial Compounds</h2>
             </div>
-            <p class="lede">Our quality framework ensures every consignment strictly complies with approved mesh, brightness, and purity parameters.</p>
+            <p class="lede">Engineered raw materials delivering physical opacity, mechanical reinforcement, rheology control, and thermal resistance across compounding lines.</p>
           </div>
 
-          <!-- 5-Step QA Process Diagram -->
-          <div class="about-process-infographic">
-            <div class="about-process-step">
-              <div class="about-step-badge">01</div>
-              <div>
-                <h4 class="about-step-title">Mine Quarry Sourcing</h4>
-                <p class="about-step-desc">Direct selection of raw non-metallic mineral ore chunks from audited mining pits.</p>
+          <div class="compounding-grid">
+            <div class="compounding-card">
+              <div class="compounding-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              </div>
+              <h3 class="compounding-title">High-Opacity Extenders &amp; Spacers</h3>
+              <p class="compounding-desc">Extends expensive titanium dioxide (TiO2), maximizes dry-hide, and optimizes scattering coefficient in paints and masterbatch.</p>
+              <div class="compounding-minerals">
+                <span class="compounding-min-tag">Talc Powder</span>
+                <span class="compounding-min-tag">Micro Calcite</span>
+                <span class="compounding-min-tag">China Clay</span>
               </div>
             </div>
 
-            <div class="about-process-step">
-              <div class="about-step-badge">02</div>
-              <div>
-                <h4 class="about-step-title">Pulverizing &amp; Sifting</h4>
-                <p class="about-step-desc">Controlled milling and multi-deck air-classification from 100 mesh up to 1250 mesh.</p>
+            <div class="compounding-card">
+              <div class="compounding-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <h3 class="compounding-title">Reinforcing &amp; Impact Modifiers</h3>
+              <p class="compounding-desc">Improves flexural modulus, tensile strength, and impact resistance in thermoplastic compounds, rubber goods, and FRP resins.</p>
+              <div class="compounding-minerals">
+                <span class="compounding-min-tag">Micronized Dolomite</span>
+                <span class="compounding-min-tag">Barytes</span>
+                <span class="compounding-min-tag">Talc Powder</span>
               </div>
             </div>
 
-            <div class="about-process-step">
-              <div class="about-step-badge">03</div>
-              <div>
-                <h4 class="about-step-title">Laboratory Assay</h4>
-                <p class="about-step-desc">Batch verification for whiteness, brightness, moisture, oil absorption, and CaCO3 assay.</p>
+            <div class="compounding-card">
+              <div class="compounding-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M20 12l-4-4m4 4-4 4M4 12l4-4m-4 4 4 4"/></svg>
+              </div>
+              <h3 class="compounding-title">Rheology &amp; Anti-Settling Agents</h3>
+              <p class="compounding-desc">Controls viscosity, prevents pigment settling in liquid containers, and imparts anti-sagging properties during spray application.</p>
+              <div class="compounding-minerals">
+                <span class="compounding-min-tag">Levigated Kaolin</span>
+                <span class="compounding-min-tag">French Chalk</span>
+                <span class="compounding-min-tag">Precipitated Carbonates</span>
               </div>
             </div>
 
-            <div class="about-process-step">
-              <div class="about-step-badge">04</div>
-              <div>
-                <h4 class="about-step-title">Moisture Sealing</h4>
-                <p class="about-step-desc">Sealed packaging in 25kg / 50kg HDPE laminated bags or 1-Ton FIBC Jumbo bags.</p>
+            <div class="compounding-card">
+              <div class="compounding-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               </div>
-            </div>
-
-            <div class="about-process-step">
-              <div class="about-step-badge">05</div>
-              <div>
-                <h4 class="about-step-title">Dispatch with COA</h4>
-                <p class="about-step-desc">Full consignment dispatch accompanied by formal Certificate of Analysis and TDS records.</p>
+              <h3 class="compounding-title">Thermal Stability &amp; Lubrication</h3>
+              <p class="compounding-desc">Facilitates internal extrusion lubrication, thermal resistance, and uniform mold release in plastics, rubber, and cable compounds.</p>
+              <div class="compounding-minerals">
+                <span class="compounding-min-tag">Zinc Stearate</span>
+                <span class="compounding-min-tag">Hydrated Lime</span>
+                <span class="compounding-min-tag">Quartz Powder</span>
               </div>
-            </div>
-          </div>
-
-          <!-- 4 Operational & Packaging Capabilities -->
-          <div class="qa-infra-grid">
-            <div class="qa-infra-card">
-              <div class="qa-infra-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-              </div>
-              <h4 class="qa-infra-title">Custom Mesh Grinding</h4>
-              <p class="qa-infra-desc">Custom pulverized powders calibrated to exact customer mesh requirements (100 to 1250 Mesh) with minimal oversize residue.</p>
-            </div>
-
-            <div class="qa-infra-card">
-              <div class="qa-infra-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-              </div>
-              <h4 class="qa-infra-title">Industrial Packaging</h4>
-              <p class="qa-infra-desc">Moisture-resistant 25kg &amp; 50kg PP/HDPE woven sacks, palletized shrink-wrapped units, and heavy-duty 1-Ton FIBC Jumbo bags.</p>
-            </div>
-
-            <div class="qa-infra-card">
-              <div class="qa-infra-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              </div>
-              <h4 class="qa-infra-title">Central Lawrence Rd Depot</h4>
-              <p class="qa-infra-desc">Strategic warehousing facility at Lawrence Road Industrial Area, New Delhi for prompt order turnaround and sample dispatch.</p>
-            </div>
-
-            <div class="qa-infra-card">
-              <div class="qa-infra-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-              </div>
-              <h4 class="qa-infra-title">Pan-India Freight Logistics</h4>
-              <p class="qa-infra-desc">Reliable logistics network enabling full truckload (FTL) and partial consignment transit across Northern, Central and Western industrial hubs.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 7. BUSINESS STRENGTHS / WHY DEEPALI MINERALS -->
+      <!-- 7. WHY CHOOSE DEEPALI MINERALS (BUSINESS STRENGTHS) -->
       <section class="why" id="why" style="padding: 5rem 0;">
         <div class="shell">
           <div class="section-head" style="margin-bottom: 2rem;">
@@ -1695,16 +1762,297 @@
         </div>
       </section>
 
-      <!-- 8. DIRECT COMMERCIAL B2B RFQ SECTION -->
-      <section style="padding: 4.5rem 0; background: #FFFFFF;">
+      <!-- 8. QUALITY ASSURANCE & LABORATORY TESTING -->
+      <section class="showroom-section" id="quality" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">ACCREDITED QUALITY CONTROL &bull; ISO 9001:2015 &amp; ISO 14001:2015</span>
+              <h2 class="section-title">Consignment Quality Assurance &amp; Laboratory Inspection</h2>
+            </div>
+            <p class="lede">Our quality framework ensures every consignment strictly complies with approved mesh, brightness, and purity parameters.</p>
+          </div>
+
+          <!-- 5-Step QA Process Diagram -->
+          <div class="about-process-infographic">
+            <div class="about-process-step">
+              <div class="about-step-badge">01</div>
+              <div>
+                <h4 class="about-step-title">Mine Quarry Sourcing</h4>
+                <p class="about-step-desc">Direct selection of raw non-metallic mineral ore chunks from audited mining pits in Rajasthan and Gujarat.</p>
+              </div>
+            </div>
+
+            <div class="about-process-step">
+              <div class="about-step-badge">02</div>
+              <div>
+                <h4 class="about-step-title">Pulverizing &amp; Sifting</h4>
+                <p class="about-step-desc">Controlled milling and multi-deck air-classification from 100 mesh up to 1250 mesh.</p>
+              </div>
+            </div>
+
+            <div class="about-process-step">
+              <div class="about-step-badge">03</div>
+              <div>
+                <h4 class="about-step-title">Laboratory Assay</h4>
+                <p class="about-step-desc">Batch verification for photometric whiteness, brightness, moisture, oil absorption, and CaCO3 assay.</p>
+              </div>
+            </div>
+
+            <div class="about-process-step">
+              <div class="about-step-badge">04</div>
+              <div>
+                <h4 class="about-step-title">Moisture Sealing</h4>
+                <p class="about-step-desc">Sealed packaging in 25kg / 50kg HDPE laminated bags or 1-Ton FIBC Jumbo bulk bags.</p>
+              </div>
+            </div>
+
+            <div class="about-process-step">
+              <div class="about-step-badge">05</div>
+              <div>
+                <h4 class="about-step-title">Dispatch with COA</h4>
+                <p class="about-step-desc">Full consignment dispatch accompanied by formal Certificate of Analysis and technical specification records.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. PACKAGING, WAREHOUSING AND FLEET LOGISTICS -->
+      <section class="showroom-section" id="facilities" style="padding: 5rem 0; background: #F8FAFC; border-bottom: 1px solid var(--line);">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">DEPOT INFRASTRUCTURE &bull; NEW DELHI</span>
+              <h2 class="section-title">Packaging Standards &amp; Central Depot Logistics</h2>
+            </div>
+            <p class="lede">Robust packaging options and buffer inventory at our Lawrence Road depot ensuring seamless logistics without production downtime.</p>
+          </div>
+
+          <div class="facility-showcase-grid">
+            <div class="facility-card">
+              <div class="facility-card-head">
+                <h4>25kg &amp; 50kg HDPE Bags</h4>
+                <span>RETAIL &amp; WHOLESALE BATCH FEEDING</span>
+              </div>
+              <div class="facility-card-body">
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>Multi-layer woven polypropylene with laminated moisture-barrier inner LDPE liner.</span>
+                </div>
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>UV-stabilized fabric preventing degradation during outdoor storage or yard staging.</span>
+                </div>
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>Tamper-evident double stitch closing with clear batch identification stenciling.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="facility-card">
+              <div class="facility-card-head">
+                <h4>1,000 kg (1 MT) Jumbo Bags</h4>
+                <span>AUTOMATED SILO CHARGING &amp; EXPORT</span>
+              </div>
+              <div class="facility-card-body">
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>Heavy-duty four-loop crane-liftable FIBC bulk bags with bottom discharge spouts.</span>
+                </div>
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>Designed for dust-free pneumatic conveying into industrial plant storage silos.</span>
+                </div>
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>Palletized and shrink-wrapped for safe long-distance transit and zero spillage.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="facility-card">
+              <div class="facility-card-head">
+                <h4>Central Lawrence Rd Depot</h4>
+                <span>CENTRAL BUFFER STOCK &bull; SAME-DAY DISPATCH</span>
+              </div>
+              <div class="facility-card-body">
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>Covered, elevated dry warehouse bays at Lawrence Road Industrial Area, Keshav Puram, New Delhi.</span>
+                </div>
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>Strategic buffer stock absorbing seasonal quarry delays and ensuring uninterrupted client supplies.</span>
+                </div>
+                <div class="facility-feature-item">
+                  <span style="color: #174A70; font-weight: 800;">✓</span>
+                  <span>Equipped for rapid sample parcel dispatch and Full Truckload (FTL) transport coordination.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. COMPANY PROFILE & EXECUTIVE LEADERSHIP -->
+      <section class="showroom-section" id="leadership" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
+        <div class="shell">
+          <div class="section-head" style="margin-bottom: 2rem;">
+            <div>
+              <span class="eyebrow" style="color: #174A70;">CORPORATE GOVERNANCE &bull; EXECUTIVE PROFILE</span>
+              <h2 class="section-title">Leadership &amp; Business Experience</h2>
+            </div>
+            <p class="lede">Founded and guided by two decades of industrial mineral trading and formulation partnership.</p>
+          </div>
+
+          <div class="leadership-showcase-box">
+            <div class="leadership-photo-wrap">
+              <img src="${root}/assets/images/brand/Neeraj Monga Pic.jpeg" alt="Mr. Neeraj Monga - CEO &amp; Proprietor, Deepali Minerals" />
+            </div>
+            <div>
+              <div class="leadership-title-group">
+                <h3 class="leadership-name">Mr. Neeraj Monga</h3>
+                <span class="leadership-role">FOUNDER &bull; CEO &bull; PROPRIETOR &bull; ESTD. 2004</span>
+              </div>
+              <p class="leadership-quote">
+                "For over twenty years, Deepali Minerals has operated on a foundational promise: absolute batch-to-batch consistency, honest technical specifications, and unwavering supply dependability for our manufacturing partners across India."
+              </p>
+              <p style="font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 1.5rem;">
+                Under the stewardship of Mr. Neeraj Monga, Deepali Minerals has grown from a local supplier into a recognized distributor supporting tier-1 plants in Paints, PVC Compounding, Plastics, Masterbatch, Rubber, and Foundry operations throughout Northern India and pan-India manufacturing corridors.
+              </p>
+              <div class="leadership-contact-row">
+                <div>
+                  <span style="font-family: var(--mono); font-size: 0.72rem; color: #64748B; display: block;">Executive Office Phone</span>
+                  <a href="tel:+919810516065" style="color: #174A70; font-weight: 700;">+91 9810516065</a>
+                </div>
+                <div>
+                  <span style="font-family: var(--mono); font-size: 0.72rem; color: #64748B; display: block;">Commercial Sales Helpline</span>
+                  <a href="tel:+919810715129" style="color: #174A70; font-weight: 700;">9810715129</a>
+                </div>
+                <div>
+                  <span style="font-family: var(--mono); font-size: 0.72rem; color: #64748B; display: block;">Direct Email</span>
+                  <a href="mailto:info@deepaliminerals.in" style="color: #174A70; font-weight: 700;">info@deepaliminerals.in</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11. CORPORATE BROCHURE & TECHNICAL RESOURCES -->
+      <section class="showroom-section" id="resources" style="padding: 5rem 0; background: #F8FAFC; border-bottom: 1px solid var(--line);">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">DOCUMENTATION &bull; TECHNICAL SPECIFICATIONS</span>
+              <h2 class="section-title">Corporate Brochure &amp; Technical Literature</h2>
+            </div>
+            <p class="lede">Download verified technical guides, particle size conversion references, and corporate accreditations.</p>
+          </div>
+
+          <div class="downloads-grid">
+            <a href="${root}/about.html" class="download-card">
+              <div class="download-info">
+                <h5>Deepali Minerals Corporate Profile</h5>
+                <span>Institutional Overview &bull; 20-Year Legacy</span>
+              </div>
+              <div class="download-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+            </a>
+
+            <a href="${productsUrl}" class="download-card">
+              <div class="download-info">
+                <h5>Master Mineral Portfolio Catalogue</h5>
+                <span>All 22 Pulverized Powders &amp; Extenders</span>
+              </div>
+              <div class="download-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
+            </a>
+
+            <a href="${root}/about.html#quality" class="download-card">
+              <div class="download-info">
+                <h5>ISO 9001:2015 &amp; 14001:2015 Certificates</h5>
+                <span>Quality &amp; Environmental Accreditations</span>
+              </div>
+              <div class="download-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+            </a>
+
+            <a href="${root}/product.html?product=talc" class="download-card">
+              <div class="download-info">
+                <h5>Mesh to Micron Conversion Table</h5>
+                <span>100 Mesh to 1250 Mesh Calibration Chart</span>
+              </div>
+              <div class="download-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12. DISTRIBUTION CORRIDORS (NORTH INDIA & PAN-INDIA) -->
+      <section class="showroom-section" id="distribution" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow" style="color: #174A70;">SUPPLY CHAIN DISTRIBUTION REACH</span>
+              <h2 class="section-title">Serving Major Manufacturing Corridors</h2>
+            </div>
+            <p class="lede">Dependable multi-state logistics ensuring full truckloads (FTL) and bulk parcel deliveries without shipment delays.</p>
+          </div>
+
+          <div class="corridors-grid">
+            <div class="corridor-card" style="border-top: 3px solid #174A70;">
+              <div class="corridor-hub-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Delhi-NCR Hub</span>
+              </div>
+              <p class="corridor-hubs-list">Lawrence Road, Mayapuri, Wazirpur, Okhla, Bawana, Narela, Patparganj, Mangolpuri.</p>
+            </div>
+
+            <div class="corridor-card" style="border-top: 3px solid #248C91;">
+              <div class="corridor-hub-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Haryana Corridor</span>
+              </div>
+              <p class="corridor-hubs-list">Kundli, Sonipat, Bahadurgarh, Manesar, Gurgaon, Faridabad, Panipat, Yamunanagar.</p>
+            </div>
+
+            <div class="corridor-card" style="border-top: 3px solid #A84E2B;">
+              <div class="corridor-hub-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Uttar Pradesh Hubs</span>
+              </div>
+              <p class="corridor-hubs-list">Noida, Greater Noida, Ghaziabad, Sahibabad, Meerut, Kanpur, Aligarh, Agra.</p>
+            </div>
+
+            <div class="corridor-card" style="border-top: 3px solid #D5A43A;">
+              <div class="corridor-hub-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Punjab &amp; Himachal</span>
+              </div>
+              <p class="corridor-hubs-list">Ludhiana, Jalandhar, Baddi, Nalagarh, Kala Amb, Amritsar, Mohali, Mandi Gobindgarh.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13. PROMINENT CORPORATE BUSINESS ENQUIRY DESK -->
+      <section class="showroom-section" id="rfq" style="padding: 5rem 0; background: #F8FAFC;">
         <div class="shell detail-grid">
           <div>
             <span class="eyebrow" style="color: #174A70;">COMMERCIAL SOURCING DESK</span>
             <h2 class="section-title">Request B2B Quotation &amp; Samples</h2>
-            <p class="lede">Submit your required mineral, target volume, and delivery destination for direct wholesale pricing and technical sample dispatch.</p>
+            <p class="lede">Submit your required mineral, target volume, and delivery destination for wholesale pricing and laboratory sample dispatch.</p>
             
-            <div style="margin-top: 2rem; padding: 1.5rem; background: var(--fog); border: 1px solid var(--line); border-radius: 6px;">
-              <span style="font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; color: var(--slate); display: block; margin-bottom: 0.35rem;">Central Corporate Depot</span>
+            <div style="margin-top: 2rem; padding: 1.5rem; background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 4px 14px rgba(15, 43, 72, 0.05);">
+              <span style="font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; color: #174A70; font-weight: 700; display: block; margin-bottom: 0.35rem;">Central Corporate Depot</span>
               <p style="font-size: 0.92rem; color: var(--ink); margin: 0 0 1rem; line-height: 1.5; font-weight: 600;">
                 Deepali Minerals<br>
                 C-2/29 C Lawrence Road, Rampura / Keshav Puram,<br>
@@ -1724,7 +2072,6 @@
       </section>
     `;
 
-    bindDiscoveryEngine();
     bindRfq();
     bindHeroVideoAudio();
     bindProductShowcaseTabs();
