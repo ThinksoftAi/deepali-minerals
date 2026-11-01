@@ -4909,112 +4909,111 @@ html, body {
   box-shadow: 0 2px 8px rgba(23, 74, 112, 0.2);
 }
 
-/* 5. Industry Applications 8-Card Matrix */
+/* 5. Industry Applications 10-Card Visual Showroom Grid */
 .industry-matrix-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 255px), 1fr));
+  gap: 1.5rem;
+  margin-top: 2.25rem;
 }
 
 .industry-matrix-card {
   background: #FFFFFF;
   border: 1px solid var(--line);
   border-radius: 6px;
-  padding: 1.5rem 1.35rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  padding: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
   position: relative;
   overflow: hidden;
 }
 
 .industry-matrix-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: #174A70;
+  box-shadow: 0 12px 28px rgba(15, 43, 72, 0.12);
 }
 
-.industry-matrix-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #174A70;
+.industry-matrix-img-box {
+  width: 100%;
+  height: 165px;
+  overflow: hidden;
+  position: relative;
+  background: #0B1C30;
 }
 
-.industry-matrix-card:nth-child(2)::before { background: #248C91; }
-.industry-matrix-card:nth-child(3)::before { background: #A84E2B; }
-.industry-matrix-card:nth-child(4)::before { background: #D5A43A; }
-.industry-matrix-card:nth-child(5)::before { background: #0F2B48; }
-.industry-matrix-card:nth-child(6)::before { background: #0D9488; }
-.industry-matrix-card:nth-child(7)::before { background: #B45309; }
-.industry-matrix-card:nth-child(8)::before { background: #4338CA; }
+.industry-matrix-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+  display: block;
+}
 
-.ind-matrix-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: 6px;
-  background: rgba(23, 74, 112, 0.08);
-  color: #174A70;
+.industry-matrix-card:hover .industry-matrix-img {
+  transform: scale(1.05);
+}
+
+.industry-matrix-body {
+  padding: 1.35rem 1.25rem 1.45rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
 }
 
 .ind-matrix-title {
-  font-size: 1.1rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--ink);
   margin: 0 0 0.5rem;
+  line-height: 1.3;
 }
 
 .ind-matrix-desc {
   font-size: 0.82rem;
   color: var(--slate);
-  line-height: 1.45;
+  line-height: 1.5;
   margin: 0 0 1rem;
 }
 
 .ind-matrix-minerals-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
   margin-bottom: 1.25rem;
 }
 
-.ind-matrix-mineral-pill {
+.ind-matrix-mineral-text {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  color: #1E293B;
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  padding: 0.2rem 0.5rem;
-  border-radius: 3px;
+  color: #174A70;
+  line-height: 1.55;
+  display: block;
 }
 
 .ind-matrix-action {
   font-family: var(--mono);
   font-size: 0.74rem;
   font-weight: 700;
-  text-transform: uppercase;
   color: #174A70;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  transition: gap 0.15s ease;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+  transition: all 0.15s ease;
 }
 
 .ind-matrix-action:hover {
+  color: #0A1E34;
   gap: 0.55rem;
-  color: #0F2B48;
 }
+
+
 
 /* 6. Institutional Overview Split Section */
 .institutional-split {

@@ -1163,17 +1163,17 @@
               </div>
 
               <h1 class="exp-hero-title">
-                Precision Industrial Minerals<br>
-                <span style="color: #174A70;">&amp; Functional Compounding Chemicals</span>
+                Industrial Minerals. Reliable Supply.<br>
+                <span style="color: #174A70;">Business Partnerships.</span>
               </h1>
 
               <p class="exp-hero-lead">
-                Supplying verified high-purity pulverized extenders, mineral pigments, and functional compounding ingredients to 38+ manufacturing sectors across India since 2004. Sourced through multi-regional mining partnerships and certified under strict ISO quality systems.
+                Your sourcing partner for industrial minerals and mineral-based materials serving diverse manufacturing and industrial applications. Operating with direct quarry linkages, dual ISO 9001:2015 &amp; ISO 14001:2015 certified quality systems, and nationwide logistics dispatch.
               </p>
 
               <div class="exp-hero-btn-group">
-                <a href="#portfolio" class="button" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">Explore Product Showroom &rarr;</a>
-                <a href="#about-company" class="button alt" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">Company Profile</a>
+                <a href="#portfolio" class="button" style="padding: 0.85rem 1.75rem; font-size: 0.86rem; font-weight: 700;">Explore Our Products &rarr;</a>
+                <a href="#about-company" class="button alt" style="padding: 0.85rem 1.75rem; font-size: 0.86rem; font-weight: 700;">Discover Deepali Minerals</a>
                 <button
                   type="button"
                   class="button hero-fullscreen-cta-btn"
@@ -1182,7 +1182,7 @@
                   title="Watch facility video in Full Screen with sound"
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                  <span>Watch in Full Screen</span>
+                  <span>Watch Facility Video</span>
                 </button>
                 <a href="${getWhatsAppUrl('Hello Deepali Minerals, I would like to discuss my industrial mineral requirement.')}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn" style="padding: 0.75rem 1.25rem; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 0.45rem;">
                   ${whatsappIconSvg(16, 16)}
@@ -1318,34 +1318,34 @@
       <section class="showroom-section" id="about-company" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
         <div class="shell">
           <div class="institutional-split">
-            <div class="institutional-visual-card">
-              <span class="eyebrow" style="color: #174A70;">CORPORATE PROFILE &bull; ESTABLISHED 2004</span>
-              <h3 style="font-family: var(--serif); font-size: 1.65rem; color: var(--ink); margin: 0.35rem 0 1rem;">
-                Deepali Minerals Sourcing Network
-              </h3>
-              <p style="font-size: 0.88rem; color: var(--slate); line-height: 1.6; margin-bottom: 1.5rem;">
-                Operating from our Corporate Office at <strong>Lawrence Road, Rampura / Keshav Puram, New Delhi</strong>, Deepali Minerals coordinates raw material extraction, pulverization, testing, and multi-state transport dispatches.
-              </p>
-
-              <div style="padding: 1.25rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; margin-bottom: 1.25rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                  <strong style="font-size: 0.95rem; color: var(--ink);">Mr. Neeraj Monga</strong>
-                  <span style="font-family: var(--mono); font-size: 0.72rem; color: #174A70; font-weight: 700;">CEO &amp; PROPRIETOR</span>
+            <div class="institutional-visual-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+              <div style="height: 240px; width: 100%; overflow: hidden; position: relative; background: #0B1C30;">
+                <img src="${root}/assets/images/industries/corporate-intro-banner.webp" alt="Deepali Minerals processing facility and quarry supply network" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+                <div style="position: absolute; bottom: 0.75rem; left: 0.75rem; background: rgba(11,28,48,0.85); backdrop-filter: blur(4px); padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid rgba(213,164,58,0.4); color: #FFFFFF; font-family: var(--mono); font-size: 0.72rem; font-weight: 700;">
+                  MINING CORRIDORS &bull; RAJASTHAN &amp; GUJARAT
                 </div>
-                <p style="font-size: 0.8rem; color: var(--slate); margin: 0; line-height: 1.45;">
-                  Leading industrial supply and material trading since 2004 with a focus on long-term client partnerships, transparent specifications, and consistent raw material feed.
-                </p>
               </div>
-
-              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <div style="display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.72rem; color: #174A70; background: rgba(23,74,112,0.08); padding: 0.35rem 0.65rem; border-radius: 4px; font-weight: 700;">
-                  <span>ISO 9001:2015 QMS</span>
+              <div style="padding: 1.5rem;">
+                <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem;">
+                  <img src="${root}/assets/images/Neeraj%20Monga%20Pic.jpeg" alt="Mr. Neeraj Monga, CEO &amp; Proprietor" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #D5A43A; flex-shrink: 0;" />
+                  <div>
+                    <h4 style="margin: 0; font-size: 1.05rem; color: var(--ink);">Mr. Neeraj Monga</h4>
+                    <span style="font-family: var(--mono); font-size: 0.72rem; color: #174A70; font-weight: 700;">CEO &amp; PROPRIETOR &bull; ESTD. 2004</span>
+                  </div>
                 </div>
-                <div style="display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.72rem; color: #248C91; background: rgba(36,140,145,0.08); padding: 0.35rem 0.65rem; border-radius: 4px; font-weight: 700;">
-                  <span>ISO 14001:2015 EMS</span>
-                </div>
-                <div style="display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.72rem; color: #B45309; background: #FEF3C7; padding: 0.35rem 0.65rem; border-radius: 4px; font-weight: 700;">
-                  <span>GST: 07AIMPM0458Q1ZL</span>
+                <p style="font-size: 0.85rem; color: var(--slate); line-height: 1.55; margin: 0 0 1.25rem;">
+                  Operating from our Corporate Office at <strong>Lawrence Road, Rampura / Keshav Puram, New Delhi</strong>, Deepali Minerals coordinates raw material extraction, pulverization, testing, and multi-state transport dispatches with over two decades of technical dedication.
+                </p>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <div style="font-family: var(--mono); font-size: 0.7rem; color: #174A70; background: rgba(23,74,112,0.08); padding: 0.3rem 0.6rem; border-radius: 4px; font-weight: 700;">
+                    ISO 9001:2015 QMS
+                  </div>
+                  <div style="font-family: var(--mono); font-size: 0.7rem; color: #248C91; background: rgba(36,140,145,0.08); padding: 0.3rem 0.6rem; border-radius: 4px; font-weight: 700;">
+                    ISO 14001:2015 EMS
+                  </div>
+                  <div style="font-family: var(--mono); font-size: 0.7rem; color: #B45309; background: #FEF3C7; padding: 0.3rem 0.6rem; border-radius: 4px; font-weight: 700;">
+                    GST: 07AIMPM0458Q1ZL
+                  </div>
                 </div>
               </div>
             </div>
@@ -1355,10 +1355,10 @@
               <h2 class="section-title" style="margin-bottom: 1.25rem;">
                 Bridging Mineral Mines &amp; Industrial Manufacturing
               </h2>
-              <p class="lede" style="margin-bottom: 1.5rem;">
+              <p class="lede" style="margin-bottom: 1.25rem;">
                 Deepali Minerals is a recognized manufacturer, processor, and bulk distributor of non-metallic industrial minerals, micronized functional extenders, and specialty chemical additives.
               </p>
-              <p style="font-size: 0.92rem; color: #334155; line-height: 1.65; margin-bottom: 1.75rem;">
+              <p style="font-size: 0.92rem; color: #334155; line-height: 1.65; margin-bottom: 1.5rem;">
                 We eliminate the uncertainty in raw material procurement by maintaining dependable mine linkages across mineral-rich zones in Rajasthan and Gujarat, continuous pulverization control, and batch-wise quality documentation. Every consignment is supported by comprehensive Certificates of Analysis (COA) to guarantee chemical purity and particle fineness.
               </p>
 
@@ -1382,7 +1382,7 @@
               </div>
 
               <div style="margin-top: 2.25rem;">
-                <a href="${root}/about.html" class="button alt" style="padding: 0.85rem 1.65rem;">Explore Full Corporate Profile &amp; ISO Credentials &rarr;</a>
+                <a href="${root}/about.html" class="button alt" style="padding: 0.85rem 1.65rem; font-weight: 700;">Read More About Deepali Minerals &rarr;</a>
               </div>
             </div>
           </div>
@@ -1505,149 +1505,174 @@
           </div>
 
           <div class="industry-matrix-grid">
-            <!-- Sector 1: Paints & Coatings -->
+            <!-- 1. Paints & Coatings -->
             <div class="industry-matrix-card">
-              <div>
-                <div class="ind-matrix-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3Z"/><path d="M9 8c-2 3-4 3.5-7 4l8 8c.5-3 1-5 4-7"/><path d="M14.5 17.5 4.5 7.5"/></svg>
-                </div>
-                <h3 class="ind-matrix-title">Paints &amp; Coatings</h3>
-                <p class="ind-matrix-desc">High-opacity extenders, scrub-resistant fillers, and white brightness enhancers for architectural and industrial paints.</p>
-                <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Talc Powder</span>
-                  <span class="ind-matrix-mineral-pill">Calcium Carbonate</span>
-                  <span class="ind-matrix-mineral-pill">China Clay</span>
-                  <span class="ind-matrix-mineral-pill">Titanium Dioxide</span>
-                  <span class="ind-matrix-mineral-pill">Barytes</span>
-                </div>
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/paints-coatings.webp" alt="Paints &amp; Coatings Mineral Applications" class="industry-matrix-img" loading="lazy" />
               </div>
-              <a href="${industriesUrl}?industry=paints-coatings" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Paints &amp; Coatings</h3>
+                  <p class="ind-matrix-desc">High-opacity extenders, scrub-resistant fillers, and white brightness enhancers for architectural and industrial paints.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Talc Powder &bull; Calcium Carbonate &bull; China Clay &bull; Barytes &bull; Titanium Dioxide</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=paints-coatings" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
             </div>
 
-            <!-- Sector 2: Plastics & Masterbatch -->
+            <!-- 2. Plastics & Polymers -->
             <div class="industry-matrix-card">
-              <div>
-                <div class="ind-matrix-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                </div>
-                <h3 class="ind-matrix-title">Plastics &amp; Masterbatch</h3>
-                <p class="ind-matrix-desc">Surface-treated functional extenders and white color concentrates for injection moulding, film blowing, and masterbatch.</p>
-                <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Calcite Powder</span>
-                  <span class="ind-matrix-mineral-pill">Talc (Micro)</span>
-                  <span class="ind-matrix-mineral-pill">Zinc Stearate</span>
-                  <span class="ind-matrix-mineral-pill">Titanium Dioxide</span>
-                </div>
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/plastics-polymers.webp" alt="Plastics &amp; Polymers Mineral Applications" class="industry-matrix-img" loading="lazy" />
               </div>
-              <a href="${industriesUrl}?industry=plastics-polymers" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Plastics &amp; Polymers</h3>
+                  <p class="ind-matrix-desc">Surface-treated functional extenders, nucleating agents, and masterbatch fillers for injection moulding and film blowing.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Micro Calcite &bull; Talc Powder &bull; Zinc Stearate &bull; Titanium Dioxide</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=plastics-polymers" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
             </div>
 
-            <!-- Sector 3: Rubber & Tyres -->
+            <!-- 3. Construction & Building Materials -->
             <div class="industry-matrix-card">
-              <div>
-                <div class="ind-matrix-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
-                </div>
-                <h3 class="ind-matrix-title">Rubber &amp; Elastomers</h3>
-                <p class="ind-matrix-desc">Vulcanization activators, anti-blocking dusting agents, and reinforcing fillers for automotive rubber goods and footwear soles.</p>
-                <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Zinc Oxide</span>
-                  <span class="ind-matrix-mineral-pill">Magnesium Carbonate</span>
-                  <span class="ind-matrix-mineral-pill">Barytes</span>
-                  <span class="ind-matrix-mineral-pill">French Chalk</span>
-                </div>
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/construction-building-materials.webp" alt="Construction &amp; Building Materials Mineral Applications" class="industry-matrix-img" loading="lazy" />
               </div>
-              <a href="${industriesUrl}?industry=rubber-footwear" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Construction &amp; Building</h3>
+                  <p class="ind-matrix-desc">High-whiteness calcite, graded aggregates, and chemical binders for tile adhesives, polymer wall putty, and precast mortars.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Dolomite Powder &bull; Marble Powder &bull; Chalk Powder &bull; Hydrated Lime</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=construction-building-materials" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
             </div>
 
-            <!-- Sector 4: PVC Compounding -->
+            <!-- 4. Ceramics & Sanitaryware -->
             <div class="industry-matrix-card">
-              <div>
-                <div class="ind-matrix-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h10"/><path d="M12 7v10"/></svg>
-                </div>
-                <h3 class="ind-matrix-title">Rigid &amp; Flexible PVC</h3>
-                <p class="ind-matrix-desc">Impact modifiers, cost-reducing mineral extenders, and thermal stabilizers for PVC pipes, conduits, and cable insulation.</p>
-                <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Calcium Carbonate</span>
-                  <span class="ind-matrix-mineral-pill">Zinc Stearate</span>
-                  <span class="ind-matrix-mineral-pill">Talc Powder</span>
-                  <span class="ind-matrix-mineral-pill">Hydrated Lime</span>
-                </div>
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/ceramics.webp" alt="Ceramics &amp; Sanitaryware Mineral Applications" class="industry-matrix-img" loading="lazy" />
               </div>
-              <a href="${industriesUrl}?industry=rigid-pvc" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Ceramics &amp; Sanitaryware</h3>
+                  <p class="ind-matrix-desc">High-silica minerals, refractory fluxes, and plastic clays for sanitaryware bodies, ceramic tile glazes, and vitrified ware.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Quartz Powder &bull; Silica Sand &bull; Kaoline &bull; China Clay &bull; Dolomite</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=ceramics" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
             </div>
 
-            <!-- Sector 5: Ceramics & Glass -->
+            <!-- 5. Rubber & Footwear -->
             <div class="industry-matrix-card">
-              <div>
-                <div class="ind-matrix-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                </div>
-                <h3 class="ind-matrix-title">Ceramics, Glass &amp; Sanitary</h3>
-                <p class="ind-matrix-desc">High-silica minerals, refractory fluxes, and plastic clays for sanitaryware, glazes, ceramic tiles, and float glass.</p>
-                <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Quartz Powder</span>
-                  <span class="ind-matrix-mineral-pill">Silica Sand</span>
-                  <span class="ind-matrix-mineral-pill">Dolomite Powder</span>
-                  <span class="ind-matrix-mineral-pill">China Clay</span>
-                </div>
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/rubber-footwear.webp" alt="Rubber &amp; Footwear Mineral Applications" class="industry-matrix-img" loading="lazy" />
               </div>
-              <a href="${industriesUrl}?industry=ceramics" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Rubber &amp; Footwear</h3>
+                  <p class="ind-matrix-desc">Vulcanization activators, anti-tack dusting agents, and reinforcing fillers for automotive rubber goods and footwear soles.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Zinc Oxide &bull; Magnesium Carbonate &bull; Barytes &bull; French Chalk &bull; Talc</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=rubber-footwear" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
             </div>
 
-            <!-- Sector 6: Paper & Board Mills -->
+            <!-- 6. Paper & Stationery -->
             <div class="industry-matrix-card">
-              <div>
-                <div class="ind-matrix-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                </div>
-                <h3 class="ind-matrix-title">Paper &amp; Pulp Mills</h3>
-                <p class="ind-matrix-desc">Pitch control talcs, surface coating clays, and corrugation adhesive starches for paperboard and printing stock.</p>
-                <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Levigated China Clay</span>
-                  <span class="ind-matrix-mineral-pill">Talc Powder</span>
-                  <span class="ind-matrix-mineral-pill">Maize Starch</span>
-                  <span class="ind-matrix-mineral-pill">Calcium Carbonate</span>
-                </div>
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/paper-stationery.webp" alt="Paper &amp; Stationery Mineral Applications" class="industry-matrix-img" loading="lazy" />
               </div>
-              <a href="${industriesUrl}?industry=paper-mills" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Paper &amp; Stationery</h3>
+                  <p class="ind-matrix-desc">Pitch control talcs, high-brightness surface coating clays, and corrugation adhesive starches for paperboard and printing paper.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Levigated China Clay &bull; Talc Powder &bull; Maize Starch &bull; Calcium Carbonate</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=paper-stationery" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
             </div>
 
-            <!-- Sector 7: Wall Putty & Construction -->
+            <!-- 7. FRP & Composite Applications -->
             <div class="industry-matrix-card">
-              <div>
-                <div class="ind-matrix-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                </div>
-                <h3 class="ind-matrix-title">Wall Putty &amp; Construction</h3>
-                <p class="ind-matrix-desc">High whiteness calcite, fine dolomite, and natural chalk powder for polymer wall putty, dry-mix mortars, and architectural grouts.</p>
-                <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Dolomite Powder</span>
-                  <span class="ind-matrix-mineral-pill">Chalk Powder</span>
-                  <span class="ind-matrix-mineral-pill">Marble Powder</span>
-                  <span class="ind-matrix-mineral-pill">Hydrated Lime</span>
-                </div>
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/frp-composites.webp" alt="FRP &amp; Composite Applications" class="industry-matrix-img" loading="lazy" />
               </div>
-              <a href="${industriesUrl}?industry=wall-putty-nc-putty" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">FRP &amp; Composites</h3>
+                  <p class="ind-matrix-desc">Polyester resin matrices, structural gel coat extenders, and dimensional stabilizers for fiberglass composite mouldings.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Polyester Resin &bull; Talc Powder &bull; Calcium Carbonate &bull; Quartz Powder</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=frp-composites" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
             </div>
 
-            <!-- Sector 8: Foundry & Metallurgy -->
+            <!-- 8. Foundry & Industrial Applications -->
             <div class="industry-matrix-card">
-              <div>
-                <div class="ind-matrix-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                </div>
-                <h3 class="ind-matrix-title">Foundry, Steel &amp; Refractory</h3>
-                <p class="ind-matrix-desc">High-fusion silica sand, metallurgical fluxing lime, and refractory dusting powders for metal casting and core moulds.</p>
-                <div class="ind-matrix-minerals-list">
-                  <span class="ind-matrix-mineral-pill">Silica Sand (Graded)</span>
-                  <span class="ind-matrix-mineral-pill">Hydrated Lime</span>
-                  <span class="ind-matrix-mineral-pill">French Chalk</span>
-                  <span class="ind-matrix-mineral-pill">Soap Stone</span>
-                </div>
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/foundry.webp" alt="Foundry &amp; Industrial Applications" class="industry-matrix-img" loading="lazy" />
               </div>
-              <a href="${industriesUrl}?industry=foundry-industrial" class="ind-matrix-action">View Matching Minerals &rarr;</a>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Foundry &amp; Metallurgy</h3>
+                  <p class="ind-matrix-desc">High-fusion silica sand, metallurgical fluxing lime, and refractory dusting powders for metal casting and core moulds.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Silica Sand (Graded) &bull; Hydrated Lime &bull; French Chalk &bull; Soap Stone</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=foundry-industrial" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
+            </div>
+
+            <!-- 9. Agriculture & Allied Applications -->
+            <div class="industry-matrix-card">
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/agriculture-allied.webp" alt="Agriculture &amp; Allied Applications" class="industry-matrix-img" loading="lazy" />
+              </div>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Agriculture &amp; Allied</h3>
+                  <p class="ind-matrix-desc">Soil pH conditioners, fertilizer anti-caking inert carriers, and micronutrient mineral powders for crop health and livestock feed.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Hydrated Lime &bull; Dolomite Powder &bull; Chalk Powder &bull; Calcium Carbonate</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=agriculture-allied" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
+            </div>
+
+            <!-- 10. Detergents & Household Products -->
+            <div class="industry-matrix-card">
+              <div class="industry-matrix-img-box">
+                <img src="${root}/assets/images/industries/detergents-household.webp" alt="Detergents &amp; Household Products" class="industry-matrix-img" loading="lazy" />
+              </div>
+              <div class="industry-matrix-body">
+                <div>
+                  <h3 class="ind-matrix-title">Detergents &amp; Household</h3>
+                  <p class="ind-matrix-desc">Free-flowing mild abrasive scourers, bulk density builders, and particulate carriers for detergent powders and bars.</p>
+                  <div class="ind-matrix-minerals-list">
+                    <span class="ind-matrix-mineral-text">Natural Chalk &bull; Dolomite Powder &bull; China Clay &bull; Soap Stone</span>
+                  </div>
+                </div>
+                <a href="${industriesUrl}?industry=detergents-household" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
+              </div>
             </div>
           </div>
 
