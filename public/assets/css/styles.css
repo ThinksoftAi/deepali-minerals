@@ -4620,6 +4620,227 @@ html, body {
   color: #D5A43A;
 }
 
+/* Video Top Floating Control Bar */
+.exp-hero-video-top-bar {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  right: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.exp-hero-video-top-bar button,
+.exp-hero-video-top-bar a {
+  pointer-events: auto;
+}
+
+.hero-sound-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(15, 43, 72, 0.88);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  border: 1px solid rgba(213, 164, 58, 0.5);
+  border-radius: 9999px;
+  padding: 0.35rem 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.hero-sound-pill-btn:hover {
+  background: rgba(23, 74, 112, 0.95);
+  border-color: #D5A43A;
+  transform: translateY(-1px);
+}
+
+.hero-sound-pill-btn.is-active {
+  background: rgba(36, 140, 145, 0.92);
+  border-color: #5CD2D6;
+  color: #FFFFFF;
+}
+
+.hero-fullscreen-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(15, 43, 72, 0.88);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  padding: 0.35rem 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.hero-fullscreen-pill-btn:hover {
+  background: rgba(23, 74, 112, 0.95);
+  border-color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+/* Pulsing Center Unmute Prompt */
+.exp-hero-center-unmute-prompt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 43, 72, 0.85);
+  backdrop-filter: blur(6px);
+  border: 1.5px solid #D5A43A;
+  border-radius: 9999px;
+  padding: 0.65rem 1.25rem;
+  color: #FFFFFF;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  animation: pulseHeroSound 2s infinite ease-in-out;
+  z-index: 8;
+}
+
+@keyframes pulseHeroSound {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(213, 164, 58, 0.4);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.04);
+    box-shadow: 0 0 0 10px rgba(213, 164, 58, 0);
+  }
+}
+
+.exp-hero-center-unmute-prompt.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Fullscreen Theater Modal */
+.video-fullscreen-theater {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #050B14;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.video-fullscreen-theater.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.video-theater-header {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  color: #FFFFFF;
+}
+
+.video-theater-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.video-theater-title h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.video-theater-title span {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: #D5A43A;
+}
+
+.video-theater-close-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.video-theater-close-btn:hover {
+  background: rgba(213, 164, 58, 0.25);
+  border-color: #D5A43A;
+  color: #F8DF8A;
+}
+
+.video-theater-body {
+  width: 100%;
+  max-width: 1400px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.video-theater-player {
+  width: 100%;
+  max-height: calc(100vh - 140px);
+  aspect-ratio: 16 / 9;
+  background: #000000;
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  outline: none;
+}
+
+.video-theater-footer {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #94A3B8;
+}
+
+
 /* 4. Product Catalog Interactive Filter Tabs */
 .product-showcase-tabs {
   display: flex;

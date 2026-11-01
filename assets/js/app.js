@@ -1047,14 +1047,24 @@
               <div class="exp-hero-btn-group">
                 <a href="#portfolio" class="button" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">Explore Product Portfolio &rarr;</a>
                 <a href="#rfq" class="button alt" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">Request Commercial Quotation</a>
+                <button
+                  type="button"
+                  class="button hero-fullscreen-cta-btn"
+                  data-hero-fullscreen-trigger="true"
+                  style="padding: 0.85rem 1.35rem; font-size: 0.84rem; display: inline-flex; align-items: center; gap: 0.5rem; background: #0A1E34; color: #FFFFFF; border: 1.5px solid #D5A43A;"
+                  title="Watch facility video in Full Screen with sound"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                  <span>Watch in Full Screen</span>
+                </button>
                 <a href="${getWhatsAppUrl('Hello Deepali Minerals, I would like to discuss my industrial mineral requirement.')}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn" style="padding: 0.75rem 1.25rem; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 0.45rem;">
                   ${whatsappIconSvg(16, 16)}
                   <span>WhatsApp Sales Desk</span>
                 </a>
               </div>
 
-              <!-- Audio Toggle for Facility Video -->
-              <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.75rem;">
+              <!-- Audio & Fullscreen Quick Status Bar -->
+              <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem;">
                 <button
                   type="button"
                   class="button hero-sound-btn"
@@ -1071,15 +1081,50 @@
                       <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                   </span>
-                  <span class="hero-audio-label">Facility Video Sound</span>
+                  <span class="hero-audio-label">Enable Video Sound</span>
                 </button>
-                <span style="font-size: 0.74rem; font-family: var(--mono); color: var(--slate);">Click to enable industrial audio</span>
+                <span style="font-size: 0.74rem; font-family: var(--mono); color: var(--slate);">Click video or button to hear facility sound &bull; Expand for full screen</span>
               </div>
             </div>
 
             <!-- Hero Facility Video Showcase Card -->
             <div class="exp-hero-media-card">
               <div class="exp-hero-video-box" data-hero-video-click="true" title="Click to toggle facility sound">
+                <!-- Top Floating Video Control Bar -->
+                <div class="exp-hero-video-top-bar">
+                  <button
+                    type="button"
+                    class="hero-sound-pill-btn"
+                    data-hero-audio-toggle="true"
+                    aria-label="Toggle facility video sound"
+                    title="Click to toggle facility sound"
+                  >
+                    <span class="hero-audio-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+                    </span>
+                    <span class="hero-audio-label">Tap to Unmute</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="hero-fullscreen-pill-btn"
+                    data-hero-fullscreen-trigger="true"
+                    aria-label="Watch video in full screen"
+                    title="Expand video to Full Screen"
+                  >
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    <span>Full Screen</span>
+                  </button>
+                </div>
+
+                <!-- Center Pulsing Unmute Badge (fades when sound enabled) -->
+                <div class="exp-hero-center-unmute-prompt" data-hero-unmute-hint="true">
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D5A43A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                    <span>TAP FOR SOUND</span>
+                  </div>
+                </div>
+
                 <video
                   class="hero-video"
                   autoplay
@@ -1097,8 +1142,19 @@
                     <strong>Deepali Minerals Central Processing &amp; Dispatch</strong>
                     <span>Lawrence Road Depot &bull; Keshav Puram, New Delhi</span>
                   </div>
-                  <div style="background: rgba(213,164,58,0.2); border: 1px solid #D5A43A; padding: 0.25rem 0.5rem; border-radius: 4px; font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: #F8DF8A;">
-                    ISO AUDITED
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <button
+                      type="button"
+                      data-hero-fullscreen-trigger="true"
+                      class="button alt"
+                      style="padding: 0.25rem 0.55rem; font-size: 0.68rem; min-height: 28px; background: rgba(255,255,255,0.15); color: #FFFFFF; border-color: rgba(255,255,255,0.4);"
+                      title="Watch in full screen"
+                    >
+                      ⛶ Full Screen
+                    </button>
+                    <div style="background: rgba(213,164,58,0.2); border: 1px solid #D5A43A; padding: 0.25rem 0.5rem; border-radius: 4px; font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: #F8DF8A;">
+                      ISO AUDITED
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1706,11 +1762,13 @@
   function bindHeroVideoAudio() {
     const video = document.querySelector('.hero-video');
     const toggleBtns = document.querySelectorAll('[data-hero-audio-toggle]');
+    const fullscreenTriggers = document.querySelectorAll('[data-hero-fullscreen-trigger]');
+    const unmutePrompt = document.querySelector('[data-hero-unmute-hint]');
     const soundCard = document.querySelector('.hero-sound-card');
     const volumeSlider = document.querySelector('.hero-volume-slider');
     const volumeLabel = document.querySelector('.hero-volume-label');
     const videoWrap = document.querySelector('[data-hero-video-click]');
-    if (!video || !toggleBtns.length) return;
+    if (!video) return;
 
     const mutedSvg = `
       <svg class="sound-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1729,6 +1787,14 @@
     `;
 
     const syncUI = (isMuted) => {
+      if (unmutePrompt) {
+        if (!isMuted) {
+          unmutePrompt.classList.add('is-hidden');
+        } else {
+          unmutePrompt.classList.remove('is-hidden');
+        }
+      }
+
       toggleBtns.forEach(btn => {
         btn.setAttribute('aria-pressed', (!isMuted).toString());
         btn.classList.toggle('is-active', !isMuted);
@@ -1740,11 +1806,10 @@
 
         const labelEl = btn.querySelector('.hero-audio-label');
         if (labelEl) {
-          const isPill = btn.classList.contains('hero-sound-pill');
-          if (isPill) {
-            labelEl.textContent = isMuted ? 'Play Video Sound' : 'Sound On (Mute)';
+          if (btn.classList.contains('hero-sound-pill-btn')) {
+            labelEl.textContent = isMuted ? 'Tap to Unmute' : '🔊 Sound On (Mute)';
           } else {
-            labelEl.textContent = isMuted ? 'Play Video Sound' : 'Mute Video Sound';
+            labelEl.textContent = isMuted ? 'Enable Video Sound' : 'Mute Video Sound';
           }
         }
 
@@ -1765,17 +1830,19 @@
       }
     };
 
+    const enableSound = () => {
+      video.muted = false;
+      video.volume = 1.0;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+      syncUI(false);
+    };
+
     const toggleAudio = () => {
       if (video.muted) {
-        video.muted = false;
-        if (!video.volume || video.volume < 0.1) {
-          video.volume = 1.0;
-        }
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {});
-        }
-        syncUI(false);
+        enableSound();
       } else {
         video.muted = true;
         syncUI(true);
@@ -1812,7 +1879,7 @@
 
     if (videoWrap) {
       videoWrap.addEventListener('click', (e) => {
-        // Toggle if user clicks video area directly
+        // Only trigger if not clicking buttons/links
         if (!e.target.closest('button, a, input, select, textarea, form')) {
           toggleAudio();
         }
@@ -1821,6 +1888,122 @@
 
     video.addEventListener('volumechange', () => {
       syncUI(video.muted);
+    });
+
+    // -----------------------------------------------------------------------
+    // FULLSCREEN THEATER CONTROLLER
+    // -----------------------------------------------------------------------
+    const openTheater = () => {
+      // Always ensure sound is enabled when opening fullscreen
+      enableSound();
+
+      let theaterEl = document.querySelector('#hero-fullscreen-theater');
+      if (!theaterEl) {
+        theaterEl = document.createElement('div');
+        theaterEl.id = 'hero-fullscreen-theater';
+        theaterEl.className = 'video-fullscreen-theater';
+        theaterEl.setAttribute('role', 'dialog');
+        theaterEl.setAttribute('aria-modal', 'true');
+        theaterEl.setAttribute('aria-label', 'Deepali Minerals Facility Video Full Screen Theater');
+
+        const rootPath = document.body.getAttribute('data-root') || '.';
+        const videoSrc = `${rootPath}/hero%20video%20DM%20watermark%20(1).mp4`;
+
+        theaterEl.innerHTML = `
+          <div class="video-theater-header">
+            <div class="video-theater-title">
+              <span style="background: rgba(213,164,58,0.2); border: 1px solid #D5A43A; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.68rem; font-weight: 700; color: #F8DF8A;">DEEPALI MINERALS</span>
+              <div>
+                <h3>Central Processing &amp; Dispatch Facility</h3>
+                <span>Lawrence Road Depot &bull; Keshav Puram, New Delhi</span>
+              </div>
+            </div>
+            <button type="button" class="video-theater-close-btn" id="btn-close-theater" aria-label="Close Full Screen Theater">
+              ✕ Close Full Screen [Esc]
+            </button>
+          </div>
+          <div class="video-theater-body">
+            <video class="video-theater-player" controls autoplay playsinline preload="auto">
+              <source src="${videoSrc}" type="video/mp4" />
+            </video>
+          </div>
+          <div class="video-theater-footer">
+            <div>High-Purity Pulverized Extenders &bull; 100–1250 Mesh Grading &bull; Bulk Industrial Supply</div>
+            <div style="color: #D5A43A; font-weight: 700;">ISO 9001:2015 &amp; ISO 14001:2015 ACCREDITED</div>
+          </div>
+        `;
+        document.body.appendChild(theaterEl);
+
+        const closeBtn = theaterEl.querySelector('#btn-close-theater');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', () => closeTheater());
+        }
+
+        // Close on clicking backdrop outside player
+        theaterEl.addEventListener('click', (e) => {
+          if (!e.target.closest('.video-theater-player, .video-theater-header')) {
+            closeTheater();
+          }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && theaterEl.classList.contains('is-open')) {
+            closeTheater();
+          }
+        });
+      }
+
+      const theaterVideo = theaterEl.querySelector('.video-theater-player');
+      if (theaterVideo) {
+        // Sync current time from hero video
+        try {
+          theaterVideo.currentTime = video.currentTime || 0;
+        } catch (_) {}
+        theaterVideo.muted = false;
+        theaterVideo.volume = 1.0;
+        const playPromise = theaterVideo.play();
+        if (playPromise !== undefined) playPromise.catch(() => {});
+      }
+
+      theaterEl.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+
+      // Also attempt native fullscreen on the theater element or video if supported
+      try {
+        if (theaterVideo && theaterVideo.requestFullscreen) {
+          theaterVideo.requestFullscreen().catch(() => {});
+        } else if (theaterVideo && theaterVideo.webkitEnterFullscreen) {
+          theaterVideo.webkitEnterFullscreen();
+        }
+      } catch (_) {}
+    };
+
+    const closeTheater = () => {
+      const theaterEl = document.querySelector('#hero-fullscreen-theater');
+      if (theaterEl) {
+        const theaterVideo = theaterEl.querySelector('.video-theater-player');
+        if (theaterVideo) {
+          // Sync current time back to hero video
+          try {
+            video.currentTime = theaterVideo.currentTime || 0;
+          } catch (_) {}
+          theaterVideo.pause();
+        }
+        theaterEl.classList.remove('is-open');
+      }
+      document.body.style.overflow = '';
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    };
+
+    fullscreenTriggers.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openTheater();
+      });
     });
 
     // Initial state sync
