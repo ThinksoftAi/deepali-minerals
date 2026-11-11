@@ -4547,18 +4547,35 @@ html, body {
 /* 3. High-Impact Industrial Hero Section */
 .exp-hero {
   position: relative;
-  background: #0B1C30 url('/assets/images/gallery/hero_industrial_minerals.jpg') center/cover no-repeat;
+  background-color: #0B1C30;
   padding: 5.5rem 0 4.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   overflow: hidden;
 }
 
-.exp-hero::before {
-  content: "";
+/* Full Hero Background Video */
+.exp-hero-bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Light transparent gradient overlay so background video is clearly visible */
+.exp-hero-bg-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(11, 28, 48, 0.94) 0%, rgba(18, 62, 112, 0.88) 55%, rgba(23, 105, 170, 0.78) 100%);
+  background: linear-gradient(135deg, rgba(11, 28, 48, 0.45) 0%, rgba(18, 62, 112, 0.35) 55%, rgba(23, 105, 170, 0.25) 100%);
+  z-index: 1;
   pointer-events: none;
+}
+
+.exp-hero::before {
+  display: none;
 }
 
 .exp-hero-inner {
@@ -4580,11 +4597,13 @@ html, body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #F8DF8A !important;
-  background: rgba(213, 164, 58, 0.18) !important;
-  border: 1px solid rgba(213, 164, 58, 0.45) !important;
+  background: rgba(11, 28, 48, 0.55) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(213, 164, 58, 0.55) !important;
   padding: 0.35rem 0.8rem;
   border-radius: 4px;
   margin-bottom: 1.25rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .exp-hero-title {
@@ -4595,14 +4614,16 @@ html, body {
   color: #FFFFFF !important;
   margin: 0 0 1.25rem;
   letter-spacing: -0.01em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 0 1px 3px rgba(0, 0, 0, 0.95);
 }
 
 .exp-hero-lead {
   font-size: 1.12rem;
   line-height: 1.6;
-  color: #D5E7F6 !important;
+  color: #FFFFFF !important;
   margin: 0 0 2rem;
   max-width: 58ch;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
 }
 
 .exp-hero-btn-group {
@@ -4621,22 +4642,24 @@ html, body {
   gap: 1.25rem;
   margin-top: 2.75rem;
   padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .exp-hero-stat-card {
-  background: rgba(12, 43, 80, 0.88) !important;
-  backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  background: rgba(12, 43, 80, 0.65) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
   border-radius: 6px;
   padding: 1.25rem 1.15rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .exp-hero-stat-card:hover {
   transform: translateY(-2px);
   border-color: #D5A43A !important;
+  background: rgba(12, 43, 80, 0.78) !important;
 }
 
 .exp-stat-num {
@@ -4646,6 +4669,7 @@ html, body {
   color: #F8DF8A !important;
   line-height: 1.1;
   margin-bottom: 0.25rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 
 .exp-stat-label {
@@ -4656,6 +4680,7 @@ html, body {
   letter-spacing: 0.06em;
   color: #FFFFFF !important;
   margin-bottom: 0.2rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .exp-stat-desc {
@@ -4663,66 +4688,132 @@ html, body {
   color: #D5E7F6 !important;
   line-height: 1.45;
   margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-.exp-stat-desc {
-  font-size: 0.76rem;
-  color: var(--slate);
-  line-height: 1.35;
-  margin: 0;
-}
-
-/* Hero Media Display Card */
-.exp-hero-media-card {
+/* Frosted Glass Authority & Facility Card */
+.exp-hero-facility-glass {
   position: relative;
-  background: #0F2B48;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 12px 35px rgba(15, 43, 72, 0.15);
-  border: 1px solid #E2E8F0;
+  background: rgba(12, 43, 80, 0.60);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  padding: 1.75rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
 
-.exp-hero-video-box {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  background: #0F2B48;
-}
-
-.exp-hero-video-box video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.exp-hero-overlay-badge {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
-  background: rgba(15, 43, 72, 0.92);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(213, 164, 58, 0.4);
-  border-radius: 4px;
-  padding: 0.75rem 1rem;
+.glass-live-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #FFFFFF;
+  margin-bottom: 1rem;
 }
 
-.exp-hero-overlay-badge strong {
-  display: block;
-  font-size: 0.88rem;
-  color: #FFFFFF;
-}
-
-.exp-hero-overlay-badge span {
+.live-pulse-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: var(--mono);
   font-size: 0.72rem;
-  color: #D5A43A;
+  font-weight: 700;
+  color: #F8DF8A;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #25D366;
+  box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  animation: pulse-green 1.8s infinite;
+}
+
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(37, 211, 102, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+.iso-audit-tag {
+  background: rgba(213, 164, 58, 0.2);
+  border: 1px solid #D5A43A;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #F8DF8A;
+}
+
+.glass-facility-title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: #FFFFFF !important;
+  margin: 0 0 0.5rem;
+  line-height: 1.3;
+}
+
+.glass-facility-address {
+  font-size: 0.85rem;
+  color: #D5E7F6;
+  margin: 0 0 1.25rem;
+  line-height: 1.45;
+}
+
+.glass-spec-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.glass-metric-box {
+  background: rgba(11, 28, 48, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  padding: 0.75rem 0.6rem;
+  text-align: center;
+}
+
+.glass-metric-val {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #F8DF8A;
+  line-height: 1.1;
+}
+
+.glass-metric-lbl {
+  display: block;
+  font-size: 0.7rem;
+  color: #D5E7F6;
+  margin-top: 0.25rem;
+  font-family: var(--mono);
+}
+
+.glass-facility-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.glass-footer-note {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #D5E7F6;
+}
+
+/* Legacy Hero Media Card adjustments if referenced */
+.exp-hero-media-card {
+  display: none;
 }
 
 /* Video Top Floating Control Bar */

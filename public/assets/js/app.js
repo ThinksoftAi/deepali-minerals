@@ -1221,10 +1221,26 @@
 
     document.querySelector('#main').innerHTML = `
       <!-- ====================================================================
-           1. HERO BANNER — RAJSHILA-INSPIRED HIGH-IMPACT INDUSTRIAL SHOWROOM
+           1. HERO BANNER — FULL BACKGROUND VIDEO SHOWROOM EXPERIENCE
            ==================================================================== -->
       <section class="exp-hero" id="hero">
-        <div class="shell">
+        <!-- Full-Bleed Background Video -->
+        <video
+          class="hero-video exp-hero-bg-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          aria-label="Deepali Minerals industrial processing facility video background"
+        >
+          <source src="${root}/hero%20video%20DM%20watermark%20(1).mp4" type="video/mp4" />
+        </video>
+
+        <!-- High-Contrast Blue Gradient Overlay -->
+        <div class="exp-hero-bg-overlay"></div>
+
+        <div class="shell" style="position: relative; z-index: 2;">
           <div class="exp-hero-inner">
             <div>
               <div class="exp-hero-estd-pill">
@@ -1244,16 +1260,6 @@
               <div class="exp-hero-btn-group">
                 <a href="#portfolio" class="button" style="padding: 0.85rem 1.75rem; font-size: 0.86rem; font-weight: 700; background: #D5A43A; color: #0C2B50; border-color: #D5A43A;">Explore Our Products &rarr;</a>
                 <a href="#rfq" class="button" style="padding: 0.85rem 1.75rem; font-size: 0.86rem; font-weight: 700; background: #1769AA; color: #FFFFFF; border-color: #2488C9;">Enquire Now / Get Quotation</a>
-                <button
-                  type="button"
-                  class="button hero-fullscreen-cta-btn"
-                  data-hero-fullscreen-trigger="true"
-                  style="padding: 0.85rem 1.35rem; font-size: 0.84rem; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(10, 30, 52, 0.85); color: #FFFFFF; border: 1.5px solid #D5A43A;"
-                  title="Watch facility video in Full Screen with sound"
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                  <span>Watch Facility Video</span>
-                </button>
                 <a href="${getWhatsAppUrl('Hello Deepali Minerals, I would like to discuss my industrial mineral requirement.')}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn" style="padding: 0.75rem 1.25rem; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 0.45rem;">
                   ${whatsappIconSvg(16, 16)}
                   <span>WhatsApp Sales Desk</span>
@@ -1269,10 +1275,10 @@
                   aria-label="Toggle facility video sound"
                   aria-pressed="false"
                   title="Click to toggle facility sound"
-                  style="padding: 0.4rem 0.85rem; font-size: 0.72rem; min-height: 34px; background: rgba(12, 43, 80, 0.85); border-color: rgba(255,255,255,0.25); color: #FFFFFF;"
+                  style="padding: 0.45rem 0.95rem; font-size: 0.74rem; min-height: 36px; background: rgba(12, 43, 80, 0.92); border-color: rgba(255,255,255,0.3); color: #FFFFFF; display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 4px;"
                 >
                   <span class="hero-audio-icon" aria-hidden="true">
-                    <svg class="sound-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="sound-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <line x1="23" y1="9" x2="17" y2="15"></line>
                       <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -1280,78 +1286,61 @@
                   </span>
                   <span class="hero-audio-label">Enable Video Sound</span>
                 </button>
-                <span style="font-size: 0.74rem; font-family: var(--mono); color: #D5E7F6;">Click video or button to hear facility sound &bull; Expand for full screen</span>
+
+                <button
+                  type="button"
+                  class="button hero-fullscreen-cta-btn"
+                  data-hero-fullscreen-trigger="true"
+                  style="padding: 0.45rem 0.95rem; font-size: 0.74rem; min-height: 36px; display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(10, 30, 52, 0.88); color: #FFFFFF; border: 1.5px solid #D5A43A; border-radius: 4px;"
+                  title="Watch facility video in Full Screen with sound"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                  <span>Full Screen Theater</span>
+                </button>
+
+                <span style="font-size: 0.74rem; font-family: var(--mono); color: #D5E7F6;">Live processing facility video playing in background</span>
               </div>
             </div>
 
-            <!-- Hero Facility Video Showcase Card -->
-            <div class="exp-hero-media-card">
-              <div class="exp-hero-video-box" data-hero-video-click="true" title="Click to toggle facility sound">
-                <div class="exp-hero-video-top-bar">
-                  <button
-                    type="button"
-                    class="hero-sound-pill-btn"
-                    data-hero-audio-toggle="true"
-                    aria-label="Toggle facility video sound"
-                    title="Click to toggle facility sound"
-                  >
-                    <span class="hero-audio-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
-                    </span>
-                    <span class="hero-audio-label">Tap to Unmute</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    class="hero-fullscreen-pill-btn"
-                    data-hero-fullscreen-trigger="true"
-                    aria-label="Watch video in full screen"
-                    title="Expand video to Full Screen"
-                  >
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                    <span>Full Screen</span>
-                  </button>
+            <!-- Frosted Glass Facility & Technical Credibility Card -->
+            <div class="exp-hero-facility-glass">
+              <div class="glass-live-header">
+                <div class="live-pulse-badge">
+                  <span class="live-dot"></span>
+                  <span>LIVE FACILITY DISPATCH</span>
                 </div>
+                <span class="iso-audit-tag">ISO 9001 &bull; 14001</span>
+              </div>
 
-                <div class="exp-hero-center-unmute-prompt" data-hero-unmute-hint="true">
-                  <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D5A43A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
-                    <span>TAP FOR SOUND</span>
-                  </div>
+              <h3 class="glass-facility-title">Central Processing, Pulverization &amp; Buffer Storage</h3>
+              <p class="glass-facility-address">Corporate Office: Lawrence Road Industrial Area, Rampura / Keshav Puram, New Delhi</p>
+
+              <div class="glass-spec-metrics">
+                <div class="glass-metric-box">
+                  <span class="glass-metric-val">100–1250</span>
+                  <span class="glass-metric-lbl">Mesh Precision</span>
                 </div>
+                <div class="glass-metric-box">
+                  <span class="glass-metric-val">100%</span>
+                  <span class="glass-metric-lbl">COA Verified</span>
+                </div>
+                <div class="glass-metric-box">
+                  <span class="glass-metric-val">Pan-India</span>
+                  <span class="glass-metric-lbl">Fleet Logistics</span>
+                </div>
+              </div>
 
-                <video
-                  class="hero-video"
-                  autoplay
-                  muted
-                  loop
-                  playsinline
-                  preload="metadata"
-                  aria-label="Deepali Minerals industrial processing facility video"
+              <div class="glass-facility-footer">
+                <span class="glass-footer-note">&bull; Direct Quarry Linkages: Rajasthan &amp; Gujarat</span>
+                <button
+                  type="button"
+                  data-hero-fullscreen-trigger="true"
+                  class="button alt"
+                  style="padding: 0.35rem 0.75rem; font-size: 0.72rem; min-height: 32px; background: rgba(255,255,255,0.15); color: #FFFFFF; border-color: rgba(255,255,255,0.4);"
+                  title="Expand to Full Screen Theater"
                 >
-                  <source src="${root}/hero%20video%20DM%20watermark%20(1).mp4" type="video/mp4" />
-                </video>
-                <div class="hero-overlay"></div>
-                <div class="exp-hero-overlay-badge">
-                  <div>
-                    <strong>Deepali Minerals Central Processing &amp; Dispatch</strong>
-                    <span>Corporate Office &bull; Keshav Puram, New Delhi</span>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <button
-                      type="button"
-                      data-hero-fullscreen-trigger="true"
-                      class="button alt"
-                      style="padding: 0.25rem 0.55rem; font-size: 0.68rem; min-height: 28px; background: rgba(255,255,255,0.15); color: #FFFFFF; border-color: rgba(255,255,255,0.4);"
-                      title="Watch in full screen"
-                    >
-                      ⛶ Full Screen
-                    </button>
-                    <div style="background: rgba(213,164,58,0.2); border: 1px solid #D5A43A; padding: 0.25rem 0.5rem; border-radius: 4px; font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: #F8DF8A;">
-                      ISO AUDITED
-                    </div>
-                  </div>
-                </div>
+                  ⛶ Expand Theater
+                </button>
               </div>
             </div>
           </div>

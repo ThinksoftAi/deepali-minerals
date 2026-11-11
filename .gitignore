@@ -41,3 +41,13 @@ test_rsvg.py
 # Backups
 backups/
 *.tar.gz
+
+# Verification Screenshots & Visual Test Captures (keep locally, do not push to Git repo)
+screenshots/
+*.png.tmp
+deepali-homepage-full-desktop.png
+deepali-homepage-full-mobile.png
+rajshila-homepage-desktop.png
+
+# AI Studio brain artifacts & temporary media
+.aistudio/
