@@ -1,21 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap');
 
 :root {
-  --navy: #20201d;
-  --navy-2: #34342e;
-  --ink: #25241f;
-  --slate: #6f6b61;
-  --line: #E5E7EB;
-  --fog: #F8F9FA;
+  /* Official Deepali Minerals Blue Corporate Palette */
+  --deep-blue: #123E70;      /* Deep Corporate Blue */
+  --mineral-blue: #1769AA;   /* Mineral Blue */
+  --ice-blue: #EAF3FB;       /* Ice Blue */
+  --soft-blue: #D5E7F6;      /* Soft Blue */
+  --white: #FFFFFF;          /* Pure White */
+  --charcoal: #252F3D;       /* Text and headings */
+
+  --navy: #123E70;
+  --navy-2: #0E2F54;
+  --ink: #252F3D;
+  --slate: #526071;
+  --line: #E2E8F0;
+  --fog: #EAF3FB;
   --paper: #FFFFFF;
   --surface: #FFFFFF;
-  --blue: #a84e2b;
-  --aqua: #c7b78f;
-  --lime: #d5a43a;
+  --blue: #1769AA;
+  --aqua: #248C91;
+  --lime: #D5A43A;
   --serif: 'Source Serif 4', Georgia, serif;
   --sans: Manrope, Arial, sans-serif;
   --mono: 'DM Mono', monospace;
-  --shadow: 0 10px 30px rgba(0, 0, 0, .05);
+  --shadow: 0 10px 30px rgba(18, 62, 112, .08);
 }
 
 * {
@@ -144,8 +152,8 @@ a {
 
 .site-header {
   position: relative;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
+  background: #123E70;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   z-index: 900;
 }
 
@@ -154,7 +162,7 @@ a {
   height: 80px;
   padding: 0;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: space-between;
   gap: 2rem;
 }
@@ -168,6 +176,15 @@ a {
   letter-spacing: -.04em;
   text-decoration: none;
   flex-shrink: 0;
+  background: #FFFFFF;
+  padding: 5px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease;
+}
+
+.brand:hover {
+  transform: scale(1.02);
 }
 
 .brand-wrapper {
@@ -303,13 +320,13 @@ a {
 }
 
 .brand-logo {
-  width: 100%;
-  max-width: 185px;
+  width: auto;
+  max-width: 215px;
+  max-height: 58px;
   height: auto;
   object-fit: contain;
   display: block;
-  aspect-ratio: 2 / 1;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: transform .2s ease;
 }
 
@@ -318,13 +335,16 @@ a {
 }
 
 .brand-logo-footer {
-  width: 100%;
-  max-width: 200px;
+  width: auto;
+  max-width: 215px;
+  max-height: 60px;
   height: auto;
   object-fit: contain;
   display: block;
-  aspect-ratio: 2 / 1;
+  background: #FFFFFF;
+  padding: 6px 12px;
   border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   transition: transform .2s ease;
 }
 
@@ -354,19 +374,23 @@ a {
   text-transform: uppercase;
 }
 
-.nav-links > a {
+.nav-links > a,
+.nav-links > div > a,
+.nav-links .nav-link-with-icon {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
+  color: #FFFFFF;
+  transition: color 0.15s ease;
 }
 
-.nav-links a {
-  white-space: nowrap;
-}
-
-.nav-links a:hover,
-.nav-links a.active {
-  color: var(--blue);
+.nav-links > a:hover,
+.nav-links > a.active,
+.nav-links > div > a:hover,
+.nav-links > div > a.active,
+.nav-links .nav-link-with-icon:hover,
+.nav-links .nav-link-with-icon.active {
+  color: #D5A43A;
 }
 
 .menu-toggle {
@@ -378,24 +402,38 @@ a {
   text-transform: uppercase;
   padding: .75rem;
   cursor: pointer;
+  color: #FFFFFF;
 }
 
 .mobile-nav {
   display: none;
-  padding: 1rem 0 1.5rem;
-  background: #FFFFFF;
-  border-top: 1px solid var(--line);
+  padding: 1.25rem 1rem 2rem;
+  background: #FFFFFF !important;
+  border-top: 1px solid #D5E7F6;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
 }
 
 .mobile-nav.open {
-  display: grid;
-  gap: .25rem;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.35rem !important;
 }
 
 .mobile-nav a {
-  padding: .8rem 0;
+  padding: 0.75rem 0.5rem;
   font-weight: 700;
-  border-bottom: 1px solid var(--line);
+  color: #123E70 !important;
+  border-bottom: 1px solid #E2E8F0;
+  text-decoration: none;
+  font-size: 0.92rem;
+  display: block;
+}
+
+.mobile-nav a:hover,
+.mobile-nav a.active {
+  background: #EAF3FB;
+  color: #1769AA !important;
 }
 
 .header-actions {
@@ -545,7 +583,7 @@ a {
 /* Structured B2B Industrial Footer */
 .footer {
   margin-top: 0;
-  background: #0A1E34;
+  background: #123E70;
   color: #E2E8F0;
   padding: 4.5rem 0 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -1961,21 +1999,34 @@ section {
 }
 
 .rfq-preview {
-  background: #34342e;
-  color: #fff;
-  padding: 2rem;
+  background: #0E325A;
+  color: #FFFFFF;
+  padding: 2.25rem;
+  border-radius: 8px;
+  border: 1px solid rgba(213, 164, 58, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.rfq-preview .section-title {
+  color: #FFFFFF;
+  font-size: 1.65rem;
+  margin-top: 0.25rem;
 }
 
 .rfq-preview p {
-  color: #d2cabb;
+  color: #D5E7F6;
+  font-size: 0.92rem;
+  line-height: 1.55;
 }
 
 .rfq-preview label {
   display: block;
-  font-size: .73rem;
+  font-size: .75rem;
   font-weight: 700;
-  letter-spacing: .06em;
+  letter-spacing: .05em;
+  text-transform: uppercase;
   margin-top: 1rem;
+  color: #F8DF8A;
 }
 
 .rfq-preview input,
@@ -1983,14 +2034,23 @@ section {
   width: 100%;
   padding: .75rem;
   margin-top: .35rem;
-  border: 1px solid var(--line);
+  border: 1px solid #234E7B;
+  border-radius: 4px;
   font: inherit;
-  background: #fff;
+  background: #FFFFFF;
   color: var(--ink);
 }
 
 .rfq-preview button {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
+  background: #D5A43A;
+  color: #0B1C30;
+  font-weight: 700;
+  border: none;
+}
+
+.rfq-preview button:hover {
+  background: #E8BC59;
 }
 
 /* Technical Specification & Document Enhancements */
@@ -2215,7 +2275,8 @@ section {
     padding: .5rem 0;
   }
   .brand-logo {
-    max-width: 155px;
+    max-width: 175px;
+    max-height: 50px;
     height: auto;
   }
   .nav-links,
@@ -2270,18 +2331,21 @@ section {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
+    min-height: 38px;
     padding: 0.45rem 0.85rem;
     font-family: var(--mono);
     font-size: 0.76rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    background: #FFFFFF;
-    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 4px;
     cursor: pointer;
-    color: var(--ink);
+    color: #FFFFFF;
+  }
+  .menu-toggle:hover {
+    background: rgba(255, 255, 255, 0.25);
   }
   .hero {
     min-height: auto;
@@ -2400,22 +2464,26 @@ section {
 
 @media (max-width: 480px) {
   .brand-logo {
-    max-width: 135px;
+    max-width: 150px;
+    max-height: 44px;
     height: auto;
   }
   .brand-logo-footer {
-    max-width: 160px;
+    max-width: 175px;
+    max-height: 52px;
     height: auto;
   }
 }
 
 @media (max-width: 360px) {
   .brand-logo {
-    max-width: 115px;
+    max-width: 130px;
+    max-height: 40px;
     height: auto;
   }
   .brand-logo-footer {
-    max-width: 140px;
+    max-width: 150px;
+    max-height: 46px;
     height: auto;
   }
 }
@@ -4275,27 +4343,27 @@ html, body {
   top: 100%;
   left: 0;
   right: 0;
-  background: #FFFFFF;
-  border-top: 1px solid #E2E8F0;
-  border-bottom: 2px solid #174A70;
-  box-shadow: 0 16px 36px rgba(15, 43, 72, 0.14);
+  background: #FFFFFF !important;
+  border: 1px solid #D5E7F6 !important;
+  border-top: 3px solid #123E70 !important;
+  box-shadow: 0 16px 36px rgba(18, 62, 112, 0.16) !important;
   padding: 2.25rem 0 2.5rem;
   opacity: 0;
   visibility: hidden;
   transform: translateY(0);
   transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
-  z-index: 1000;
+  z-index: 2500 !important;
 }
 
-/* Invisible bridge extending 25px above the mega menu into the header so mouse hover is never lost */
+/* Invisible bridge extending 30px above the mega menu into the header so mouse hover is never lost */
 .mega-menu-dropdown::before {
   content: '';
   position: absolute;
-  top: -25px;
+  top: -30px;
   left: 0;
   right: 0;
-  height: 25px;
+  height: 30px;
   background: transparent;
   pointer-events: auto;
 }
@@ -4315,15 +4383,15 @@ html, body {
 }
 
 .mega-menu-col-title {
-  font-family: var(--mono);
-  font-size: 0.74rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #174A70;
+  font-family: var(--mono) !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #123E70 !important;
   margin: 0 0 1rem;
   padding-bottom: 0.45rem;
-  border-bottom: 2px solid #E5E7EB;
+  border-bottom: 2px solid #D5E7F6 !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4331,11 +4399,12 @@ html, body {
 
 .mega-menu-col-title span.count {
   font-size: 0.68rem;
-  color: var(--slate);
-  background: var(--fog);
+  color: #1769AA !important;
+  background: #EAF3FB !important;
+  border: 1px solid #D5E7F6 !important;
   padding: 0.1rem 0.45rem;
   border-radius: 3px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .mega-menu-list {
@@ -4348,33 +4417,40 @@ html, body {
 }
 
 .mega-menu-item a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.4rem 0.55rem;
-  border-radius: 4px;
-  text-decoration: none;
-  color: var(--ink);
-  font-size: 0.86rem;
-  font-weight: 600;
-  transition: all 0.15s ease;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0.45rem 0.65rem !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  color: #123E70 !important;
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+  background: transparent !important;
+  transition: all 0.15s ease !important;
 }
 
 .mega-menu-item a:hover {
-  background: #F1F5F9;
-  color: #174A70;
-  transform: translateX(3px);
+  background: #EAF3FB !important;
+  color: #123E70 !important;
+  transform: translateX(3px) !important;
+}
+
+.mega-menu-item a.active {
+  background: #D5E7F6 !important;
+  color: #123E70 !important;
 }
 
 .mega-menu-item a span.tag {
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  font-weight: 600;
-  color: #A84E2B;
-  background: rgba(168, 78, 43, 0.08);
-  padding: 0.1rem 0.4rem;
-  border-radius: 3px;
-  letter-spacing: 0.02em;
+  font-family: var(--mono) !important;
+  font-size: 0.66rem !important;
+  font-weight: 700 !important;
+  color: #1769AA !important;
+  background: #EAF3FB !important;
+  border: 1px solid #D5E7F6 !important;
+  padding: 0.12rem 0.45rem !important;
+  border-radius: 3px !important;
+  letter-spacing: 0.02em !important;
 }
 
 .mega-menu-spotlight-card {
@@ -4471,9 +4547,9 @@ html, body {
 /* 3. High-Impact Industrial Hero Section */
 .exp-hero {
   position: relative;
-  background: #FFFFFF;
-  padding: 4.5rem 0 4rem;
-  border-bottom: 1px solid var(--line);
+  background: #0B1C30 url('/assets/images/gallery/hero_industrial_minerals.jpg') center/cover no-repeat;
+  padding: 5.5rem 0 4.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   overflow: hidden;
 }
 
@@ -4481,12 +4557,7 @@ html, body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: 
-    radial-gradient(circle at 15% 20%, rgba(23, 74, 112, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(213, 164, 58, 0.05) 0%, transparent 40%),
-    linear-gradient(to right, rgba(229, 231, 235, 0.5) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(229, 231, 235, 0.5) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+  background: linear-gradient(135deg, rgba(11, 28, 48, 0.94) 0%, rgba(18, 62, 112, 0.88) 55%, rgba(23, 105, 170, 0.78) 100%);
   pointer-events: none;
 }
 
@@ -4508,9 +4579,9 @@ html, body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #174A70;
-  background: rgba(23, 74, 112, 0.08);
-  border: 1px solid rgba(23, 74, 112, 0.18);
+  color: #F8DF8A !important;
+  background: rgba(213, 164, 58, 0.18) !important;
+  border: 1px solid rgba(213, 164, 58, 0.45) !important;
   padding: 0.35rem 0.8rem;
   border-radius: 4px;
   margin-bottom: 1.25rem;
@@ -4521,7 +4592,7 @@ html, body {
   font-size: clamp(2.4rem, 4.4vw, 3.6rem);
   line-height: 1.14;
   font-weight: 700;
-  color: var(--ink);
+  color: #FFFFFF !important;
   margin: 0 0 1.25rem;
   letter-spacing: -0.01em;
 }
@@ -4529,7 +4600,7 @@ html, body {
 .exp-hero-lead {
   font-size: 1.12rem;
   line-height: 1.6;
-  color: #4B5563;
+  color: #D5E7F6 !important;
   margin: 0 0 2rem;
   max-width: 58ch;
 }
@@ -4543,33 +4614,36 @@ html, body {
 }
 
 .exp-hero-stats-grid {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
   margin-top: 2.75rem;
   padding-top: 2rem;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .exp-hero-stat-card {
-  background: #FFFFFF;
-  border: 1px solid var(--line);
+  background: rgba(12, 43, 80, 0.88) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: 6px;
   padding: 1.25rem 1.15rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .exp-hero-stat-card:hover {
   transform: translateY(-2px);
-  border-color: #174A70;
+  border-color: #D5A43A !important;
 }
 
 .exp-stat-num {
   font-family: var(--serif);
   font-size: 1.75rem;
   font-weight: 700;
-  color: #174A70;
+  color: #F8DF8A !important;
   line-height: 1.1;
   margin-bottom: 0.25rem;
 }
@@ -4580,8 +4654,15 @@ html, body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--ink);
+  color: #FFFFFF !important;
   margin-bottom: 0.2rem;
+}
+
+.exp-stat-desc {
+  font-size: 0.78rem;
+  color: #D5E7F6 !important;
+  line-height: 1.45;
+  margin: 0;
 }
 
 .exp-stat-desc {
@@ -4909,112 +4990,111 @@ html, body {
   box-shadow: 0 2px 8px rgba(23, 74, 112, 0.2);
 }
 
-/* 5. Industry Applications 8-Card Matrix */
+/* 5. Industry Applications 10-Card Visual Showroom Grid */
 .industry-matrix-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 255px), 1fr));
+  gap: 1.5rem;
+  margin-top: 2.25rem;
 }
 
 .industry-matrix-card {
   background: #FFFFFF;
   border: 1px solid var(--line);
   border-radius: 6px;
-  padding: 1.5rem 1.35rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  padding: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
   position: relative;
   overflow: hidden;
 }
 
 .industry-matrix-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: #174A70;
+  box-shadow: 0 12px 28px rgba(15, 43, 72, 0.12);
 }
 
-.industry-matrix-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #174A70;
+.industry-matrix-img-box {
+  width: 100%;
+  height: 165px;
+  overflow: hidden;
+  position: relative;
+  background: #0B1C30;
 }
 
-.industry-matrix-card:nth-child(2)::before { background: #248C91; }
-.industry-matrix-card:nth-child(3)::before { background: #A84E2B; }
-.industry-matrix-card:nth-child(4)::before { background: #D5A43A; }
-.industry-matrix-card:nth-child(5)::before { background: #0F2B48; }
-.industry-matrix-card:nth-child(6)::before { background: #0D9488; }
-.industry-matrix-card:nth-child(7)::before { background: #B45309; }
-.industry-matrix-card:nth-child(8)::before { background: #4338CA; }
+.industry-matrix-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+  display: block;
+}
 
-.ind-matrix-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: 6px;
-  background: rgba(23, 74, 112, 0.08);
-  color: #174A70;
+.industry-matrix-card:hover .industry-matrix-img {
+  transform: scale(1.05);
+}
+
+.industry-matrix-body {
+  padding: 1.35rem 1.25rem 1.45rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
 }
 
 .ind-matrix-title {
-  font-size: 1.1rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--ink);
   margin: 0 0 0.5rem;
+  line-height: 1.3;
 }
 
 .ind-matrix-desc {
   font-size: 0.82rem;
   color: var(--slate);
-  line-height: 1.45;
+  line-height: 1.5;
   margin: 0 0 1rem;
 }
 
 .ind-matrix-minerals-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
   margin-bottom: 1.25rem;
 }
 
-.ind-matrix-mineral-pill {
+.ind-matrix-mineral-text {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  color: #1E293B;
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  padding: 0.2rem 0.5rem;
-  border-radius: 3px;
+  color: #174A70;
+  line-height: 1.55;
+  display: block;
 }
 
 .ind-matrix-action {
   font-family: var(--mono);
   font-size: 0.74rem;
   font-weight: 700;
-  text-transform: uppercase;
   color: #174A70;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  transition: gap 0.15s ease;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+  transition: all 0.15s ease;
 }
 
 .ind-matrix-action:hover {
+  color: #0A1E34;
   gap: 0.55rem;
-  color: #0F2B48;
 }
+
+
 
 /* 6. Institutional Overview Split Section */
 .institutional-split {
@@ -6123,10 +6203,11 @@ html, body {
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 420px;
-  background: #FFFFFF;
-  border-top: 2px solid #174A70;
-  box-shadow: 0 16px 36px rgba(15, 43, 72, 0.16);
+  min-width: 440px;
+  background: #FFFFFF !important;
+  border: 1px solid #D5E7F6 !important;
+  border-top: 3px solid #123E70 !important;
+  box-shadow: 0 16px 36px rgba(18, 62, 112, 0.16) !important;
   border-radius: 0 0 6px 6px;
   padding: 1.25rem 1.5rem;
   opacity: 0;
@@ -6134,17 +6215,17 @@ html, body {
   transform: translateY(0);
   transition: opacity 0.2s ease, visibility 0.2s ease;
   pointer-events: none;
-  z-index: 1000;
+  z-index: 2500 !important;
 }
 
-/* Invisible bridge extending 20px above dropdown */
+/* Invisible bridge extending 30px above dropdown */
 .dropdown-menu::before {
   content: '';
   position: absolute;
-  top: -20px;
+  top: -30px;
   left: 0;
   right: 0;
-  height: 20px;
+  height: 30px;
   background: transparent;
   pointer-events: auto;
 }
@@ -6164,21 +6245,47 @@ html, body {
 }
 
 .dropdown-item {
-  display: flex;
-  align-items: center;
-  padding: 0.35rem 0.5rem;
-  border-radius: 4px;
-  text-decoration: none;
-  color: var(--ink);
-  font-size: 0.84rem;
-  font-weight: 600;
-  transition: all 0.15s ease;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0.45rem 0.65rem !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  color: #123E70 !important;
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+  background: transparent !important;
+  transition: all 0.15s ease !important;
 }
 
 .dropdown-item:hover {
-  background: #F1F5F9;
-  color: #174A70;
-  transform: translateX(2px);
+  background: #EAF3FB !important;
+  color: #123E70 !important;
+  transform: translateX(2px) !important;
+}
+
+.dropdown-item.active {
+  background: #D5E7F6 !important;
+  color: #123E70 !important;
+}
+
+.dropdown-item-all {
+  grid-column: 1 / -1 !important;
+  font-weight: 700 !important;
+  color: #123E70 !important;
+  border-top: 1px solid #D5E7F6 !important;
+  padding-top: 0.65rem !important;
+  margin-top: 0.35rem !important;
+  display: block !important;
+  text-decoration: none !important;
+  font-size: 0.86rem !important;
+  transition: all 0.15s ease !important;
+}
+
+.dropdown-item-all:hover {
+  color: #1769AA !important;
+  background: #EAF3FB !important;
+  padding-left: 0.5rem !important;
+  border-radius: 4px !important;
 }
 
 /* Flagship Mineral Showroom Cards */
@@ -6597,6 +6704,472 @@ html, body {
   margin: 0;
 }
 
+/* =========================================================================
+ * RAJSHILA BENCHMARK SHOWROOM SECTIONS (BLUE CORPORATE THEME)
+ * ========================================================================= */
 
+/* Section E: Sourcing Corridors & Pit-Head Partnerships */
+.sourcing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
 
+.sourcing-card {
+  background: #FFFFFF;
+  border: 1px solid #D5E7F6;
+  border-radius: 8px;
+  padding: 1.6rem;
+  box-shadow: 0 4px 18px rgba(18, 62, 112, 0.05);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
 
+.sourcing-card:hover {
+  transform: translateY(-4px);
+  border-color: #1769AA;
+  box-shadow: 0 12px 28px rgba(18, 62, 112, 0.1);
+}
+
+.sourcing-hub-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+  width: fit-content;
+}
+
+.sourcing-title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #123E70;
+  margin: 0 0 0.5rem;
+}
+
+.sourcing-desc {
+  font-size: 0.84rem;
+  color: #526071;
+  line-height: 1.55;
+  margin: 0 0 1rem;
+  flex-grow: 1;
+}
+
+.sourcing-minerals-list {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #1769AA;
+  font-weight: 700;
+  padding-top: 0.75rem;
+  border-top: 1px solid #E2E8F0;
+}
+
+/* Section G: Asymmetric Showroom Strengths Layout */
+.strengths-showroom-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: stretch;
+}
+
+.strengths-hero-card {
+  background: #FFFFFF;
+  border: 1px solid #D5E7F6;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(18, 62, 112, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.strengths-hero-img-box {
+  height: 250px;
+  position: relative;
+  background: #0B284D;
+  overflow: hidden;
+}
+
+.strengths-hero-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.strengths-hero-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.strengths-matrix {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.15rem;
+}
+
+.strength-pillar-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-left: 4px solid #1769AA;
+  border-radius: 6px;
+  padding: 1.35rem 1.5rem;
+  box-shadow: 0 4px 14px rgba(18, 62, 112, 0.04);
+  transition: transform 0.2s ease, border-left-color 0.2s ease;
+}
+
+.strength-pillar-card:hover {
+  transform: translateX(4px);
+  border-left-color: #D5A43A;
+}
+
+.strength-pillar-num {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #1769AA;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.strength-pillar-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #252F3D;
+  margin: 0 0 0.35rem;
+}
+
+.strength-pillar-desc {
+  font-size: 0.83rem;
+  color: #526071;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Section H: Technical Literature & Blog Showcase */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.blog-card {
+  background: #FFFFFF;
+  border: 1px solid #D5E7F6;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(18, 62, 112, 0.06);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  border-color: #1769AA;
+  box-shadow: 0 12px 28px rgba(18, 62, 112, 0.12);
+}
+
+.blog-img-box {
+  height: 180px;
+  width: 100%;
+  overflow: hidden;
+  background: #0B284D;
+  position: relative;
+}
+
+.blog-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.blog-card:hover .blog-thumb-img {
+  transform: scale(1.04);
+}
+
+.blog-body {
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.blog-cat-badge {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #1769AA;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.45rem;
+  display: block;
+}
+
+.blog-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #252F3D;
+  line-height: 1.35;
+  margin: 0 0 0.65rem;
+}
+
+.blog-desc {
+  font-size: 0.82rem;
+  color: #526071;
+  line-height: 1.55;
+  margin: 0 0 1.25rem;
+  flex-grow: 1;
+}
+
+.blog-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.85rem;
+  border-top: 1px solid #E2E8F0;
+  margin-top: auto;
+}
+
+.blog-read-link {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #1769AA;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: gap 0.15s ease;
+}
+
+.blog-read-link:hover {
+  color: #123E70;
+  gap: 0.5rem;
+}
+
+/* =========================================================================
+ * COLORFUL SHOWROOM SECTION PALETTES (60% RICH / 40% LIGHT RATIO)
+ * ========================================================================= */
+.showroom-section-dark {
+  background: #0C2B50 !important;
+  color: #FFFFFF !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.showroom-section-dark .section-title {
+  color: #FFFFFF !important;
+}
+
+.showroom-section-dark .lede {
+  color: #D5E7F6 !important;
+}
+
+.showroom-section-dark .eyebrow {
+  color: #D5A43A !important;
+}
+
+#about-company {
+  background: #EAF3FB !important;
+}
+
+#about-company .institutional-visual-card {
+  border: 1px solid #D5E7F6 !important;
+  box-shadow: 0 8px 24px rgba(18, 62, 112, 0.08) !important;
+}
+
+#about-company .inst-pillar-item {
+  background: #FFFFFF !important;
+  border: 1px solid #D5E7F6 !important;
+  box-shadow: 0 4px 12px rgba(18, 62, 112, 0.04) !important;
+}
+
+#sourcing {
+  background: #0C2B50 !important;
+  color: #FFFFFF !important;
+}
+
+#sourcing .section-title {
+  color: #FFFFFF !important;
+}
+
+#sourcing .lede {
+  color: #D5E7F6 !important;
+}
+
+#sourcing .eyebrow {
+  color: #D5A43A !important;
+}
+
+#sourcing .sourcing-card {
+  background: #123E70 !important;
+  border: 1px solid rgba(213, 164, 58, 0.3) !important;
+  color: #FFFFFF !important;
+}
+
+#sourcing .sourcing-title {
+  color: #FFFFFF !important;
+}
+
+#sourcing .sourcing-desc {
+  color: #D5E7F6 !important;
+}
+
+#sourcing .sourcing-hub-badge {
+  background: rgba(213, 164, 58, 0.2) !important;
+  color: #F8DF8A !important;
+  border: 1px solid #D5A43A !important;
+}
+
+#sourcing .sourcing-minerals-list {
+  background: rgba(11, 28, 48, 0.7) !important;
+  color: #D5E7F6 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+#industries {
+  background: #EAF3FB !important;
+}
+
+#industries .industry-matrix-card {
+  background: #FFFFFF !important;
+  border: 1px solid #D5E7F6 !important;
+  box-shadow: 0 4px 18px rgba(18, 62, 112, 0.06) !important;
+}
+
+#why {
+  background: #123E70 !important;
+  color: #FFFFFF !important;
+}
+
+#why .section-title {
+  color: #FFFFFF !important;
+}
+
+#why .lede {
+  color: #D5E7F6 !important;
+}
+
+#why .eyebrow {
+  color: #D5A43A !important;
+}
+
+#why .strengths-hero-card {
+  background: #0C2B50 !important;
+  border: 1px solid rgba(213, 164, 58, 0.35) !important;
+  color: #FFFFFF !important;
+}
+
+#why .strengths-hero-title {
+  color: #FFFFFF !important;
+}
+
+#why .strengths-hero-desc {
+  color: #D5E7F6 !important;
+}
+
+#why .strengths-hero-badge {
+  background: rgba(213, 164, 58, 0.15) !important;
+  border: 1px solid rgba(213, 164, 58, 0.4) !important;
+  color: #F8DF8A !important;
+}
+
+#why .strengths-stat-val {
+  color: #F8DF8A !important;
+}
+
+#why .strengths-stat-lbl {
+  color: #D5E7F6 !important;
+}
+
+#why .strength-pillar-card {
+  background: #0E3560 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-left: 4px solid #D5A43A !important;
+  color: #FFFFFF !important;
+}
+
+#why .strength-pillar-title {
+  color: #FFFFFF !important;
+}
+
+#why .strength-pillar-desc {
+  color: #D5E7F6 !important;
+}
+
+#why .strength-pillar-num {
+  color: #F8DF8A !important;
+}
+
+#facilities {
+  background: #EAF3FB !important;
+}
+
+#facilities .facility-card {
+  background: #FFFFFF !important;
+  border: 1px solid #D5E7F6 !important;
+  box-shadow: 0 4px 18px rgba(18, 62, 112, 0.06) !important;
+}
+
+#facilities .facility-card-head {
+  background: #123E70 !important;
+}
+
+#facilities .facility-card-head h4 {
+  color: #FFFFFF !important;
+}
+
+#facilities .facility-card-head span {
+  color: #F8DF8A !important;
+}
+
+/* Enhanced Product Cards with Category Colored Top Accent */
+.product-card {
+  border-top: 3px solid #1769AA !important;
+  border-radius: 8px !important;
+}
+
+.homepage-product-card[data-category="minerals"] .product-card {
+  border-top: 3px solid #1769AA !important;
+}
+
+.homepage-product-card[data-category="chemicals"] .product-card {
+  border-top: 3px solid #248C91 !important;
+}
+
+.homepage-product-card[data-category="grains"] .product-card {
+  border-top: 3px solid #D5A43A !important;
+}
+
+@media (max-width: 1024px) {
+  .sourcing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .strengths-showroom-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .sourcing-grid {
+    grid-template-columns: 1fr;
+  }
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+}
