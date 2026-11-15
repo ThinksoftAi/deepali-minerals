@@ -1228,7 +1228,6 @@
         <video
           class="hero-video exp-hero-bg-video"
           autoplay
-          muted
           loop
           playsinline
           preload="auto"
@@ -1270,21 +1269,21 @@
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem;">
                 <button
                   type="button"
-                  class="button hero-sound-btn"
+                  class="button hero-sound-btn is-active"
                   data-hero-audio-toggle="true"
-                  aria-label="Toggle facility video sound"
-                  aria-pressed="false"
-                  title="Click to toggle facility sound"
+                  aria-label="Mute facility video sound"
+                  aria-pressed="true"
+                  title="Click to mute facility video sound"
                   style="padding: 0.45rem 0.95rem; font-size: 0.74rem; min-height: 36px; background: rgba(12, 43, 80, 0.92); border-color: rgba(255,255,255,0.3); color: #FFFFFF; display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 4px;"
                 >
                   <span class="hero-audio-icon" aria-hidden="true">
                     <svg class="sound-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                      <line x1="23" y1="9" x2="17" y2="15"></line>
-                      <line x1="17" y1="9" x2="23" y2="15"></line>
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
                     </svg>
                   </span>
-                  <span class="hero-audio-label">Enable Video Sound</span>
+                  <span class="hero-audio-label">Mute Video Sound</span>
                 </button>
 
                 <button
@@ -2183,7 +2182,10 @@
       }
     };
 
+    let userExplicitlyMuted = false;
+
     const enableSound = () => {
+      userExplicitlyMuted = false;
       video.muted = false;
       video.volume = 1.0;
       const playPromise = video.play();
@@ -2197,6 +2199,7 @@
       if (video.muted) {
         enableSound();
       } else {
+        userExplicitlyMuted = true;
         video.muted = true;
         syncUI(true);
       }
@@ -2359,8 +2362,44 @@
       });
     });
 
-    // Initial state sync
-    syncUI(video.muted);
+    // Enable sound by default on load; gracefully handle browser autoplay policies
+    const attemptDefaultUnmutedPlay = () => {
+      video.muted = false;
+      video.volume = 1.0;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          syncUI(false);
+        }).catch(() => {
+          // If browser blocks unmuted autoplay before interaction, keep video playing muted
+          // and automatically enable sound on first user interaction
+          video.muted = true;
+          video.play().catch(() => {});
+          syncUI(true);
+
+          const unlockAudioOnFirstGesture = (e) => {
+            ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(evt => {
+              document.removeEventListener(evt, unlockAudioOnFirstGesture, true);
+            });
+            // If user clicked the audio toggle button itself, let its own handler toggle audio once
+            if (e && e.target && e.target.closest && e.target.closest('[data-hero-audio-toggle]')) {
+              return;
+            }
+            if (!userExplicitlyMuted) {
+              enableSound();
+            }
+          };
+
+          ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(evt => {
+            document.addEventListener(evt, unlockAudioOnFirstGesture, { capture: true, once: true, passive: true });
+          });
+        });
+      } else {
+        syncUI(video.muted);
+      }
+    };
+
+    attemptDefaultUnmutedPlay();
   }
 
   /* =========================================================================
