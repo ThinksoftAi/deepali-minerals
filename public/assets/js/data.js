@@ -86,10 +86,6 @@
         {
           src: '/assets/images/products/talc-powder.webp',
           alt: 'Talc Powder and Natural Mineral Rocks'
-        },
-        {
-          src: '/assets/images/products/talc-powder-alt.webp',
-          alt: 'Micronized Talc Mineral Powder in Inspection Dish'
         }
       ],
       category: 'Mineral Powders',
@@ -171,10 +167,6 @@
         {
           src: '/assets/images/products/chalk-powder.webp',
           alt: 'White Chalk Powder with Raw Natural Mineral Chunks'
-        },
-        {
-          src: '/assets/images/products/chalk-powder-alt.webp',
-          alt: 'Refined Chalk Powder Laboratory Still Life'
         }
       ],
       category: 'Mineral Powders',
