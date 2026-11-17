@@ -112,7 +112,7 @@
       specifications: {
         grade: 'Cosmetic USP & Industrial Micro grades',
         purity: 'Technical data available on request.',
-        mesh: '300 to 1250 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'High whiteness grades available',
@@ -147,7 +147,7 @@
       specifications: {
         grade: 'Commercial Soapstone Powder',
         purity: 'Technical data available on request.',
-        mesh: '200 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Available on request',
@@ -191,7 +191,7 @@
       specifications: {
         grade: 'French Chalk & Whitening Chalk grades',
         purity: 'Technical data available on request.',
-        mesh: '300 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Available on request',
@@ -227,7 +227,7 @@
       specifications: {
         grade: 'Chemical & Water Treatment Grade',
         purity: 'Available Ca(OH)2 > 90% (Available on request)',
-        mesh: '200 to 400 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Available on request',
@@ -262,7 +262,7 @@
       specifications: {
         grade: 'Levigated & Industrial Grade',
         purity: 'Technical data available on request.',
-        mesh: '300 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Available on request',
@@ -296,7 +296,7 @@
       specifications: {
         grade: 'Calcined & Pharma/Cosmetic Grade',
         purity: 'Technical data available on request.',
-        mesh: '400 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Micro-fine gradations',
         particleSize: 'Available on request',
         whiteness: 'High whiteness grades available',
@@ -330,7 +330,7 @@
       specifications: {
         grade: 'Super White Marble Powder',
         purity: 'Technical data available on request.',
-        mesh: '200 to 400 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'High natural brightness',
@@ -364,7 +364,7 @@
       specifications: {
         grade: 'Micronized Optical Quartz',
         purity: 'SiO2 content available on request',
-        mesh: '200 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Available on request',
@@ -405,7 +405,7 @@
       specifications: {
         grade: 'PCC, GCC & Stearic Coated Grades',
         purity: 'CaCO3 content available on request',
-        mesh: '300 to 1250 Mesh',
+        mesh: 'Available on request',
         micron: 'Superfine micronized options',
         particleSize: 'Available on request',
         whiteness: 'High whiteness up to 98%+',
@@ -438,7 +438,7 @@
       specifications: {
         grade: 'Natural Hematite & Synthetic Red Oxide',
         purity: 'Fe2O3 content available on request',
-        mesh: '300 to 400 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'N/A (Deep Brick Red)',
@@ -505,7 +505,7 @@
       specifications: {
         grade: 'White Seal & Active Rubber Grade',
         purity: 'ZnO assay available on request',
-        mesh: '325 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Micro-fine active surface area',
         particleSize: 'Available on request',
         whiteness: 'High whiteness powder',
@@ -538,7 +538,7 @@
       specifications: {
         grade: 'Polymer & Coating Grade',
         purity: 'Technical data available on request.',
-        mesh: '200 to 325 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Snow white powder',
@@ -573,7 +573,7 @@
       specifications: {
         grade: 'Light Basic & Heavy Grade',
         purity: 'MgO equivalent available on request',
-        mesh: '300 to 400 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Ultra-white powder',
@@ -607,7 +607,7 @@
       specifications: {
         grade: 'Superfine & Micronized Dolomite',
         purity: 'CaCO3 & MgCO3 assay available on request',
-        mesh: '300 to 1250 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: '94% - 97%',
@@ -641,7 +641,7 @@
       specifications: {
         grade: 'Micronized Industrial Silica',
         purity: 'SiO2 content available on request',
-        mesh: '200 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Available on request',
@@ -782,7 +782,7 @@
       specifications: {
         grade: 'Industrial Barium Sulfate Mineral Grade',
         purity: 'BaSO4 content available on request',
-        mesh: '200 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Available on request',
@@ -817,7 +817,7 @@
       specifications: {
         grade: 'Commercial French Chalk Grade',
         purity: 'Technical data available on request.',
-        mesh: '300 to 500 Mesh',
+        mesh: 'Available on request',
         micron: 'Available on request',
         particleSize: 'Available on request',
         whiteness: 'Good whiteness (Available on request)',
@@ -912,7 +912,7 @@
         { sheetIndex: "H", industry: "Detergent", role: "Bulk density & scouring extender" },
         { sheetIndex: "N", industry: "Wall Putty", role: "High-whiteness mineral extender for white cement putties" }
       ],
-      description: "High-purity crystalline Calcite and micronized Calcite Powder engineered for fine wall putties, dry agricultural carriers, and detergent scouring compounds. Tailored particle size distributions (300 to 1250 mesh) and whiteness grades supplied on request.",
+      description: "High-purity crystalline Calcite and micronized Calcite Powder engineered for fine wall putties, dry agricultural carriers, and detergent scouring compounds. Tailored particle size distributions and whiteness grades supplied on request.",
       catalogueStatus: "Specialty Sourced Formulation Grade",
       action: "Technical specifications and batch volume confirmed on enquiry"
     }
@@ -934,7 +934,7 @@
       "Wood primers, sanding sealers, and exterior textured wall finishes"
     ],
     "technicalHighlights": [
-      "Controlled particle size distribution from 300 to 1250 mesh",
+      "Controlled particle size distribution and fine micron grading on request",
       "High whiteness (>92-98% L-value) and low oil absorption grades",
       "Chemical inertness, scrub resistance, and superior tint retention"
     ],
@@ -1552,7 +1552,7 @@
       "Wood putties, primer surfacers, and industrial metal repair paste compounds"
     ],
     "technicalHighlights": [
-      "Optimum particle size distribution (300 to 800 mesh) providing easy trowel glide and high square-foot coverage",
+      "Optimum particle size distribution providing easy trowel glide and high square-foot coverage",
       "Exceptional whiteness (>94-96% L-value) creating an ultra-bright, uniform substrate for paint topcoats",
       "Fine talc and french chalk imparting feather-edge sandability without clogging sandpaper or producing pinholes"
     ],
@@ -1705,7 +1705,7 @@
       "Waterproof tile fixing mortars, floor screeds, and self-levelling underlayments"
     ],
     "technicalHighlights": [
-      "Sub-angular graded quartz sand (30-60, 40-80, 50-100 mesh) providing high mechanical interlock and slip resistance",
+      "Sub-angular graded quartz sand in multiple industrial sieve fractions providing high mechanical interlock and slip resistance",
       "Fine calcium carbonate and talc improving open time, buttery trowel glide, and sag resistance on vertical walls",
       "Hydrated lime enhancing chemical bond strength, water retention, and long-term carbonation durability"
     ],

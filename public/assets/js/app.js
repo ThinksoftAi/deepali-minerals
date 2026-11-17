@@ -981,10 +981,6 @@
     const imgSrc = resolveProductImg(p.image);
     const altText = esc(p.alt || `${p.name} - Deepali Minerals Industrial Supply`);
 
-    const technicalBadge = (p.specifications && p.specifications.mesh) 
-      ? p.specifications.mesh 
-      : (isStarch ? 'Plant-Derived' : (p.category === 'Functional Chemicals' ? 'Compounding Grade' : 'Industrial Spec'));
-
     return `
       <article class="product-card" data-slug="${esc(p.slug)}">
         <div class="product-card-visual">
@@ -1007,7 +1003,6 @@
               <span class="fallback-sub">${isStarch ? 'Plant-Derived Industrial Grade' : 'Laboratory Certified Specimen'}</span>
             </div>
           </div>
-          <span class="product-card-badge">${esc(technicalBadge)}</span>
         </div>
         <span class="eyebrow">${esc(p.category)}</span>
         <h3>${esc(p.name)}</h3>
@@ -1316,8 +1311,8 @@
 
               <div class="glass-spec-metrics">
                 <div class="glass-metric-box">
-                  <span class="glass-metric-val">100–1250</span>
-                  <span class="glass-metric-lbl">Mesh Precision</span>
+                  <span class="glass-metric-val">Custom</span>
+                  <span class="glass-metric-lbl">Micron Grading</span>
                 </div>
                 <div class="glass-metric-box">
                   <span class="glass-metric-val">100%</span>
@@ -1427,7 +1422,7 @@
                 </div>
                 <div class="inst-pillar-item" style="border-left: 4px solid #1769AA; background: #FFFFFF; padding: 1rem 1.25rem; border-radius: 6px; box-shadow: 0 4px 14px rgba(18,62,112,0.04);">
                   <strong style="color: #1769AA; display: block; margin-bottom: 0.25rem;">Particle Size Consistency</strong>
-                  <p style="margin: 0; font-size: 0.82rem; color: #526071; line-height: 1.45;">Micronized and pulverized grades sieved from 100 mesh up to 1250 mesh for demanding compounding.</p>
+                  <p style="margin: 0; font-size: 0.82rem; color: #526071; line-height: 1.45;">Micronized and pulverized grades classified to required particle fineness for demanding compounding.</p>
                 </div>
                 <div class="inst-pillar-item" style="border-left: 4px solid #80664A; background: #FFFFFF; padding: 1rem 1.25rem; border-radius: 6px; box-shadow: 0 4px 14px rgba(18,62,112,0.04);">
                   <strong style="color: #80664A; display: block; margin-bottom: 0.25rem;">Laboratory Quality Assay</strong>
@@ -1538,9 +1533,9 @@
             <div class="sourcing-card" style="background: #123E70; border: 1px solid rgba(213, 164, 58, 0.3); color: #FFFFFF;">
               <span class="sourcing-hub-badge" style="background: rgba(213, 164, 58, 0.2); color: #F8DF8A; border: 1px solid #D5A43A;">CONTROLLED MILLING</span>
               <h3 class="sourcing-title" style="color: #FFFFFF;">Raymond Milling &amp; Air-Classification</h3>
-              <p class="sourcing-desc" style="color: #D5E7F6;">Multi-deck air-classification and raymond milling infrastructure capable of delivering custom micronized particle distributions from 100 up to 1250 mesh.</p>
+              <p class="sourcing-desc" style="color: #D5E7F6;">Multi-deck air-classification and raymond milling infrastructure capable of delivering custom micronized particle distributions on request.</p>
               <div class="sourcing-minerals-list" style="background: rgba(11, 28, 48, 0.7); color: #D5E7F6; border-top: 1px solid rgba(255, 255, 255, 0.12);">
-                <strong style="color: #F8DF8A;">Capabilities:</strong> 100–1250 Mesh Sieving &bull; Surface Stearate Coating &bull; De-gritting
+                <strong style="color: #F8DF8A;">Capabilities:</strong> Custom Micron Sieving &bull; Surface Stearate Coating &bull; De-gritting
               </div>
             </div>
 
@@ -1808,7 +1803,7 @@
               <div class="strength-pillar-card" style="background: #0E3560; border: 1px solid rgba(255, 255, 255, 0.14); border-left: 4px solid #D5A43A; color: #FFFFFF;">
                 <div class="strength-pillar-num" style="color: #F8DF8A;">03</div>
                 <div>
-                  <h4 class="strength-pillar-title" style="color: #FFFFFF;">Calibrated Micron Sizing (100–1250 Mesh)</h4>
+                  <h4 class="strength-pillar-title" style="color: #FFFFFF;">Calibrated Micron Sizing &amp; Screening</h4>
                   <p class="strength-pillar-desc" style="color: #D5E7F6;">Controlled air-classification delivers tight particle size distribution (PSD), controlled top-cut, and high photometric whiteness.</p>
                 </div>
               </div>
@@ -1940,7 +1935,7 @@
               </div>
               <div class="blog-body">
                 <span class="blog-cat-badge">PARTICLE CALIBRATION</span>
-                <h3 class="blog-title" style="color: #123E70;">Mesh to Micron Calibration: Understanding 100 to 1250 Mesh in Mineral Fillers</h3>
+                <h3 class="blog-title" style="color: #123E70;">Sieve to Micron Calibration: Understanding Particle Grading in Mineral Fillers</h3>
                 <p class="blog-desc">A practical technical guide for paint and masterbatch formulators navigating sieve mesh sizes, D50/D97 laser diffraction metrics, and particle top-cut control.</p>
                 <div class="blog-meta-row">
                   <span>Technical Reference</span>
@@ -2034,8 +2029,8 @@
 
               <a href="${root}/product.html?product=talc" class="download-card">
                 <div class="download-info">
-                  <h5>Mesh to Micron Conversion Table</h5>
-                  <span>100 Mesh to 1250 Mesh Calibration Chart</span>
+                  <h5>Particle Fineness Reference Guide</h5>
+                  <span>Micron &amp; Sieve Calibration Chart</span>
                 </div>
                 <div class="download-icon">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
@@ -2284,7 +2279,7 @@
             </video>
           </div>
           <div class="video-theater-footer">
-            <div>High-Purity Pulverized Extenders &bull; 100–1250 Mesh Grading &bull; Bulk Industrial Supply</div>
+            <div>High-Purity Pulverized Extenders &bull; Custom Sieve Grading &bull; Bulk Industrial Supply</div>
             <div style="color: #D5A43A; font-weight: 700;">ISO 9001:2015 &amp; ISO 14001:2015 ACCREDITED</div>
           </div>
         `;
@@ -2502,9 +2497,9 @@
         dynamicContainer.innerHTML = `
           <select id="discovery-dynamic-select">
             <option value="micronized">All Fine & Micronized Powders</option>
-            <option value="1250">Superfine (up to 1250 Mesh)</option>
-            <option value="500">Fine Industrial (300 to 500 Mesh)</option>
-            <option value="200">Standard Milled (200 to 400 Mesh)</option>
+            <option value="superfine">Superfine Micronized Grades</option>
+            <option value="fine">Fine Industrial Powders</option>
+            <option value="standard">Standard Milled &amp; Granular Grades</option>
           </select>
         `;
       } else if (['plastics', 'paints', 'rubber', 'cosmetics', 'pharma', 'pvc', 'ceramics', 'construction', 'paper', 'cables'].includes(q)) {
@@ -2659,17 +2654,17 @@
           criteriaText = 'White & High-Brightness Minerals';
         }
       } else if (q === 'micronized' || q === 'particle') {
-        if (val === '1250') {
-          matched = data.products.filter(p => (p.specifications.mesh || '').includes('1250'));
-          criteriaText = 'Superfine Powders (up to 1250 Mesh)';
-        } else if (val === '500') {
-          matched = data.products.filter(p => (p.specifications.mesh || '').includes('500'));
-          criteriaText = 'Fine Industrial Powders (300 to 500 Mesh)';
-        } else if (val === '200') {
-          matched = data.products.filter(p => (p.specifications.mesh || '').includes('200') || (p.specifications.mesh || '').includes('400'));
-          criteriaText = 'Standard Milled Grades (200 to 400 Mesh)';
+        if (val === 'superfine') {
+          matched = data.searchByRequirement('superfine micronized lamellar coated');
+          criteriaText = 'Superfine Micronized Grades';
+        } else if (val === 'fine') {
+          matched = data.getProductsByCategory('Mineral Powders');
+          criteriaText = 'Fine Industrial Powders';
+        } else if (val === 'standard') {
+          matched = data.getProductsByCategory('Industrial Materials');
+          criteriaText = 'Standard Milled & Granular Grades';
         } else {
-          matched = data.searchByRequirement('fine micron mesh micronized');
+          matched = data.searchByRequirement('fine micron micronized');
           criteriaText = 'Fine & Micronized Powders';
         }
       } else if (['plastics', 'paints', 'rubber', 'cosmetics', 'pharma', 'pvc', 'ceramics', 'construction', 'paper', 'cables'].includes(q)) {
@@ -2916,8 +2911,8 @@
                   <span class="industry-procure-val">Lawrence Road, Delhi (Bulk &amp; FTL)</span>
                 </li>
                 <li class="industry-procure-item">
-                  <span class="industry-procure-lbl">Fineness Range:</span>
-                  <span class="industry-procure-val">100 to 1250 Mesh Available</span>
+                  <span class="industry-procure-lbl">Fineness Grading:</span>
+                  <span class="industry-procure-val">Custom Graded on Request</span>
                 </li>
                 <li class="industry-procure-item">
                   <span class="industry-procure-lbl">Standard Packaging:</span>
@@ -2966,14 +2961,12 @@
 
           <div class="industry-products-deck">
             ${ind.products.map(p => {
-              const meshTag = (p.specifications && p.specifications.mesh && p.specifications.mesh !== 'N/A') ? p.specifications.mesh : '300 to 1250 Mesh Available';
               const roleText = (ind.productRoles && ind.productRoles[p.slug]) ? ind.productRoles[p.slug] : p.shortDescription;
               const prodWaUrl = `https://wa.me/${(data.company.whatsappNumber || '919810516065').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello Deepali Minerals, I would like to enquire about ${p.name} for ${ind.name}. My required specifications and volume: `)}`;
               return `
                 <article class="industry-product-card">
                   <div class="industry-product-img-wrap">
                     <img src="${p.image}" alt="${esc(p.name)} for ${esc(ind.name)}" class="industry-product-img" loading="lazy" />
-                    <span class="industry-product-badge-float">${esc(meshTag)}</span>
                   </div>
 
                   <div class="industry-product-body">
@@ -3182,8 +3175,8 @@
               <div class="industry-hub-stat-lbl">Verified Mineral Products</div>
             </div>
             <div class="industry-hub-stat">
-              <div class="industry-hub-stat-num">100 &ndash; 1250</div>
-              <div class="industry-hub-stat-lbl">Mesh Particle Fineness</div>
+              <div class="industry-hub-stat-num">Custom</div>
+              <div class="industry-hub-stat-lbl">Particle Fineness Grading</div>
             </div>
             <div class="industry-hub-stat">
               <div class="industry-hub-stat-num">20+ Years</div>

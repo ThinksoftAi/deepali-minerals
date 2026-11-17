@@ -42,7 +42,7 @@ const productConfigs = [
   {
     filename: 'chalk-powder.webp',
     name: 'NATURAL CHALK POWDER',
-    subTitle: 'Calcium Carbonate • 300 to 500 Mesh Anti-Tack',
+    subTitle: 'Talc Mineral Powder • Industrial Anti-Tack Grade',
     category: 'MINERAL POWDER',
     powderColor: '#FFFFFF',
     powderShadow: '#E2E8F0',

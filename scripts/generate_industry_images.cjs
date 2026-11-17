@@ -246,7 +246,7 @@ function generateSvg(item) {
       <!-- Technical Grade Tags -->
       <g transform="translate(0, 115)">
         <rect x="0" y="0" width="130" height="24" rx="3" fill="#FFFFFF" fill-opacity="0.12" stroke="${theme.line}" stroke-width="0.8" />
-        <text x="12" y="16" font-family="'JetBrains Mono', monospace, sans-serif" font-size="10" font-weight="600" fill="#FFFFFF">100–1250 MESH</text>
+        <text x="12" y="16" font-family="'JetBrains Mono', monospace, sans-serif" font-size="10" font-weight="600" fill="#FFFFFF">CUSTOM GRADED</text>
 
         <rect x="145" y="0" width="130" height="24" rx="3" fill="#FFFFFF" fill-opacity="0.12" stroke="${theme.line}" stroke-width="0.8" />
         <text x="157" y="16" font-family="'JetBrains Mono', monospace, sans-serif" font-size="10" font-weight="600" fill="#FFFFFF">ISO 9001:2015</text>
