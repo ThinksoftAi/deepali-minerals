@@ -158,8 +158,50 @@
       id: 'soap-stone',
       slug: 'soap-stone',
       name: 'Soap Stone',
-      image: '/assets/images/products/soap-stone-powder.webp',
-      alt: 'Soap Stone - Deepali Minerals Industrial Supply',
+      image: '/assets/images/products/soap-stone-mill-and-sacks.png',
+      alt: 'Soap Stone Rocks, Pulverizing Mill and DM Branded 50 Kg Sack - Deepali Minerals',
+      gallery: [
+        {
+          src: '/assets/images/products/soap-stone-mill-and-sacks.png',
+          alt: 'Soap Stone Rocks, Pulverizing Mill & DM Branded 50 Kg Sack',
+          caption: 'Soap Stone Mill, Raw Ore & DM 50 Kg Sack'
+        },
+        {
+          src: '/assets/images/products/soap-stone-rocks-branded-sack.png',
+          alt: 'Soap Stone Rocks, Fine Powder & DM Branded 50 Kg Sack',
+          caption: 'Soap Stone Rocks, Powder & DM 50 Kg Sack'
+        },
+        {
+          src: '/assets/images/products/soap-stone-rocks-industrial-sack.png',
+          alt: 'Raw Natural Greenish-White Steatite Rocks & DM 50 Kg Industrial Sack',
+          caption: 'Raw Steatite Rocks & DM 50 Kg Sack'
+        },
+        {
+          src: '/assets/images/products/soap-stone-blue-dm-50kg-sack.png',
+          alt: 'Deepali Minerals Blue Print Soap Stone 50 Kg Sack',
+          caption: 'DM Blue Print Soap Stone — 50 Kg Sack'
+        },
+        {
+          src: '/assets/images/products/soap-stone-polyfills-50kg-sack.jpeg',
+          alt: 'DM Polyfills Snow White Pure Steatite / Talc 50 Kg Warehouse Sack',
+          caption: 'DM Polyfills Snow White — 50 Kg Warehouse Sack'
+        },
+        {
+          src: '/assets/images/products/soap-stone-raw-lumps.jpeg',
+          alt: 'Raw Natural Soapstone / Steatite Lumps Bulk Stock',
+          caption: 'Raw Natural Soapstone / Steatite Lumps'
+        },
+        {
+          src: '/assets/images/products/soap-stone-fine-powder.jpeg',
+          alt: 'Pulverized Fine White Soap Stone Powder Sample',
+          caption: 'Pulverized Fine White Soap Stone Powder'
+        },
+        {
+          src: '/assets/images/products/soap-stone-milling-plant.jpeg',
+          alt: 'Industrial Soap Stone Grinding & Air Classification Mill',
+          caption: 'Industrial Grinding & Classification Plant'
+        }
+      ],
       category: 'Mineral Powders',
       status: 'source-catalogue',
       shortDescription: 'Steatite talcose mineral powder valued for softness, lubricity, and structuring performance in soap manufacturing, ceramics, and cables.',
@@ -193,12 +235,33 @@
       id: 'chalk-powder',
       slug: 'chalk-powder',
       name: 'Chalk Powder',
-      image: '/assets/images/products/chalk-powder.webp',
-      alt: 'Deepali Minerals White Chalk Powder and Mineral Rocks Display',
+      image: '/assets/images/products/chalk-powder-sack-and-rocks.png',
+      alt: 'Deepali Minerals Chalk Powder 50 Kg Branded Sack with Natural Rocks and Powder',
       gallery: [
         {
-          src: '/assets/images/products/chalk-powder.webp',
-          alt: 'White Chalk Powder with Raw Natural Mineral Chunks'
+          src: '/assets/images/products/chalk-powder-sack-and-rocks.png',
+          alt: 'DM Red Print Chalk Powder 50 Kg Sack with Raw Chalk Rocks & Powder Mound',
+          caption: 'DM Chalk Powder 50 Kg Sack & Raw Rocks'
+        },
+        {
+          src: '/assets/images/products/chalk-powder-blue-dm-sack-limestone.png',
+          alt: 'DM Blue Print Chalk Powder 50 Kg Sack with White Limestone & Powder Dish',
+          caption: 'DM Blue Print Chalk Powder — 50 Kg Sack & Limestone'
+        },
+        {
+          src: '/assets/images/products/chalk-powder-red-dm-sack-mound.png',
+          alt: 'Fine White Chalk Powder Mound & DM Red Print 50 Kg Branded Sack',
+          caption: 'Fine White Chalk Powder & DM 50 Kg Sack'
+        },
+        {
+          src: '/assets/images/products/chalk-powder-warehouse-loading-red.png',
+          alt: 'Deepali Minerals Warehouse Loading DM Red Print Chalk Powder 50 Kg Sack',
+          caption: 'Warehouse Loading — DM Red Print 50 Kg Sack'
+        },
+        {
+          src: '/assets/images/products/chalk-powder-warehouse-dispatch-blue.png',
+          alt: 'Deepali Minerals Warehouse Pallet Dispatch DM Blue Print Chalk Powder 50 Kg Sack',
+          caption: 'Warehouse Dispatch — DM Blue Print 50 Kg Sack'
         }
       ],
       category: 'Mineral Powders',
