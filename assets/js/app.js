@@ -172,6 +172,63 @@
   ]);
 
   const getIndustryImageSrc = (slug) => `${root}/assets/images/industries/${slug}.webp`;
+  const resolveIndustryImageSrc = (nameOrSlug) => {
+    if (!nameOrSlug) return `${root}/assets/images/industries/industries-hub-hero.webp`;
+    const cInd = (data.getCanonicalIndustryBySlug && data.getCanonicalIndustryBySlug(nameOrSlug)) ||
+                 (data.getCanonicalIndustryByName && data.getCanonicalIndustryByName(nameOrSlug));
+    if (cInd && cInd.slug) return getIndustryImageSrc(cInd.slug);
+
+    const key = String(nameOrSlug).toLowerCase().trim();
+    const fallbackMap = {
+      'home / household applications': 'detergents-household.webp',
+      'agriculture': 'agriculture-allied.webp',
+      'pesticides': 'agriculture-allied.webp',
+      'biofertilizers': 'agriculture-allied.webp',
+      'dal polish mills': 'agriculture-allied.webp',
+      'plastic': 'plastics-polymers.webp',
+      'master batch': 'plastics-polymers.webp',
+      'mould release': 'plastics-polymers.webp',
+      'rigid pvc': 'rigid-pvc-profiles.jpg',
+      'putty': 'wall-putty-nc-putty.webp',
+      'wall putty': 'wall-putty-nc-putty.webp',
+      'nc putty': 'wall-putty-nc-putty.webp',
+      'nc putty industry': 'wall-putty-nc-putty.webp',
+      'soap': 'detergents-household.webp',
+      'detergent': 'detergents-household.webp',
+      'footwear': 'rubber-footwear.webp',
+      'eva': 'rubber-footwear.webp',
+      'rubber': 'rubber-footwear.webp',
+      'construction': 'construction-building-materials.webp',
+      'cattle feed': 'cattle-feed.webp',
+      'ceramics': 'ceramics.webp',
+      'colors': 'gulal-rangoli.webp',
+      'gulal / rangoli': 'gulal-rangoli.webp',
+      'gulal / rangoli industry': 'gulal-rangoli.webp',
+      'anti-corrosive primer': 'paints-coatings.webp',
+      'paints': 'paints-coatings.webp',
+      'automobile paints': 'automobile-paints.jpg',
+      'foundry': 'foundry-industrial.webp',
+      'foundary': 'foundry-industrial.webp',
+      'frp': 'frp-composites.webp',
+      'fire safety': 'fire-safety.webp',
+      'gym powder': 'gym-powder.webp',
+      'fibre murti': 'fibre-murti.webp',
+      'fibre murti industry': 'fibre-murti.webp',
+      'tile adhesives': 'tile-adhesives.webp',
+      'tile adhesives industry': 'tile-adhesives.webp',
+      'plywood': 'plywood.webp',
+      'plywood industry': 'plywood.webp',
+      'stationery': 'paper-stationery.webp',
+      'stationery industry': 'paper-stationery.webp',
+      'paper': 'paper-stationery.webp',
+      'cosmetics': 'cosmetics-personal-care.jpg',
+      'pharmaceutical': 'pharma-ayurvedic.jpg',
+      'ayurvedic medicines': 'pharma-ayurvedic.jpg',
+      'cables': 'cables-wires.jpg'
+    };
+    const file = fallbackMap[key] || 'industries-hub-hero.webp';
+    return `${root}/assets/images/industries/${file}`;
+  };
 
   const getBackupImageSrc = (slug) => {
     const norm = slug === 'foundry-industrial' ? 'foundry' : slug;
@@ -2952,12 +3009,22 @@
             <h3 class="other-industries-title">Explore Other Industries (${otherSectors.length})</h3>
             <p style="font-size: 0.9rem; color: #526071; margin: 0 0 1rem;">Browse verified material mappings for other industrial sectors.</p>
 
-            <div class="other-industries-pills">
-              ${otherSectors.map(other => `
-                <a href="${industriesUrl}?industry=${encodeURIComponent(other.slug)}" class="other-industry-pill" title="${esc(other.subtitle)}">
-                  ${esc(other.name)} (${other.products.length})
-                </a>
-              `).join('')}
+            <div class="dm-visual-industry-grid dm-visual-industry-grid--other">
+              ${otherSectors.map(other => {
+                const otherImg = getIndustryImageSrc(other.slug);
+                const otherBackup = getBackupImageSrc(other.slug);
+                return `
+                  <a href="${industriesUrl}?industry=${encodeURIComponent(other.slug)}" class="dm-visual-industry-card" title="${esc(other.subtitle)}">
+                    <span class="dm-vic-media">
+                      <img src="${otherImg}" data-photo-src="${otherImg}" ${otherBackup ? `data-backup-src="${otherBackup}"` : ''} alt="${esc(other.name)}" loading="lazy" />
+                    </span>
+                    <span class="dm-vic-label">
+                      <span>${esc(other.name)}</span>
+                      <span class="dm-vic-meta">${other.products.length} Products</span>
+                    </span>
+                  </a>
+                `;
+              }).join('')}
             </div>
           </div>
         </div>
@@ -3047,14 +3114,26 @@
               </div>
             </div>
 
-            <!-- Quick Category Pill Filters -->
-            <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: center;">
-              <span style="font: 700 0.7rem var(--mono); color: #526071; text-transform: uppercase; margin-right: 0.35rem;">Sector Groups:</span>
-              <button type="button" class="pill active sector-group-btn" data-group="all">All Sectors (18)</button>
-              <button type="button" class="pill sector-group-btn" data-group="coatings">Coatings &amp; Construction (4)</button>
-              <button type="button" class="pill sector-group-btn" data-group="polymers">Polymers &amp; Rubber (3)</button>
-              <button type="button" class="pill sector-group-btn" data-group="ceramics">Ceramics &amp; Foundry (2)</button>
-              <button type="button" class="pill sector-group-btn" data-group="specialty">Specialty &amp; Allied (9)</button>
+            <!-- Quick Category Visual Group Filters (Images + Text) -->
+            <div>
+              <span style="display: block; font: 700 0.7rem var(--mono); color: #526071; text-transform: uppercase;">Filter by Sector Group:</span>
+              <div class="dm-visual-filter-grid--groups">
+                ${[
+                  { group: 'all', label: 'All Sectors (18)', img: 'industries-hub-hero.webp' },
+                  { group: 'coatings', label: 'Coatings & Construction (4)', img: 'paints-coatings.webp' },
+                  { group: 'polymers', label: 'Polymers & Rubber (3)', img: 'plastics-polymers.webp' },
+                  { group: 'ceramics', label: 'Ceramics & Foundry (2)', img: 'ceramics.webp' },
+                  { group: 'specialty', label: 'Allied & Industrial (9)', img: 'agriculture-allied.webp' }
+                ].map((g, idx) => `
+                  <button type="button" class="pill dm-visual-filter-card sector-group-btn ${idx === 0 ? 'active' : ''}" data-group="${g.group}" aria-label="Filter by ${esc(g.label)}">
+                    <span class="dm-vfc-media">
+                      <img src="${root}/assets/images/industries/${g.img}" alt="${esc(g.label)}" loading="lazy" />
+                      <span class="dm-vfc-check" aria-hidden="true">&#10003;</span>
+                    </span>
+                    <span class="dm-vfc-label">${esc(g.label)}</span>
+                  </button>
+                `).join('')}
+              </div>
             </div>
           </div>
 
@@ -3843,26 +3922,44 @@
             <ul class="dm-bullet-list">
               ${verifiedApplications.map(app => `<li>${esc(app)}</li>`).join('')}
             </ul>
-
-            ${verifiedSectors.length ? `
-              <div style="margin-top: 1.35rem; padding-top: 1.15rem; border-top: 1px solid #E2E5E9;">
-                <span style="display: block; font: 600 0.72rem var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: #526071; margin-bottom: 0.6rem;">
-                  Related Industry Pages
-                </span>
-                <div class="pill-list">
-                  ${verifiedSectors.map(ind => {
-                    const cInd = (data.getCanonicalIndustryByName && data.getCanonicalIndustryByName(ind)) ||
-                                 (data.getCanonicalIndustryBySlug && data.getCanonicalIndustryBySlug(ind));
-                    const targetUrl = cInd ? `${industriesUrl}?industry=${encodeURIComponent(cInd.slug)}` : `${productsUrl}?industry=${encodeURIComponent(ind)}`;
-                    return `
-                      <a href="${targetUrl}" class="pill ${ind.toLowerCase() === industryCtx.toLowerCase() ? 'active' : ''}" title="Explore materials for ${esc(ind)}">${esc(ind)} &rarr;</a>
-                    `;
-                  }).join('')}
-                </div>
-              </div>
-            ` : ''}
           </div>
         </div>
+
+        ${verifiedSectors.length ? `
+          <div class="shell" style="margin-top: 2rem;">
+            <div class="dm-detail-block">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                <div>
+                  <span class="eyebrow" style="color: #80664A; margin-bottom: 0.2rem;">RELATED INDUSTRY PAGES</span>
+                  <h3 style="font-family: var(--serif); font-size: 1.4rem; margin: 0; color: #252F3D;">
+                    Industries Using ${esc(p.name)} (${verifiedSectors.length})
+                  </h3>
+                </div>
+                <a href="${industriesUrl}" class="text-link" style="color: #1769AA; font-weight: 700; font-size: 0.85rem;">
+                  View All 18 Industries &rarr;
+                </a>
+              </div>
+              <div class="dm-visual-industry-grid dm-visual-industry-grid--other">
+                ${verifiedSectors.map(ind => {
+                  const cInd = (data.getCanonicalIndustryByName && data.getCanonicalIndustryByName(ind)) ||
+                               (data.getCanonicalIndustryBySlug && data.getCanonicalIndustryBySlug(ind));
+                  const targetUrl = cInd ? `${industriesUrl}?industry=${encodeURIComponent(cInd.slug)}` : `${productsUrl}?industry=${encodeURIComponent(ind)}`;
+                  const imgSrc = resolveIndustryImageSrc(cInd ? cInd.slug : ind);
+                  const backupSrc = cInd ? getBackupImageSrc(cInd.slug) : '';
+                  const isActive = ind.toLowerCase() === industryCtx.toLowerCase() || (cInd && cInd.slug === industryCtx.toLowerCase());
+                  return `
+                    <a href="${targetUrl}" class="dm-visual-industry-card ${isActive ? 'active' : ''}" title="Explore materials for ${esc(ind)}">
+                      <span class="dm-vic-media">
+                        <img src="${imgSrc}" data-photo-src="${imgSrc}" ${backupSrc ? `data-backup-src="${backupSrc}"` : ''} alt="${esc(ind)}" loading="lazy" />
+                      </span>
+                      <span class="dm-vic-label">${esc(ind)}</span>
+                    </a>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        ` : ''}
       </section>
 
       <!-- 5. TECHNICAL SPECIFICATIONS TABLE & 6. PACKAGING INFORMATION -->

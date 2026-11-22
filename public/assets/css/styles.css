@@ -8796,7 +8796,7 @@ html, body {
 
 .dm-product-gallery-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
@@ -8953,6 +8953,165 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================================
+ * 17. VISUAL INDUSTRY CARDS (RELATED INDUSTRIES, OTHER INDUSTRIES, GROUPS & ABOUT)
+ * ========================================================================= */
+.dm-visual-industry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.35rem;
+}
+
+.dm-visual-industry-grid--other {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.75rem;
+}
+
+.dm-visual-filter-grid--groups {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.65rem;
+}
+
+a.dm-visual-industry-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background: #FFFFFF;
+  border: 1px solid #E2E5E9;
+  border-radius: 6px;
+  overflow: hidden;
+  color: #252F3D;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.dm-visual-industry-card:hover {
+  transform: translateY(-2px);
+  border-color: #1769AA;
+  box-shadow: 0 8px 18px rgba(37, 47, 61, 0.08);
+  color: #1769AA;
+}
+
+a.dm-visual-industry-card.active {
+  border-color: #1769AA;
+  box-shadow: 0 0 0 2px rgba(23, 105, 170, 0.2);
+  background: #F4F8FC;
+  color: #1769AA;
+}
+
+.dm-vic-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #F1F3F5;
+  border-bottom: 1px solid #E2E5E9;
+  display: block;
+}
+
+.dm-vic-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.32s ease;
+}
+
+a.dm-visual-industry-card:hover .dm-vic-media img {
+  transform: scale(1.06);
+}
+
+.dm-vic-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.15rem;
+  padding: 0.55rem 0.45rem;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.25;
+  min-height: 2.8rem;
+  color: inherit;
+}
+
+.dm-vic-meta {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: #526071;
+}
+
+/* About page Core Manufacturing Sectors image-led cards */
+.about-industry-card-v2.about-industry-card-v2--visual {
+  padding: 0;
+  overflow: hidden;
+}
+
+.about-ind-photo-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #F1F3F5;
+  border-bottom: 1px solid #E2E5E9;
+  display: block;
+}
+
+.about-ind-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.about-industry-card-v2--visual:hover .about-ind-photo-wrap img {
+  transform: scale(1.04);
+}
+
+.about-ind-card-content {
+  padding: 1.35rem 1.35rem 1.45rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  gap: 0.9rem;
+}
+
+@media (max-width: 1120px) {
+  .dm-visual-industry-grid--other {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .dm-visual-filter-grid--groups {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .dm-visual-industry-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .dm-visual-industry-grid--other {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+  .dm-visual-filter-grid--groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .dm-visual-industry-grid--other {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 
 
 

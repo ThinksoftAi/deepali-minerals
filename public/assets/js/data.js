@@ -89,6 +89,16 @@
           caption: 'Natural Talc Mineral & DM Branded 50 Kg Sack'
         },
         {
+          src: '/assets/images/products/talc-red-dm-50kg-sack.png',
+          alt: 'Deepali Minerals Red DM Branded Talc 50 Kg Sack with Natural Talc Ore',
+          caption: 'DM Branded Talc — 50 Kg Red Print Sack'
+        },
+        {
+          src: '/assets/images/products/talc-snow-white-dm-50kg-sack.png',
+          alt: 'Deepali Minerals Snow White Talc 50 Kg Branded Sack with Natural Talc Ore',
+          caption: 'Deepali Minerals Snow White Talc — 50 Kg Sack'
+        },
+        {
           src: '/assets/images/products/talc-raw-mineral.webp',
           alt: 'Raw Natural Crystalline Layered Talc Mineral',
           caption: 'Raw Natural Crystalline Talc Mineral'
