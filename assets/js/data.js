@@ -80,31 +80,31 @@
       id: 'talc',
       slug: 'talc',
       name: 'Talc',
-      image: '/assets/aistudio/Talc_Mineral_and_Branded_Sack_3758e580.png',
+      image: '/assets/images/products/talc-mineral-branded-sack.png',
       alt: 'Deepali Minerals Talc Mineral and DM Branded 50 Kg Sack',
       gallery: [
         {
-          src: '/assets/aistudio/Talc_Mineral_and_Branded_Sack_3758e580.png',
+          src: '/assets/images/products/talc-mineral-branded-sack.png',
           alt: 'Natural Talc Mineral & Deepali Minerals Branded 50 Kg Sack',
           caption: 'Natural Talc Mineral & DM Branded 50 Kg Sack'
         },
         {
-          src: '/assets/aistudio/talc1_3c2aff71.webp',
+          src: '/assets/images/products/talc-raw-mineral.webp',
           alt: 'Raw Natural Crystalline Layered Talc Mineral',
           caption: 'Raw Natural Crystalline Talc Mineral'
         },
         {
-          src: '/assets/aistudio/talc4_5a4be4ca.jpeg',
+          src: '/assets/images/products/talc-crown-50kg-sack.jpeg',
           alt: 'DM Crown Talc 50 Kg Branded Sack',
           caption: 'DM Crown Talc — 50 Kg Branded Sack'
         },
         {
-          src: '/assets/aistudio/talc1_63f64436.jpeg',
+          src: '/assets/images/products/talc-cosmo-super-white-50kg-sack.jpeg',
           alt: 'Bhambhani Cosmo Super White Talc 50 Kg Sack',
           caption: 'Cosmo Super White Talc — 50 Kg Sack'
         },
         {
-          src: '/assets/aistudio/Talc_2_bf14fc0c.jpeg',
+          src: '/assets/images/products/talc-polyfills-snow-white-50kg-stack.jpeg',
           alt: 'DM Polyfills Snow White Pure Talc 50 Kg Stacked Sacks',
           caption: 'DM Polyfills Snow White Pure Talc — 50 Kg Stock'
         }
