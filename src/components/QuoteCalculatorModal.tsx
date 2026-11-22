@@ -267,7 +267,6 @@ export const QuoteCalculatorModal: React.FC<QuoteCalculatorModalProps> = ({
                     >
                       <option value="50kg">50 Kg PP Woven Bags (Standard)</option>
                       <option value="25kg">25 Kg Multiwall Paper / HDPE Bags (Moisture Liner)</option>
-                      <option value="1000kg">1000 Kg (1 MT) Heavy Duty Jumbo Bag</option>
                       <option value="palletized">Palletized & Shrink Wrapped (Export standard)</option>
                     </select>
                   </div>

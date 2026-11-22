@@ -102,13 +102,9 @@ export const SampleRequestModal: React.FC<SampleRequestModalProps> = ({
                   <span className="text-slate-400">Consignee:</span>
                   <span className="text-slate-200 font-medium">{chemistName} ({companyName})</span>
                 </div>
-                <div className="flex justify-between border-b border-slate-800 pb-1.5">
+                <div className="flex justify-between">
                   <span className="text-slate-400">Sample Quantity:</span>
                   <span className="text-amber-400 font-bold">{sampleSize} (Sealed Pouch)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Dispatch Hub:</span>
-                  <span className="text-slate-200">Lawrence Road, Delhi Plant</span>
                 </div>
               </div>
 

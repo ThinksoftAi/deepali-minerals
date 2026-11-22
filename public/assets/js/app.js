@@ -99,7 +99,7 @@
     });
   }
 
-  // Enforce Clean Bright White Theme System Tokens
+  // Enforce Clean Natural Mineral White Theme Tokens
   (function enforceWhiteThemeTokens() {
     if (typeof document === 'undefined') return;
     const rootEl = document.documentElement;
@@ -107,15 +107,15 @@
       rootEl.style.setProperty('--paper', '#FFFFFF');
       rootEl.style.setProperty('--surface', '#FFFFFF');
       rootEl.style.setProperty('--fog', '#F8F9FA');
-      rootEl.style.setProperty('--line', '#E5E7EB');
-      rootEl.style.setProperty('--ink', '#25241F');
-      rootEl.style.setProperty('--slate', '#6F6B61');
+      rootEl.style.setProperty('--line', '#E2E5E9');
+      rootEl.style.setProperty('--ink', '#252F3D');
+      rootEl.style.setProperty('--slate', '#526071');
       rootEl.style.backgroundColor = '#FFFFFF';
     }
     const applyBody = () => {
       if (document.body && document.body.style) {
         document.body.style.backgroundColor = '#FFFFFF';
-        document.body.style.color = '#25241F';
+        document.body.style.color = '#252F3D';
       }
     };
     applyBody();
@@ -152,6 +152,163 @@
   const productsUrl = `${root}/products/`;
   const industriesUrl = `${root}/industries/`;
 
+  /* =========================================================================
+   * TITLE-MATCHED HERO PHOTOS & RESTORE CONTROLLER (PER-PAGE + SITE-WIDE)
+   * ========================================================================= */
+  const VISUAL_BACKUP_SLUGS = new Set([
+    'agriculture-allied',
+    'ceramics',
+    'construction-building-materials',
+    'corporate-intro-banner',
+    'detergents-household',
+    'foundry',
+    'frp-composites',
+    'packaging-logistics-depot',
+    'paints-coatings',
+    'paper-stationery',
+    'plastics-polymers',
+    'quality-assurance-lab',
+    'rubber-footwear'
+  ]);
+
+  const getIndustryImageSrc = (slug) => `${root}/assets/images/industries/${slug}.webp`;
+
+  const getBackupImageSrc = (slug) => {
+    const norm = slug === 'foundry-industrial' ? 'foundry' : slug;
+    return VISUAL_BACKUP_SLUGS.has(norm) ? `${root}/assets/images/industries/backup/${norm}.webp` : '';
+  };
+
+  function renderHeroVisualBanner({ pageKey, imgSrc, alt, caption, backupSrc }) {
+    return `
+      <div class="page-hero-visual-banner" data-hero-visual-banner="${esc(pageKey)}">
+        <div class="page-hero-photo-frame">
+          <img
+            src="${imgSrc}"
+            alt="${esc(alt)}"
+            data-photo-src="${imgSrc}"
+            ${backupSrc ? `data-backup-src="${backupSrc}"` : ''}
+            loading="eager"
+          />
+        </div>
+        <div class="hero-visual-toolbar">
+          <span class="hero-visual-caption">${esc(caption)}</span>
+          <div class="hero-visual-actions">
+            <button type="button" class="hero-visual-btn" data-hero-toggle-page="${esc(pageKey)}">
+              Hide Hero Photo (Restore Classic)
+            </button>
+            <button type="button" class="hero-visual-btn hero-visual-btn-restore" data-hero-toggle-global>
+              Restore All Original Visuals
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function initVisualRestoreControls() {
+    const GLOBAL_KEY = 'dm_visual_restore_global';
+    const PAGES_KEY = 'dm_visual_restore_pages';
+
+    const readGlobal = () => {
+      try {
+        return localStorage.getItem(GLOBAL_KEY) === '1';
+      } catch (_) {
+        return false;
+      }
+    };
+
+    const writeGlobal = (val) => {
+      try {
+        localStorage.setItem(GLOBAL_KEY, val ? '1' : '0');
+      } catch (_) {}
+    };
+
+    const readPages = () => {
+      try {
+        const raw = localStorage.getItem(PAGES_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return (parsed && typeof parsed === 'object') ? parsed : {};
+      } catch (_) {
+        return {};
+      }
+    };
+
+    const writePages = (obj) => {
+      try {
+        localStorage.setItem(PAGES_KEY, JSON.stringify(obj));
+      } catch (_) {}
+    };
+
+    const applyVisualState = () => {
+      const isGlobal = readGlobal();
+      const hiddenPages = readPages();
+
+      if (document.body) {
+        document.body.classList.toggle('dm-restored-classic', isGlobal);
+      }
+
+      document.querySelectorAll('[data-hero-visual-banner]').forEach((banner) => {
+        const key = banner.getAttribute('data-hero-visual-banner') || '';
+        const isRestored = isGlobal || !!hiddenPages[key];
+        banner.classList.toggle('is-classic-restored', isRestored);
+
+        const pageBtn = banner.querySelector('[data-hero-toggle-page]');
+        if (pageBtn) {
+          pageBtn.textContent = isRestored ? 'Show Hero Photo' : 'Hide Hero Photo (Restore Classic)';
+          pageBtn.setAttribute('aria-pressed', isRestored ? 'true' : 'false');
+        }
+      });
+
+      document.querySelectorAll('[data-hero-toggle-global]').forEach((btn) => {
+        btn.textContent = isGlobal ? 'Show New Industry Photos' : 'Restore All Original Visuals';
+        btn.setAttribute('aria-pressed', isGlobal ? 'true' : 'false');
+      });
+
+      document.querySelectorAll('img[data-photo-src][data-backup-src]').forEach((img) => {
+        const target = isGlobal ? img.getAttribute('data-backup-src') : img.getAttribute('data-photo-src');
+        if (target && img.getAttribute('src') !== target) {
+          img.setAttribute('src', target);
+        }
+      });
+    };
+
+    document.querySelectorAll('[data-hero-toggle-page]').forEach((btn) => {
+      if (btn.dataset.restoreBound === '1') return;
+      btn.dataset.restoreBound = '1';
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-hero-toggle-page') || '';
+        const isGlobal = readGlobal();
+        const hiddenPages = readPages();
+        if (isGlobal) {
+          // Switching a single page back to photo exits global classic mode while keeping other pages intact
+          writeGlobal(false);
+          delete hiddenPages[key];
+        } else if (hiddenPages[key]) {
+          delete hiddenPages[key];
+        } else {
+          hiddenPages[key] = true;
+        }
+        writePages(hiddenPages);
+        applyVisualState();
+      });
+    });
+
+    document.querySelectorAll('[data-hero-toggle-global]').forEach((btn) => {
+      if (btn.dataset.restoreBound === '1') return;
+      btn.dataset.restoreBound = '1';
+      btn.addEventListener('click', () => {
+        const nextGlobal = !readGlobal();
+        writeGlobal(nextGlobal);
+        if (!nextGlobal) {
+          writePages({});
+        }
+        applyVisualState();
+      });
+    });
+
+    applyVisualState();
+  }
+
   function header() {
     const headerEl = document.querySelector('#site-header');
     if (!headerEl) return;
@@ -170,11 +327,11 @@
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               <span>+91 9810516065</span>
             </a>
-            <span style="color: rgba(255,255,255,0.2);">|</span>
+            <span class="topbar-sep">|</span>
             <a href="tel:+919810715129" class="topbar-item" title="Call Secondary Helpline">
               <span>9810715129</span>
             </a>
-            <span style="color: rgba(255,255,255,0.2);">|</span>
+            <span class="topbar-sep">|</span>
             <a href="mailto:info@deepaliminerals.in" class="topbar-item" title="Email Sales Desk">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               <span>info@deepaliminerals.in</span>
@@ -183,38 +340,37 @@
 
           <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
             <div class="topbar-badge-iso">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>ISO 9001:2015 &bull; ISO 14001:2015</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>ISO 9001:2015 &middot; ISO 14001:2015</span>
             </div>
             <span class="topbar-timing">Mon &ndash; Sat: 9:00 AM &ndash; 7:30 PM IST</span>
             <a href="${getWhatsAppUrl()}" target="_blank" rel="noopener noreferrer" class="topbar-whatsapp-btn">
               ${whatsappIconSvg(13, 13)}
-              <span>WhatsApp Desk</span>
+              <span>WhatsApp</span>
             </a>
           </div>
         </div>
       </div>
 
-      <!-- Main Corporate Header -->
+      <!-- Main Corporate Header (White Background, Dark Readable Nav) -->
       <header class="site-header">
         <div class="shell header-inner">
           <a class="brand dm-interactive-logo" href="${root}/" aria-label="Deepali Minerals home" data-dm-logo="true">
             <img src="${root}/assets/images/brand/logo.png" alt="Deepali Minerals" class="brand-logo" width="200" height="100" referrerpolicy="no-referrer" />
           </a>
 
-          <!-- Primary Desktop Nav with Mega Menu -->
+          <!-- Primary Desktop Nav -->
           <nav class="nav-links" aria-label="Primary navigation">
             <a href="${root}/" class="${page === 'home' ? 'active' : ''}">Home</a>
             <a href="${root}/about.html" class="${page === 'about' ? 'active' : ''}">About Us</a>
 
-            <!-- Products Mega Menu Item -->
+            <!-- Products Mega Menu (All 22 Products — Zero Mesh Captions) -->
             <div class="nav-has-megamenu" id="nav-products-megamenu">
               <a href="${productsUrl}" class="nav-link-with-icon ${page === 'products' || page === 'product' ? 'active' : ''}" aria-expanded="false" aria-haspopup="true">
                 <span>Products</span>
                 <svg class="nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
               </a>
 
-              <!-- Mega Menu Dropdown -->
               <div class="mega-menu-dropdown">
                 <div class="shell">
                   <div class="mega-menu-grid">
@@ -229,7 +385,7 @@
                           <li class="mega-menu-item">
                             <a href="${productUrl(p)}">
                               <span>${esc(p.name)}</span>
-                              <span class="tag">${p.slug === 'calcium-carbonate' ? '98% CaCO3' : (p.slug === 'talc' ? '300-1250 M' : (p.slug === 'dolomite' ? 'Micronized' : 'Industrial'))}</span>
+                              <span class="tag">Mineral</span>
                             </a>
                           </li>
                         `).join('')}
@@ -247,7 +403,7 @@
                           <li class="mega-menu-item">
                             <a href="${productUrl(p)}">
                               <span>${esc(p.name)}</span>
-                              <span class="tag">${p.slug === 'zinc-oxide' ? '99.5% White' : (p.slug === 'zinc-stearates' ? 'Lubricant' : 'Additive')}</span>
+                              <span class="tag">${p.slug === 'starch' ? 'Industrial' : 'Chemical'}</span>
                             </a>
                           </li>
                         `).join('')}
@@ -265,7 +421,7 @@
                           <li class="mega-menu-item">
                             <a href="${productUrl(p)}">
                               <span>${esc(p.name)}</span>
-                              <span class="tag">${p.slug === 'quartz-sand' ? 'Silica Sand' : (p.slug === 'marble-chips' ? 'White Grits' : 'Industrial')}</span>
+                              <span class="tag">Material</span>
                             </a>
                           </li>
                         `).join('')}
@@ -276,16 +432,18 @@
                     <div>
                       <div class="mega-menu-spotlight-card">
                         <div>
-                          <span class="mega-spotlight-badge">VERIFIED INDUSTRIAL SUPPLY</span>
-                          <h4 class="mega-spotlight-title">22 Master Minerals &amp; Chemicals</h4>
-                          <p class="mega-spotlight-desc">
-                            Direct processing and sourcing partnerships across India. Tested to strict mesh tolerances with batch COA and TDS documentation.
-                          </p>
+                          <span class="mega-spotlight-badge">INDUSTRIAL MATERIALS PORTFOLIO</span>
+                          <h4 class="mega-spotlight-title">All 22 Minerals &amp; Materials</h4>
+                          <ul class="dm-bullet-list dm-bullet-list--compact" style="margin-bottom: 1.15rem;">
+                            <li>Verified industrial mineral powders, chemicals, and granular grades.</li>
+                            <li>ISO 9001:2015 &amp; ISO 14001:2015 certified trading operations.</li>
+                            <li>Technical Data Sheets (TDS) and batch COAs shared on request.</li>
+                          </ul>
                         </div>
                         <div>
-                          <a href="${productsUrl}" class="mega-spotlight-cta">Explore Full Catalogue &rarr;</a>
-                          <div style="margin-top: 0.75rem; text-align: center;">
-                            <a href="${root}/#rfq" style="font-size: 0.74rem; font-family: var(--mono); color: #D5A43A; text-decoration: underline;">Request Bulk Quotation &rarr;</a>
+                          <a href="${productsUrl}" class="mega-spotlight-cta">View All Products &rarr;</a>
+                          <div style="margin-top: 0.7rem; text-align: center;">
+                            <a href="${root}/#rfq" style="font-size: 0.76rem; font-weight: 700; color: #1769AA; text-decoration: underline;">Enquire Now &rarr;</a>
                           </div>
                         </div>
                       </div>
@@ -295,7 +453,7 @@
               </div>
             </div>
 
-            <!-- Industries Dropdown Menu -->
+            <!-- Industries Dropdown Menu (Verified Canonical Slugs Only) -->
             <div class="nav-has-dropdown" id="nav-industries-dropdown">
               <a href="${industriesUrl}" class="nav-link-with-icon ${page === 'industries' ? 'active' : ''}" aria-expanded="false" aria-haspopup="true">
                 <span>Industries</span>
@@ -304,95 +462,95 @@
               <div class="dropdown-menu">
                 <div class="dropdown-grid">
                   <a href="${industriesUrl}?industry=paints-coatings" class="dropdown-item">Paints &amp; Coatings</a>
-                  <a href="${industriesUrl}?industry=plastics-polymers" class="dropdown-item">Plastics &amp; Masterbatch</a>
-                  <a href="${industriesUrl}?industry=rubber-footwear" class="dropdown-item">Rubber &amp; Tyres</a>
-                  <a href="${industriesUrl}?industry=rigid-pvc" class="dropdown-item">Rigid &amp; Flexible PVC</a>
-                  <a href="${industriesUrl}?industry=ceramics" class="dropdown-item">Ceramics &amp; Sanitaryware</a>
-                  <a href="${industriesUrl}?industry=paper-mills" class="dropdown-item">Paper &amp; Pulp Mills</a>
-                  <a href="${industriesUrl}?industry=wall-putty-nc-putty" class="dropdown-item">Wall Putty &amp; Mortars</a>
-                  <a href="${industriesUrl}?industry=foundry-industrial" class="dropdown-item">Foundry &amp; Metallurgy</a>
-                  <a href="${industriesUrl}?industry=cosmetics-pharma" class="dropdown-item">Cosmetics &amp; Pharma</a>
-                  <a href="${industriesUrl}?industry=agrochemicals-fertilizers" class="dropdown-item">Agrochemicals</a>
-                  <a href="${industriesUrl}" class="dropdown-item-all" style="grid-column: 1 / -1; font-weight: 700; color: #174A70; border-top: 1px solid #E5E7EB; padding-top: 0.5rem; margin-top: 0.25rem;">
-                    View All 18 Manufacturing Sectors &rarr;
+                  <a href="${industriesUrl}?industry=plastics-polymers" class="dropdown-item">Plastics &amp; Polymers</a>
+                  <a href="${industriesUrl}?industry=rubber-footwear" class="dropdown-item">Rubber &amp; Footwear</a>
+                  <a href="${industriesUrl}?industry=ceramics" class="dropdown-item">Ceramics</a>
+                  <a href="${industriesUrl}?industry=construction-building-materials" class="dropdown-item">Construction Materials</a>
+                  <a href="${industriesUrl}?industry=paper-stationery" class="dropdown-item">Paper &amp; Stationery</a>
+                  <a href="${industriesUrl}?industry=wall-putty-nc-putty" class="dropdown-item">Wall Putty &amp; NC Putty</a>
+                  <a href="${industriesUrl}?industry=foundry-industrial" class="dropdown-item">Foundry &amp; Industrial</a>
+                  <a href="${industriesUrl}?industry=agriculture-allied" class="dropdown-item">Agriculture &amp; Allied</a>
+                  <a href="${industriesUrl}?industry=detergents-household" class="dropdown-item">Soaps &amp; Detergents</a>
+                  <a href="${industriesUrl}" class="dropdown-item-all" style="grid-column: 1 / -1; font-weight: 700; color: #1769AA; border-top: 1px solid #E2E5E9; padding-top: 0.5rem; margin-top: 0.25rem;">
+                    View All 18 Industries &rarr;
                   </a>
                 </div>
               </div>
             </div>
 
             <a href="${root}/#quality">Quality</a>
-            <a href="${root}/#facilities">Facilities</a>
+            <a href="${root}/#operations">Operations</a>
             <a href="${root}/#resources">Resources</a>
-            <a href="${root}/#contact">Contact</a>
+            <a href="${root}/#contact">Contact Us</a>
           </nav>
 
           <div class="header-actions">
-            <a class="header-whatsapp" href="${getWhatsAppUrl()}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Sales Desk">
+            <a class="header-whatsapp" href="${getWhatsAppUrl()}" target="_blank" rel="noopener noreferrer" aria-label="Contact on WhatsApp">
               ${whatsappIconSvg(15, 15)}
-              <span>WhatsApp Sales Desk</span>
+              <span>WhatsApp</span>
             </a>
-            <a class="button header-cta" href="${root}/#rfq">Quotation</a>
+            <a class="button header-cta" href="${root}/#rfq">Enquire Now</a>
             <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav">
-              <span style="font-size: 1.1rem; line-height: 1; margin-right: 0.25rem;" aria-hidden="true">☰</span>
+              <span style="font-size: 1.05rem; line-height: 1; margin-right: 0.25rem;" aria-hidden="true">☰</span>
               <span>Menu</span>
             </button>
           </div>
         </div>
 
-        <!-- Mobile Drawer Navigation with Accordion Submenu -->
+        <!-- Mobile Drawer Navigation -->
         <nav class="shell mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
           <a href="${root}/">Home</a>
           <a href="${root}/about.html">About Us</a>
-          
+
           <!-- Products Accordion -->
           <button type="button" class="mobile-nav-toggle-btn" id="mobile-products-toggle" aria-expanded="false">
             <span>Products (All 22 Materials)</span>
             <span class="mobile-toggle-arrow" id="mobile-products-arrow">&darr;</span>
           </button>
-          
+
           <div class="mobile-nav-submenu" id="mobile-products-submenu">
             <h4>Minerals &amp; Powders</h4>
             ${powders.map(p => `<a href="${productUrl(p)}">${esc(p.name)}</a>`).join('')}
-            
+
             <h4>Functional Chemicals</h4>
             ${chemicals.map(p => `<a href="${productUrl(p)}">${esc(p.name)}</a>`).join('')}
-            
-            <h4>Grains &amp; Aggregates</h4>
+
+            <h4>Grains &amp; Materials</h4>
             ${grains.map(p => `<a href="${productUrl(p)}">${esc(p.name)}</a>`).join('')}
-            
-            <a href="${productsUrl}" style="font-weight: 700; color: #1769AA; margin-top: 0.5rem; display: block;">View Full 22-Product Catalogue &rarr;</a>
+
+            <a href="${productsUrl}" style="font-weight: 700; color: #1769AA; margin-top: 0.5rem; display: block;">View All 22 Products &rarr;</a>
           </div>
 
           <!-- Industries Accordion -->
           <button type="button" class="mobile-nav-toggle-btn" id="mobile-industries-toggle" aria-expanded="false">
-            <span>Industries &amp; Applications (18 Sectors)</span>
+            <span>Industries (18 Sectors)</span>
             <span class="mobile-toggle-arrow" id="mobile-industries-arrow">&darr;</span>
           </button>
-          
+
           <div class="mobile-nav-submenu" id="mobile-industries-submenu">
             <a href="${industriesUrl}?industry=paints-coatings">Paints &amp; Coatings</a>
-            <a href="${industriesUrl}?industry=plastics-polymers">Plastics &amp; Masterbatch</a>
-            <a href="${industriesUrl}?industry=rubber-footwear">Rubber &amp; Tyres</a>
-            <a href="${industriesUrl}?industry=construction-building-materials">Construction &amp; Building</a>
-            <a href="${industriesUrl}?industry=ceramics">Ceramics &amp; Sanitaryware</a>
-            <a href="${industriesUrl}?industry=paper-stationery">Paper &amp; Pulp Mills</a>
+            <a href="${industriesUrl}?industry=plastics-polymers">Plastics &amp; Polymers</a>
+            <a href="${industriesUrl}?industry=rubber-footwear">Rubber &amp; Footwear</a>
+            <a href="${industriesUrl}?industry=ceramics">Ceramics</a>
+            <a href="${industriesUrl}?industry=construction-building-materials">Construction Materials</a>
+            <a href="${industriesUrl}?industry=paper-stationery">Paper &amp; Stationery</a>
             <a href="${industriesUrl}?industry=frp-composites">FRP &amp; Composites</a>
-            <a href="${industriesUrl}?industry=foundry-industrial">Foundry &amp; Metallurgy</a>
+            <a href="${industriesUrl}?industry=foundry-industrial">Foundry &amp; Industrial</a>
             <a href="${industriesUrl}?industry=agriculture-allied">Agriculture &amp; Allied</a>
-            <a href="${industriesUrl}?industry=detergents-household">Detergents &amp; Household</a>
-            <a href="${industriesUrl}" style="font-weight: 700; color: #1769AA; margin-top: 0.5rem; display: block;">View All 18 Manufacturing Sectors &rarr;</a>
+            <a href="${industriesUrl}?industry=detergents-household">Soaps &amp; Detergents</a>
+            <a href="${industriesUrl}" style="font-weight: 700; color: #1769AA; margin-top: 0.5rem; display: block;">View All 18 Industries &rarr;</a>
           </div>
 
-          <a href="${root}/#quality">Quality Assurance</a>
-          <a href="${root}/#facilities">Facilities &amp; Infrastructure</a>
-          <a href="${root}/#resources">Technical Resources</a>
+          <a href="${root}/#quality">Quality</a>
+          <a href="${root}/#operations">Operations</a>
+          <a href="${root}/#resources">Resources</a>
           <a href="${root}/#contact">Contact Us</a>
-          
+
           <a class="mobile-whatsapp" href="${getWhatsAppUrl()}" target="_blank" rel="noopener noreferrer">
             ${whatsappIconSvg(18, 18)}
             <span>WhatsApp Sales Desk</span>
           </a>
-          <a class="button" href="${root}/#rfq" style="margin-top: 0.5rem; text-align: center;">Get Commercial Quotation</a>
+          <a class="button" href="${root}/#rfq" style="margin-top: 0.5rem; text-align: center;">Enquire Now</a>
         </nav>
       </header>
     `;
@@ -810,7 +968,7 @@
     const whatsappGeneralUrl = getWhatsAppUrl();
 
     footerEl.innerHTML = `
-      <a class="contact-float" href="${root}/#rfq" aria-label="Open quotation">Quotation</a>
+      <a class="contact-float" href="${root}/#rfq" aria-label="Enquire Now">Enquire</a>
       <button type="button" class="back-to-top-btn" aria-label="Back to top" title="Back to top">
         <svg class="back-to-top-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 19V5M5 12l7-7 7 7"/>
@@ -820,27 +978,27 @@
         ${whatsappIconSvg(20, 20)}
         <span class="floating-label">WhatsApp Sales Desk</span>
       </a>
-      <footer class="footer" id="contact">
+      <footer class="footer" ${page === 'home' || page === 'about' ? 'id="site-footer-band"' : 'id="contact"'}>
         <div class="shell footer-grid">
           <!-- COLUMN 1: DEEPALI MINERALS -->
           <div class="footer-col footer-col-brand">
             <a class="brand dm-interactive-logo" href="${root}/" aria-label="Deepali Minerals home" data-dm-logo="true">
               <img src="${root}/assets/images/brand/logo.png" alt="Deepali Minerals" class="brand-logo-footer" width="200" height="100" referrerpolicy="no-referrer" />
             </a>
-            <p class="footer-tagline">${company.tagline || 'Industrial materials, clearly connected.'}</p>
+            <p class="footer-tagline">${company.tagline || 'Industrial Minerals'}</p>
             <p class="footer-desc">
-              Reliable processor, manufacturer, and bulk supplier of non-metallic industrial minerals and functional chemical extenders since 2004. B2B material supply for industrial manufacturing across India and worldwide.
+              Delhi-based B2B supplier of industrial minerals, pulverized powders, and functional chemicals since 2004.
             </p>
             <div class="footer-meta-box">
-              <p><strong>CEO:</strong> ${company.ceo || 'Mr. Neeraj Monga (CEO)'}</p>
-              <p><strong>GST:</strong> ${company.gstNumber || '07AIMPM0458Q1ZL'}</p>
-              <p><strong>Business:</strong> Industrial Minerals • B2B Supply</p>
+              <p><strong>CEO:</strong> ${company.ceo || 'Mr. Neeraj Monga'}</p>
+              <p><strong>GSTIN:</strong> ${company.gstNumber || '07AIMPM0458Q1ZL'}</p>
+              <p><strong>Certifications:</strong> ISO 9001:2015 &middot; ISO 14001:2015</p>
             </div>
           </div>
 
-          <!-- COLUMN 2: MATERIALS -->
+          <!-- COLUMN 2: PRODUCTS -->
           <div class="footer-col">
-            <h3>Materials</h3>
+            <h3>Products</h3>
             <div class="footer-links-list">
               <a href="${root}/product.html?product=talc">Talc</a>
               <a href="${root}/product.html?product=soap-stone">Soap Stone</a>
@@ -851,57 +1009,51 @@
               <a href="${root}/product.html?product=marble-powder">Marble Powder</a>
               <a href="${root}/product.html?product=quartz-powder">Quartz Powder</a>
               <a href="${root}/product.html?product=calcium-carbonate">Calcium Carbonate</a>
+              <a href="${root}/product.html?product=dolomite-powder">Dolomite Powder</a>
+              <a href="${root}/product.html?product=barytes">Barytes</a>
               <a href="${root}/product.html?product=titanium-dioxide">Titanium Di Oxide</a>
               <a href="${root}/product.html?product=quartz-sand">Quartz Sand</a>
-              <a href="${root}/product.html?product=marble-chips">Marble Chips</a>
-              <a href="${root}/product.html?product=barytes">Barytes</a>
-              <a href="${root}/product.html?product=french-chalk-powder">French Chalk Powder</a>
               <a href="${root}/product.html?product=starch">Starch</a>
-              <a href="${productsUrl}" class="footer-accent-link">View All 22 Materials →</a>
+              <a href="${productsUrl}" class="footer-accent-link">View All 22 Products &rarr;</a>
             </div>
           </div>
 
-          <!-- COLUMN 3: INDUSTRIES & APPLICATIONS -->
+          <!-- COLUMN 3: INDUSTRIES -->
           <div class="footer-col">
-            <h3>Industries &amp; Applications</h3>
+            <h3>Industries</h3>
             <div class="footer-links-list">
-              <a href="${industriesUrl}?industry=paints-coatings">Paints</a>
-              <a href="${industriesUrl}?industry=plastics-polymers">Plastics</a>
-              <a href="${industriesUrl}?industry=rubber-footwear">Rubber</a>
-              <a href="${productsUrl}?industry=Master%20Batch">Masterbatch</a>
-              <a href="${productsUrl}?industry=PVC">PVC</a>
-              <a href="${productsUrl}?industry=Paper">Paper</a>
+              <a href="${industriesUrl}?industry=paints-coatings">Paints &amp; Coatings</a>
+              <a href="${industriesUrl}?industry=plastics-polymers">Plastics &amp; Polymers</a>
+              <a href="${industriesUrl}?industry=rubber-footwear">Rubber &amp; Footwear</a>
               <a href="${industriesUrl}?industry=ceramics">Ceramics</a>
-              <a href="${productsUrl}?industry=Cosmetics">Cosmetics</a>
-              <a href="${productsUrl}?industry=Pharmaceutical">Pharmaceutical</a>
-              <a href="${productsUrl}?industry=Soap">Soap &amp; Detergent</a>
-              <a href="${productsUrl}?industry=Footwear">Footwear</a>
-              <a href="${productsUrl}?industry=Cables">Cables</a>
-              <a href="${industriesUrl}?industry=construction-building-materials">Construction</a>
-              <a href="${productsUrl}?industry=FRP">FRP</a>
-              <a href="${industriesUrl}" class="footer-accent-link">Explore Industries →</a>
+              <a href="${industriesUrl}?industry=construction-building-materials">Construction Materials</a>
+              <a href="${industriesUrl}?industry=paper-stationery">Paper &amp; Stationery</a>
+              <a href="${industriesUrl}?industry=frp-composites">FRP &amp; Composites</a>
+              <a href="${industriesUrl}?industry=foundry-industrial">Foundry &amp; Industrial</a>
+              <a href="${industriesUrl}?industry=agriculture-allied">Agriculture &amp; Allied</a>
+              <a href="${industriesUrl}?industry=detergents-household">Soaps &amp; Detergents</a>
+              <a href="${industriesUrl}?industry=wall-putty-nc-putty">Wall Putty &amp; NC Putty</a>
+              <a href="${industriesUrl}" class="footer-accent-link">Explore All 18 Industries &rarr;</a>
             </div>
           </div>
 
-          <!-- COLUMN 4: BUY / TECHNICAL -->
+          <!-- COLUMN 4: COMPANY & QUALITY -->
           <div class="footer-col">
-            <h3>Buy / Technical</h3>
+            <h3>Company &amp; Quality</h3>
             <div class="footer-links-list">
-              <a href="${root}/#materials">Find Your Material</a>
-              <a href="${root}/#rfq">Quotation</a>
-              <a href="${root}/#resources">Technical Resources</a>
+              <a href="${root}/about.html">About Us</a>
+              <a href="${root}/about.html#certifications">ISO Certifications</a>
+              <a href="${root}/#quality">Quality &amp; Assurance</a>
+              <a href="${root}/#operations">Operations &amp; Capabilities</a>
+              <a href="${root}/#resources">Resources &amp; Guides</a>
               <a href="${productsUrl}">Product Catalogue</a>
-              <a href="${root}/about.html">About Deepali Minerals</a>
-              <a href="${root}/#contact">Commercial Desk</a>
-              <a href="${whatsappGeneralUrl}" target="_blank" rel="noopener noreferrer" class="footer-whatsapp-link">
-                ${whatsappIconSvg(14, 14)} WhatsApp Sales Desk
-              </a>
+              <a href="${root}/#rfq">Enquire Now</a>
             </div>
           </div>
 
           <!-- COLUMN 5: CONTACT -->
           <div class="footer-col footer-col-contact">
-            <h3>Contact</h3>
+            <h3>Contact Us</h3>
             <div class="footer-contact-details">
               <p>
                 <strong class="footer-lbl">Email:</strong><br />
@@ -909,14 +1061,14 @@
               </p>
               <p style="margin-top: .6rem;">
                 <strong class="footer-lbl">Phone:</strong><br />
-                <a href="tel:+919810516065">9810516065</a>, <a href="tel:+919810715129">9810715129</a>
+                <a href="tel:+919810516065">+91 9810516065</a>, <a href="tel:+919810715129">9810715129</a>
               </p>
               <p style="margin-top: .6rem;">
                 <strong class="footer-lbl">Office:</strong><br />
-                <span>${company.headquarters || 'C2/29C Lawrence Road, Keshav Puram, Delhi-110035'}</span>
+                <span>${company.headquarters || 'C-2/29 C Lawrence Road, Rampura / Keshav Puram, New Delhi - 110035'}</span>
               </p>
               <p style="margin-top: .6rem;">
-                <strong class="footer-lbl">Hours:</strong><br />
+                <strong class="footer-lbl">Business Hours:</strong><br />
                 <span>${company.businessHours || 'Monday – Saturday: 9:00 AM – 7:30 PM IST'}</span>
               </p>
               <div style="margin-top: .85rem;">
@@ -931,15 +1083,17 @@
 
         <div class="shell footer-bottom">
           <div class="footer-bottom-left">
-            <span>© ${new Date().getFullYear()} Deepali Minerals. All rights reserved.</span>
-            <span class="footer-sep">•</span>
-            <span>Industrial B2B Material Supply &amp; Technical Discovery</span>
+            <span>&copy; ${new Date().getFullYear()} Deepali Minerals. All rights reserved.</span>
+            <span class="footer-sep">&middot;</span>
+            <span>Industrial Minerals B2B Supply</span>
           </div>
           <div class="footer-bottom-right">
             <a href="${root}/sitemap.xml" target="_blank" rel="noopener">Sitemap (XML)</a>
-            <span class="footer-sep">•</span>
-            <a href="${root}/#rfq">Quotation</a>
-            <span class="footer-sep">•</span>
+            <span class="footer-sep">&middot;</span>
+            <a href="${root}/about.html#certifications">Quality &amp; Legal Notice</a>
+            <span class="footer-sep">&middot;</span>
+            <a href="${root}/#rfq">Enquire Now</a>
+            <span class="footer-sep">&middot;</span>
             <a href="${whatsappGeneralUrl}" target="_blank" rel="noopener noreferrer">WhatsApp Desk</a>
           </div>
         </div>
@@ -979,11 +1133,14 @@
       )
     );
     const imgSrc = resolveProductImg(p.image);
-    const altText = esc(p.alt || `${p.name} - Deepali Minerals Industrial Supply`);
+    const altText = esc(p.alt || `${p.name} — Deepali Minerals`);
+    const bullets = (p.applications && p.applications.length)
+      ? p.applications.slice(0, 2)
+      : [p.shortDescription];
 
     return `
       <article class="product-card" data-slug="${esc(p.slug)}">
-        <div class="product-card-visual">
+        <a href="${productUrl(p, industryCtx, appCtx, routeCtx)}" class="product-card-visual" aria-label="View ${esc(p.name)}">
           ${imgSrc ? `
             <img 
               src="${imgSrc}" 
@@ -1000,29 +1157,24 @@
             <div class="fallback-info">
               <span class="fallback-cat">${esc(p.category)}</span>
               <span class="fallback-title">${esc(p.name)}</span>
-              <span class="fallback-sub">${isStarch ? 'Plant-Derived Industrial Grade' : 'Laboratory Certified Specimen'}</span>
             </div>
           </div>
-        </div>
-        <span class="eyebrow">${esc(p.category)}</span>
-        <h3>${esc(p.name)}</h3>
-        <p>${esc(p.shortDescription)}</p>
-        
-        ${p.applications && p.applications.length ? `
-          <div style="margin-top: .5rem; font-size: .78rem; color: var(--slate); line-height: 1.4;">
-            <strong style="color: var(--ink); font-family: var(--mono); font-size: .7rem; text-transform: uppercase;">Key Uses:</strong>
-            <span style="display: block; margin-top: .2rem;">${esc(p.applications.slice(0, 2).join(' • '))}</span>
+        </a>
+        <div class="product-card-body">
+          <span class="product-card-cat">${esc(p.category)}</span>
+          <h3><a href="${productUrl(p, industryCtx, appCtx, routeCtx)}">${esc(p.name)}</a></h3>
+          <ul class="dm-bullet-list dm-bullet-list--compact">
+            ${bullets.map(b => `<li>${esc(b)}</li>`).join('')}
+          </ul>
+          <div class="product-card-actions">
+            <a class="product-card-link" href="${productUrl(p, industryCtx, appCtx, routeCtx)}">
+              View Product <span aria-hidden="true">&rarr;</span>
+            </a>
+            <a class="product-card-btn-quickbuy" href="${getWhatsAppUrl(`Hello Deepali Minerals, I would like to enquire about ${p.name}. Please share specifications and availability.`)}" target="_blank" rel="noopener noreferrer" aria-label="Enquire about ${esc(p.name)} on WhatsApp">
+              ${whatsappIconSvg(13, 13)}
+              <span>WhatsApp</span>
+            </a>
           </div>
-        ` : ''}
-
-        <div class="product-card-actions">
-          <a class="product-card-link" href="${productUrl(p, industryCtx, appCtx, routeCtx)}">
-            Explore Product <span aria-hidden="true">&rarr;</span>
-          </a>
-          <a class="product-card-btn-quickbuy" href="${getWhatsAppUrl(`Hello Deepali Minerals, I would like to quickly buy / enquire about ${p.name}. Please share pricing and dispatch availability.`)}" target="_blank" rel="noopener noreferrer" aria-label="Quick Buy ${esc(p.name)} via WhatsApp Sales Desk">
-            ${whatsappIconSvg(13, 13)}
-            <span>Quick Buy</span>
-          </a>
         </div>
       </article>
     `;
@@ -1147,7 +1299,6 @@
               <select name="packaging">
                 <option value="50 Kg PP Bags">50 Kg PP Woven Bags (Standard Wholesale)</option>
                 <option value="25 Kg Paper / HDPE">25 Kg Paper / HDPE Bags</option>
-                <option value="1 MT Jumbo Bags">1000 Kg (1 MT) Jumbo Bags</option>
                 <option value="Custom / Palletized">Palletized Export Packaging</option>
               </select>
             </div>
@@ -1193,14 +1344,11 @@
   };
 
   /* =========================================================================
-   * HOMEPAGE
-   * ========================================================================= */
-  /* =========================================================================
-   * HOMEPAGE (REDESIGN EXPERIMENT - MODERN INDUSTRIAL B2B STANDARD)
+   * HOMEPAGE — NATURAL MINERAL B2B REDESIGN
    * ========================================================================= */
   function home() {
     updateSeoMeta({
-      title: 'Deepali Minerals | Industrial Minerals & Pulverized Chemicals Supplier',
+      title: 'Deepali Minerals | Industrial Minerals Supplier',
       description: 'Established in 2004, Deepali Minerals is an ISO 9001:2015 & ISO 14001:2015 certified B2B supplier of industrial minerals, pulverized powders, and functional chemicals in Delhi.',
       canonical: 'https://www.deepaliminerals.com/',
       ogType: 'website',
@@ -1208,262 +1356,219 @@
     });
 
     const allProducts = data.products || [];
-    const industries = data.industries || [];
+    const mineralsCount = allProducts.filter(p => p.category === 'Industrial Minerals' || p.category === 'Mineral Powders').length;
+    const chemicalsCount = allProducts.filter(p => p.category === 'Functional Chemicals').length;
+    const grainsCount = allProducts.filter(p => p.category === 'Grains & Aggregates' || p.category === 'Industrial Materials').length;
 
-    // Flagship materials for Section 3
-    const flagshipSlugs = ['talc', 'calcium-carbonate', 'china-clay', 'dolomite', 'zinc-stearates', 'barytes'];
-    const flagshipProducts = flagshipSlugs.map(slug => data.getProductBySlug(slug)).filter(Boolean);
+    const featuredIndustries = [
+      {
+        slug: 'paints-coatings',
+        img: 'paints-coatings',
+        title: 'Paints & Coatings',
+        bullets: [
+          'Extenders and brightness enhancers for architectural and industrial coatings.',
+          'Supports scrub resistance, film build, and pigment dispersion.',
+          'Key materials: Talc, Calcium Carbonate, China Clay, Barytes, Titanium Di Oxide.'
+        ]
+      },
+      {
+        slug: 'plastics-polymers',
+        img: 'plastics-polymers',
+        title: 'Plastics & Polymers',
+        bullets: [
+          'Functional fillers and internal lubricants for PVC, PP, and masterbatches.',
+          'Improves dimensional stability, surface finish, and processing flow.',
+          'Key materials: Calcium Carbonate, Talc, Zinc Stearates, Titanium Di Oxide.'
+        ]
+      },
+      {
+        slug: 'rubber-footwear',
+        img: 'rubber-footwear',
+        title: 'Rubber & Footwear',
+        bullets: [
+          'Activators, dusting powders, and fillers for rubber compounds and EVA soles.',
+          'Supports vulcanization activation, anti-tack release, and compound reinforcement.',
+          'Key materials: Zinc Oxide, Magnesium Carbonate, Barytes, French Chalk Powder, Talc.'
+        ]
+      },
+      {
+        slug: 'ceramics',
+        img: 'ceramics',
+        title: 'Ceramics',
+        bullets: [
+          'Silica, clays, and carbonate fluxes for ceramic tiles and sanitaryware bodies.',
+          'Contributes to firing stability, plasticity, and glaze formulation.',
+          'Key materials: Quartz Powder, Silica, Kaoline, China Clay, Dolomite Powder.'
+        ]
+      },
+      {
+        slug: 'construction-building-materials',
+        img: 'construction-building-materials',
+        title: 'Construction Materials',
+        bullets: [
+          'Mineral fillers and graded aggregates for wall putty, mortars, and tile adhesives.',
+          'Enhances whiteness, workability, and structural consistency.',
+          'Key materials: Dolomite Powder, Marble Powder, Chalk Powder, Hydrated Lime, Marble Chips.'
+        ]
+      },
+      {
+        slug: 'paper-stationery',
+        img: 'paper-stationery',
+        title: 'Paper & Stationery',
+        bullets: [
+          'Brightness fillers, pitch-control minerals, and industrial binders for paper mills.',
+          'Used across writing paper, paperboard coating, and corrugation.',
+          'Key materials: China Clay, Talc, Calcium Carbonate, Starch.'
+        ]
+      },
+      {
+        slug: 'frp-composites',
+        img: 'frp-composites',
+        title: 'FRP & Composites',
+        bullets: [
+          'Resin matrices and mineral extenders for fiberglass composite mouldings.',
+          'Supports viscosity control, surface smoothness, and dimensional stability.',
+          'Key materials: Polyester Resin, Talc, Calcium Carbonate, Quartz Powder.'
+        ]
+      },
+      {
+        slug: 'foundry-industrial',
+        img: 'foundry',
+        title: 'Foundry & Metallurgy',
+        bullets: [
+          'Graded silica sand, parting powders, and chemical fluxes for metal casting.',
+          'Supports core moulding, mould release, and thermal durability.',
+          'Key materials: Quartz Sand, Silica, Hydrated Lime, French Chalk Powder, Soap Stone.'
+        ]
+      },
+      {
+        slug: 'detergents-household',
+        img: 'detergents-household',
+        title: 'Soaps & Detergents',
+        bullets: [
+          'Mineral fillers and gentle abrasive extenders for toilet soaps and detergent cakes.',
+          'Supports bar structure, free-flowing powder blends, and formulation balance.',
+          'Key materials: Soap Stone, Chalk Powder, Dolomite Powder, China Clay.'
+        ]
+      }
+    ];
 
     document.querySelector('#main').innerHTML = `
       <!-- ====================================================================
-           1. HERO BANNER — FULL BACKGROUND VIDEO SHOWROOM EXPERIENCE
+           B. HERO BANNER — INDUSTRIAL MINERALS
            ==================================================================== -->
-      <section class="exp-hero" id="hero">
-        <!-- Full-Bleed Background Video -->
-        <video
-          class="hero-video exp-hero-bg-video"
-          autoplay
-          loop
-          playsinline
-          preload="auto"
-          aria-label="Deepali Minerals industrial processing facility video background"
-        >
-          <source src="${root}/hero%20video%20DM%20watermark%20(1).mp4" type="video/mp4" />
-        </video>
+      <section class="dm-mineral-hero" id="hero">
+        <div class="dm-mineral-hero-media">
+          <img
+            src="${root}/assets/images/gallery/hero_industrial_minerals.jpg"
+            alt="Industrial mineral quarry and material processing landscape"
+            class="dm-mineral-hero-img"
+            loading="eager"
+          />
+          <div class="dm-mineral-hero-scrim"></div>
+        </div>
 
-        <!-- High-Contrast Blue Gradient Overlay -->
-        <div class="exp-hero-bg-overlay"></div>
+        <div class="shell dm-mineral-hero-inner">
+          <span class="dm-mineral-hero-kicker">DEEPALI MINERALS &middot; ESTABLISHED 2004 &middot; NEW DELHI</span>
+          <h1 class="dm-mineral-hero-title">INDUSTRIAL MINERALS</h1>
+          <p class="dm-mineral-hero-lead">
+            Explore our range of 22 industrial minerals for diverse manufacturing requirements.
+          </p>
+          <div class="dm-mineral-hero-actions">
+            <a href="#portfolio" class="dm-hero-btn-primary">Explore Products</a>
+            <a href="#rfq" class="dm-hero-btn-secondary">Enquire Now</a>
+            <button type="button" class="dm-hero-btn-video" data-hero-fullscreen-trigger="true" title="Watch Deepali Minerals facility video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+              <span>Watch Overview Video</span>
+            </button>
+          </div>
+        </div>
+      </section>
 
-        <div class="shell" style="position: relative; z-index: 2;">
-          <div class="exp-hero-inner">
-            <div>
-              <div class="exp-hero-estd-pill">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                <span>ESTD. 2004 &bull; ISO 9001:2015 &amp; ISO 14001:2015 ACCREDITED</span>
-              </div>
+      <!-- Quiet Factual Benchmark Strip -->
+      <div class="dm-benchmark-strip">
+        <div class="shell dm-benchmark-grid">
+          <div class="dm-benchmark-item">
+            <div class="dm-benchmark-val">Since 2004</div>
+            <div class="dm-benchmark-lbl">Over two decades in industrial mineral trading</div>
+          </div>
+          <div class="dm-benchmark-item">
+            <div class="dm-benchmark-val">22 Materials</div>
+            <div class="dm-benchmark-lbl">Mineral powders, chemicals &amp; granular aggregates</div>
+          </div>
+          <div class="dm-benchmark-item">
+            <div class="dm-benchmark-val">18 Sectors</div>
+            <div class="dm-benchmark-lbl">Verified manufacturing &amp; industrial applications</div>
+          </div>
+          <div class="dm-benchmark-item">
+            <div class="dm-benchmark-val">ISO 9001 &amp; 14001</div>
+            <div class="dm-benchmark-lbl">Certified quality &amp; environmental management</div>
+          </div>
+        </div>
+      </div>
 
-              <h1 class="exp-hero-title">
-                Industrial Minerals. Reliable Supply.<br>
-                <span style="color: #F8DF8A;">Business Partnerships.</span>
-              </h1>
-
-              <p class="exp-hero-lead">
-                Your direct sourcing partner for processed non-metallic industrial minerals, pulverized functional extenders, and specialized chemical additives serving diverse manufacturing corridors across India. Operating with direct quarry linkages, dual ISO certified quality systems, and nationwide logistics dispatch.
-              </p>
-
-              <div class="exp-hero-btn-group">
-                <a href="#portfolio" class="button" style="padding: 0.85rem 1.75rem; font-size: 0.86rem; font-weight: 700; background: #D5A43A; color: #0C2B50; border-color: #D5A43A;">Explore Our Products &rarr;</a>
-                <a href="#rfq" class="button" style="padding: 0.85rem 1.75rem; font-size: 0.86rem; font-weight: 700; background: #1769AA; color: #FFFFFF; border-color: #2488C9;">Enquire Now / Get Quotation</a>
-                <a href="${getWhatsAppUrl('Hello Deepali Minerals, I would like to discuss my industrial mineral requirement.')}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn" style="padding: 0.75rem 1.25rem; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 0.45rem;">
-                  ${whatsappIconSvg(16, 16)}
-                  <span>WhatsApp Sales Desk</span>
-                </a>
-              </div>
-
-              <!-- Audio & Fullscreen Quick Status Bar -->
-              <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem;">
-                <button
-                  type="button"
-                  class="button hero-sound-btn is-active"
-                  data-hero-audio-toggle="true"
-                  aria-label="Mute facility video sound"
-                  aria-pressed="true"
-                  title="Click to mute facility video sound"
-                  style="padding: 0.45rem 0.95rem; font-size: 0.74rem; min-height: 36px; background: rgba(12, 43, 80, 0.92); border-color: rgba(255,255,255,0.3); color: #FFFFFF; display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 4px;"
-                >
-                  <span class="hero-audio-icon" aria-hidden="true">
-                    <svg class="sound-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                    </svg>
-                  </span>
-                  <span class="hero-audio-label">Mute Video Sound</span>
-                </button>
-
-                <button
-                  type="button"
-                  class="button hero-fullscreen-cta-btn"
-                  data-hero-fullscreen-trigger="true"
-                  style="padding: 0.45rem 0.95rem; font-size: 0.74rem; min-height: 36px; display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(10, 30, 52, 0.88); color: #FFFFFF; border: 1.5px solid #D5A43A; border-radius: 4px;"
-                  title="Watch facility video in Full Screen with sound"
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                  <span>Full Screen Theater</span>
-                </button>
-
-                <span style="font-size: 0.74rem; font-family: var(--mono); color: #D5E7F6;">Live processing facility video playing in background</span>
-              </div>
-            </div>
-
-            <!-- Frosted Glass Facility & Technical Credibility Card -->
-            <div class="exp-hero-facility-glass">
-              <div class="glass-live-header">
-                <div class="live-pulse-badge">
-                  <span class="live-dot"></span>
-                  <span>LIVE FACILITY DISPATCH</span>
-                </div>
-                <span class="iso-audit-tag">ISO 9001 &bull; 14001</span>
-              </div>
-
-              <h3 class="glass-facility-title">Central Processing, Pulverization &amp; Buffer Storage</h3>
-              <p class="glass-facility-address">Corporate Office: Lawrence Road Industrial Area, Rampura / Keshav Puram, New Delhi</p>
-
-              <div class="glass-spec-metrics">
-                <div class="glass-metric-box">
-                  <span class="glass-metric-val">Custom</span>
-                  <span class="glass-metric-lbl">Micron Grading</span>
-                </div>
-                <div class="glass-metric-box">
-                  <span class="glass-metric-val">100%</span>
-                  <span class="glass-metric-lbl">COA Verified</span>
-                </div>
-                <div class="glass-metric-box">
-                  <span class="glass-metric-val">Pan-India</span>
-                  <span class="glass-metric-lbl">Fleet Logistics</span>
-                </div>
-              </div>
-
-              <div class="glass-facility-footer">
-                <span class="glass-footer-note">&bull; Direct Quarry Linkages: Rajasthan &amp; Gujarat</span>
-                <button
-                  type="button"
-                  data-hero-fullscreen-trigger="true"
-                  class="button alt"
-                  style="padding: 0.35rem 0.75rem; font-size: 0.72rem; min-height: 32px; background: rgba(255,255,255,0.15); color: #FFFFFF; border-color: rgba(255,255,255,0.4);"
-                  title="Expand to Full Screen Theater"
-                >
-                  ⛶ Expand Theater
-                </button>
-              </div>
+      <!-- ====================================================================
+           C. ABOUT DEEPALI MINERALS
+           ==================================================================== -->
+      <section class="dm-band-white" id="about-company">
+        <div class="shell dm-about-split">
+          <div class="dm-about-media-frame">
+            <img
+              src="${root}/assets/images/industries/corporate-intro-banner.webp"
+              data-photo-src="${root}/assets/images/industries/corporate-intro-banner.webp"
+              data-backup-src="${root}/assets/images/industries/backup/corporate-intro-banner.webp"
+              alt="Industrial mineral supply and processing workflow"
+              loading="lazy"
+            />
+            <div class="dm-about-caption">
+              <span>Corporate Office: Lawrence Road, New Delhi</span>
+              <span>Illustrative industrial image</span>
             </div>
           </div>
 
-          <!-- 4 Institutional Benchmark Counter Cards -->
-          <div class="exp-hero-stats-grid">
-            <div class="exp-hero-stat-card" style="border-top: 3px solid #F8DF8A;">
-              <div class="exp-stat-num">2004</div>
-              <div class="exp-stat-label">Year Established</div>
-              <p class="exp-stat-desc">Over two decades of continuous B2B mineral supply across India.</p>
-            </div>
-            <div class="exp-hero-stat-card" style="border-top: 3px solid #2488C9;">
-              <div class="exp-stat-num">22 Materials</div>
-              <div class="exp-stat-label">Master Catalogue</div>
-              <p class="exp-stat-desc">Standard pulverized powders, functional additives &amp; grains.</p>
-            </div>
-            <div class="exp-hero-stat-card" style="border-top: 3px solid #D5A43A;">
-              <div class="exp-stat-num">38+ Sectors</div>
-              <div class="exp-stat-label">Industrial Applications</div>
-              <p class="exp-stat-desc">Serving paints, plastics, PVC, rubber, ceramics, paper &amp; foundry.</p>
-            </div>
-            <div class="exp-hero-stat-card" style="border-top: 3px solid #77947A;">
-              <div class="exp-stat-num">ISO Certified</div>
-              <div class="exp-stat-label">QMS &amp; EMS Audited</div>
-              <p class="exp-stat-desc">ISO 9001:2015 Quality &amp; ISO 14001:2015 Environmental standards.</p>
+          <div>
+            <span class="dm-section-kicker">ABOUT DEEPALI MINERALS</span>
+            <h2 class="dm-section-heading">Trusted B2B Partner for Industrial Minerals</h2>
+            <p class="dm-section-sub" style="margin-bottom: 1.35rem;">
+              Established in 2004 and led by CEO Mr. Neeraj Monga, Deepali Minerals is a Delhi-based B2B supplier of industrial minerals and pulverized mineral powders serving diverse manufacturing sectors across India.
+            </p>
+            <ul class="dm-bullet-list" style="margin-bottom: 1.75rem;">
+              <li><strong>22 Industrial Minerals:</strong> Comprehensive catalogue of mineral powders, functional extenders, and graded aggregates.</li>
+              <li><strong>Certified Systems:</strong> ISO 9001:2015 and ISO 14001:2015 certified for trading of mineral and chemical products.</li>
+              <li><strong>Multi-Region Sourcing:</strong> Established supply partnerships across Rajasthan, Gujarat, and regional industrial hubs.</li>
+              <li><strong>Responsive Commercial Desk:</strong> Coordinated warehousing, sample support, and dispatch from Lawrence Road, New Delhi.</li>
+            </ul>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+              <a href="${root}/about.html" class="button" style="padding: 0.8rem 1.55rem; font-size: 0.86rem;">Read More &rarr;</a>
+              <a href="${root}/about.html#certifications" class="button alt" style="padding: 0.8rem 1.35rem; font-size: 0.86rem;">View ISO Certificates</a>
             </div>
           </div>
         </div>
       </section>
 
       <!-- ====================================================================
-           2. ABOUT DEEPALI MINERALS — CORPORATE SHOWROOM INTRODUCTION
+           D. OUR INDUSTRIAL MINERALS (ALL 22 PRODUCTS)
            ==================================================================== -->
-      <section class="showroom-section" id="about-company" style="padding: 5rem 0; background: #EAF3FB; border-bottom: 1px solid var(--line);">
+      <section class="dm-band-offwhite" id="portfolio">
+        <div id="materials" style="scroll-margin-top: 90px;"></div>
         <div class="shell">
-          <div class="institutional-split">
-            <div class="institutional-visual-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #D5E7F6; border-radius: 8px; box-shadow: 0 8px 24px rgba(18, 62, 112, 0.08);">
-              <div style="height: 240px; width: 100%; overflow: hidden; position: relative; background: #0B1C30;">
-                <img src="${root}/assets/images/industries/corporate-intro-banner.webp" alt="Deepali Minerals processing facility and quarry supply network" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
-                <div style="position: absolute; bottom: 0.75rem; left: 0.75rem; background: rgba(11,28,48,0.85); backdrop-filter: blur(4px); padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid rgba(213,164,58,0.4); color: #FFFFFF; font-family: var(--mono); font-size: 0.72rem; font-weight: 700;">
-                  MINING CORRIDORS &bull; RAJASTHAN &amp; GUJARAT
-                </div>
-              </div>
-              <div style="padding: 1.6rem;">
-                <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem;">
-                  <img src="${root}/assets/images/Neeraj%20Monga%20Pic.jpeg" alt="Mr. Neeraj Monga, CEO &amp; Proprietor" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #D5A43A; flex-shrink: 0;" />
-                  <div>
-                    <h4 style="margin: 0; font-size: 1.05rem; color: #123E70;">Mr. Neeraj Monga</h4>
-                    <span style="font-family: var(--mono); font-size: 0.72rem; color: #1769AA; font-weight: 700;">CEO &amp; PROPRIETOR &bull; ESTD. 2004</span>
-                  </div>
-                </div>
-                <p style="font-size: 0.86rem; color: #35424E; line-height: 1.55; margin: 0 0 1.25rem;">
-                  Operating from our Corporate Office at <strong>Lawrence Road, Rampura / Keshav Puram, New Delhi</strong>, Deepali Minerals coordinates raw material extraction, pulverization, testing, and multi-state transport dispatches with over two decades of technical dedication.
-                </p>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                  <div style="font-family: var(--mono); font-size: 0.7rem; color: #123E70; background: #D5E7F6; padding: 0.3rem 0.6rem; border-radius: 4px; font-weight: 700;">
-                    ISO 9001:2015 QMS
-                  </div>
-                  <div style="font-family: var(--mono); font-size: 0.7rem; color: #1769AA; background: #EAF3FB; padding: 0.3rem 0.6rem; border-radius: 4px; font-weight: 700; border: 1px solid #D5E7F6;">
-                    ISO 14001:2015 EMS
-                  </div>
-                  <div style="font-family: var(--mono); font-size: 0.7rem; color: #80664A; background: #E9DDC9; padding: 0.3rem 0.6rem; border-radius: 4px; font-weight: 700;">
-                    GST: 07AIMPM0458Q1ZL
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          <div class="section-head" style="margin-bottom: 1.75rem; align-items: flex-end;">
             <div>
-              <span class="eyebrow" style="color: #1769AA;">OVER TWO DECADES OF DEPENDABLE SUPPLY</span>
-              <h2 class="section-title" style="margin-bottom: 1.25rem; color: #123E70;">
-                Bridging Mineral Mines &amp; Industrial Manufacturing
-              </h2>
-              <p class="lede" style="margin-bottom: 1.25rem; color: #252F3D;">
-                Deepali Minerals is a recognized manufacturer, processor, and bulk distributor of non-metallic industrial minerals, micronized functional extenders, and specialty chemical additives.
-              </p>
-              <p style="font-size: 0.92rem; color: #35424E; line-height: 1.65; margin-bottom: 1.5rem;">
-                We eliminate the uncertainty in raw material procurement by maintaining dependable mine linkages across mineral-rich zones in Rajasthan and Gujarat, continuous pulverization control, and batch-wise quality documentation. Every consignment is supported by comprehensive Certificates of Analysis (COA) to guarantee chemical purity and particle fineness.
-              </p>
-
-              <div class="institutional-pillars-grid">
-                <div class="inst-pillar-item" style="border-left: 4px solid #123E70; background: #FFFFFF; padding: 1rem 1.25rem; border-radius: 6px; box-shadow: 0 4px 14px rgba(18,62,112,0.04);">
-                  <strong style="color: #123E70; display: block; margin-bottom: 0.25rem;">Direct Quarry Sourcing</strong>
-                  <p style="margin: 0; font-size: 0.82rem; color: #526071; line-height: 1.45;">Secured mine tie-ups across Rajasthan, Gujarat, and key mining zones ensuring uninterrupted raw mineral supply.</p>
-                </div>
-                <div class="inst-pillar-item" style="border-left: 4px solid #1769AA; background: #FFFFFF; padding: 1rem 1.25rem; border-radius: 6px; box-shadow: 0 4px 14px rgba(18,62,112,0.04);">
-                  <strong style="color: #1769AA; display: block; margin-bottom: 0.25rem;">Particle Size Consistency</strong>
-                  <p style="margin: 0; font-size: 0.82rem; color: #526071; line-height: 1.45;">Micronized and pulverized grades classified to required particle fineness for demanding compounding.</p>
-                </div>
-                <div class="inst-pillar-item" style="border-left: 4px solid #80664A; background: #FFFFFF; padding: 1rem 1.25rem; border-radius: 6px; box-shadow: 0 4px 14px rgba(18,62,112,0.04);">
-                  <strong style="color: #80664A; display: block; margin-bottom: 0.25rem;">Laboratory Quality Assay</strong>
-                  <p style="margin: 0; font-size: 0.82rem; color: #526071; line-height: 1.45;">In-house testing for whiteness, brightness, sieve residue, moisture, and chemical purity.</p>
-                </div>
-                <div class="inst-pillar-item" style="border-left: 4px solid #D5A43A; background: #FFFFFF; padding: 1rem 1.25rem; border-radius: 6px; box-shadow: 0 4px 14px rgba(18,62,112,0.04);">
-                  <strong style="color: #B45309; display: block; margin-bottom: 0.25rem;">Reliable Fleet Logistics</strong>
-                  <p style="margin: 0; font-size: 0.82rem; color: #526071; line-height: 1.45;">Corporate Office at Lawrence Road, New Delhi with buffer inventory for prompt regional and national delivery.</p>
-                </div>
-              </div>
-
-              <div style="margin-top: 2.25rem;">
-                <a href="${root}/about.html" class="button" style="padding: 0.85rem 1.65rem; font-weight: 700; background: #123E70; color: #FFFFFF;">Read More About Deepali Minerals &rarr;</a>
-              </div>
+              <span class="dm-section-kicker">PRODUCT PORTFOLIO &middot; 22 INDUSTRIAL MINERALS</span>
+              <h2 class="dm-section-heading">OUR INDUSTRIAL MINERALS</h2>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           3. EXPLORE OUR INDUSTRIAL MINERALS — PRODUCT SHOWROOM (ALL 22 PRODUCTS)
-           ==================================================================== -->
-      <section class="showroom-section" id="portfolio" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
-        <div class="shell">
-          <div class="section-head" style="margin-bottom: 1.75rem;">
-            <div>
-              <span class="eyebrow" style="color: #1769AA;">MASTER CATALOGUE &bull; ALL 22 MATERIALS UNDER ONE ROOF</span>
-              <h2 class="section-title" style="color: #123E70;">EXPLORE OUR INDUSTRIAL MINERALS</h2>
-            </div>
-            <p class="lede" style="color: #526071;">Explore all 22 catalogued non-metallic minerals, pulverized extenders, and functional additives with verified photography, particle size specifications, and direct WhatsApp sales ordering.</p>
+            <a href="${productsUrl}" class="text-link" style="color: #1769AA; font-weight: 700;">View All Products &rarr;</a>
           </div>
 
           <!-- Category Filter Tabs -->
           <div class="product-showcase-tabs">
-            <button type="button" class="showcase-tab-btn is-active" data-filter="all">All Materials (22)</button>
-            <button type="button" class="showcase-tab-btn" data-filter="minerals">Minerals &amp; Powders (13)</button>
-            <button type="button" class="showcase-tab-btn" data-filter="chemicals">Functional Chemicals (6)</button>
-            <button type="button" class="showcase-tab-btn" data-filter="grains">Grains &amp; Aggregates (3)</button>
+            <button type="button" class="showcase-tab-btn is-active" data-filter="all">All Products (${allProducts.length})</button>
+            <button type="button" class="showcase-tab-btn" data-filter="minerals">Minerals &amp; Powders (${mineralsCount})</button>
+            <button type="button" class="showcase-tab-btn" data-filter="chemicals">Functional Chemicals (${chemicalsCount})</button>
+            <button type="button" class="showcase-tab-btn" data-filter="grains">Grains &amp; Aggregates (${grainsCount})</button>
           </div>
 
-          <!-- 22 Products Grid with Category Tagging -->
+          <!-- 22 Products Image-Led Gallery (Zero Mesh Captions) -->
           <div class="product-grid" id="homepage-product-grid">
             ${allProducts.map(p => {
               const catGroup = (p.category === 'Industrial Minerals' || p.category === 'Mineral Powders') ? 'minerals' : (
@@ -1477,596 +1582,407 @@
             }).join('')}
           </div>
 
-          <div style="margin-top: 2.75rem; text-align: center;">
-            <a href="${productsUrl}" class="button" style="padding: 0.95rem 2.25rem; font-size: 0.92rem; background: #123E70; color: #FFFFFF; border-color: #123E70;">View Full 22-Product Catalogue &rarr;</a>
+          <div style="margin-top: 2.5rem; text-align: center;">
+            <a href="${productsUrl}" class="button" style="padding: 0.88rem 2rem; font-size: 0.88rem;">View All Products &rarr;</a>
           </div>
         </div>
       </section>
 
       <!-- ====================================================================
-           4. PARTNERS & BUSINESS RELATIONSHIPS — SOURCING ECOSYSTEM
+           E. INDUSTRIES WE SERVE
            ==================================================================== -->
-      <section class="showroom-section" id="sourcing" style="padding: 5.5rem 0; background: #0C2B50; color: #FFFFFF; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+      <section class="dm-band-white" id="industries">
         <div class="shell">
-          <div class="section-head" style="margin-bottom: 2rem;">
+          <div class="section-head" style="margin-bottom: 2rem; align-items: flex-end;">
             <div>
-              <span class="eyebrow" style="color: #D5A43A;">MINING CORRIDORS &bull; STRATEGIC QUARRY TIE-UPS</span>
-              <h2 class="section-title" style="color: #FFFFFF;">Direct Mine Linkages &amp; Strategic Sourcing Network</h2>
-            </div>
-            <p class="lede" style="color: #D5E7F6;">Secured pit-head arrangements across mineral-rich belts in Rajasthan and Gujarat provide verified raw ore feedstocks for continuous industrial milling.</p>
-          </div>
-
-          <!-- Transit Network Photo Banner -->
-          <div style="margin-bottom: 2.5rem; border-radius: 8px; overflow: hidden; position: relative; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4); border: 1px solid rgba(213,164,58,0.35);">
-            <img src="${root}/assets/images/gallery/logistics_transit_network.jpg" alt="Deepali Minerals transport logistics fleet and transit loading silos" style="width: 100%; height: 320px; object-fit: cover;" loading="lazy" />
-            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(11,28,48,0) 0%, rgba(11,28,48,0.94) 100%); padding: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
-              <div>
-                <span style="font-family: var(--mono); font-size: 0.72rem; color: #D5A43A; font-weight: 700; text-transform: uppercase;">STRATEGIC SOURCING ECOSYSTEM</span>
-                <h3 style="margin: 0.25rem 0 0; color: #FFFFFF; font-size: 1.25rem;">Quarry Linkages &bull; Controlled Raymond Milling &bull; Nationwide Logistics</h3>
-              </div>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <span style="background: rgba(213,164,58,0.25); color: #F8DF8A; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid #D5A43A; font-weight: 700;">PIT-HEAD TIE-UPS</span>
-                <span style="background: rgba(255,255,255,0.15); color: #FFFFFF; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.25); font-weight: 700;">PAN-INDIA TRANSIT</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="sourcing-grid">
-            <div class="sourcing-card" style="background: #123E70; border: 1px solid rgba(213, 164, 58, 0.3); color: #FFFFFF;">
-              <span class="sourcing-hub-badge" style="background: rgba(213, 164, 58, 0.2); color: #F8DF8A; border: 1px solid #D5A43A;">RAJASTHAN MINING BELT</span>
-              <h3 class="sourcing-title" style="color: #FFFFFF;">Udaipur, Beawar &amp; Makrana</h3>
-              <p class="sourcing-desc" style="color: #D5E7F6;">Direct extraction concessions and quarry partnerships ensuring continuous raw mineral ore feedstocks with high chemical purity and natural whiteness.</p>
-              <div class="sourcing-minerals-list" style="background: rgba(11, 28, 48, 0.7); color: #D5E7F6; border-top: 1px solid rgba(255, 255, 255, 0.12);">
-                <strong style="color: #F8DF8A;">Key Minerals:</strong> Calcite &bull; Talc / Soapstone &bull; Dolomite &bull; Marble &bull; Quartz
-              </div>
-            </div>
-
-            <div class="sourcing-card" style="background: #123E70; border: 1px solid rgba(213, 164, 58, 0.3); color: #FFFFFF;">
-              <span class="sourcing-hub-badge" style="background: rgba(213, 164, 58, 0.2); color: #F8DF8A; border: 1px solid #D5A43A;">GUJARAT COASTAL &amp; INLAND</span>
-              <h3 class="sourcing-title" style="color: #FFFFFF;">Kutch, Sabarkantha &amp; Morvi</h3>
-              <p class="sourcing-desc" style="color: #D5E7F6;">Audited mine linkages for sedimentary and levigated minerals, processed to strict chemical specifications for ceramics, paper, and compounding.</p>
-              <div class="sourcing-minerals-list" style="background: rgba(11, 28, 48, 0.7); color: #D5E7F6; border-top: 1px solid rgba(255, 255, 255, 0.12);">
-                <strong style="color: #F8DF8A;">Key Minerals:</strong> Levigated China Clay &bull; Kaolin &bull; Graded Silica Sand &bull; Bentonite
-              </div>
-            </div>
-
-            <div class="sourcing-card" style="background: #123E70; border: 1px solid rgba(213, 164, 58, 0.3); color: #FFFFFF;">
-              <span class="sourcing-hub-badge" style="background: rgba(213, 164, 58, 0.2); color: #F8DF8A; border: 1px solid #D5A43A;">CONTROLLED MILLING</span>
-              <h3 class="sourcing-title" style="color: #FFFFFF;">Raymond Milling &amp; Air-Classification</h3>
-              <p class="sourcing-desc" style="color: #D5E7F6;">Multi-deck air-classification and raymond milling infrastructure capable of delivering custom micronized particle distributions on request.</p>
-              <div class="sourcing-minerals-list" style="background: rgba(11, 28, 48, 0.7); color: #D5E7F6; border-top: 1px solid rgba(255, 255, 255, 0.12);">
-                <strong style="color: #F8DF8A;">Capabilities:</strong> Custom Micron Sieving &bull; Surface Stearate Coating &bull; De-gritting
-              </div>
-            </div>
-
-            <div class="sourcing-card" style="background: #123E70; border: 1px solid rgba(213, 164, 58, 0.3); color: #FFFFFF;">
-              <span class="sourcing-hub-badge" style="background: rgba(213, 164, 58, 0.2); color: #F8DF8A; border: 1px solid #D5A43A;">CENTRAL BUFFER STOCK</span>
-              <h3 class="sourcing-title" style="color: #FFFFFF;">Corporate Office &amp; Buffer Hub</h3>
-              <p class="sourcing-desc" style="color: #D5E7F6;">Strategic buffer inventory housed at our Corporate Office in Lawrence Road Industrial Area, New Delhi, shielding manufacturing partners from supply interruptions.</p>
-              <div class="sourcing-minerals-list" style="background: rgba(11, 28, 48, 0.7); color: #D5E7F6; border-top: 1px solid rgba(255, 255, 255, 0.12);">
-                <strong style="color: #F8DF8A;">Logistics:</strong> 25kg/50kg HDPE &bull; 1-Ton Jumbo FIBC &bull; Pan-India FTL Dispatch
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           5. INDUSTRIES WE SERVE — COLOURFUL VISUAL GALLERY
-           ==================================================================== -->
-      <section class="showroom-section" id="industries" style="padding: 5rem 0; background: #EAF3FB; border-bottom: 1px solid var(--line);">
-        <div class="shell">
-          <div class="section-head">
-            <div>
-              <span class="eyebrow" style="color: #1769AA;">APPLICATION DISCOVERY &bull; 18 CANONICAL MANUFACTURING SECTORS</span>
-              <h2 class="section-title" style="color: #123E70;">Serving Critical Industrial Manufacturing Sectors</h2>
-            </div>
-            <p class="lede" style="color: #252F3D;">Every manufacturing formulation demands specific chemical purity, brightness, and particle size distribution.</p>
-          </div>
-
-          <div class="industry-matrix-grid">
-            <!-- 1. Paints & Coatings -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/paints-coatings.webp" alt="Paints &amp; Coatings Mineral Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Paints &amp; Coatings</h3>
-                  <p class="ind-matrix-desc">High-opacity extenders, scrub-resistant fillers, and white brightness enhancers for architectural and industrial paints.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Talc Powder &bull; Calcium Carbonate &bull; China Clay &bull; Barytes &bull; Titanium Dioxide</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=paints-coatings" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 2. Plastics & Polymers -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/plastics-polymers.webp" alt="Plastics &amp; Polymers Mineral Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Plastics &amp; Polymers</h3>
-                  <p class="ind-matrix-desc">Surface-treated functional extenders, nucleating agents, and masterbatch fillers for injection moulding and film blowing.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Micro Calcite &bull; Talc Powder &bull; Zinc Stearate &bull; Titanium Dioxide</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=plastics-polymers" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 3. Construction & Building Materials -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/construction-building-materials.webp" alt="Construction &amp; Building Materials Mineral Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Construction &amp; Building</h3>
-                  <p class="ind-matrix-desc">High-whiteness calcite, graded aggregates, and chemical binders for tile adhesives, polymer wall putty, and precast mortars.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Dolomite Powder &bull; Marble Powder &bull; Chalk Powder &bull; Hydrated Lime</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=construction-building-materials" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 4. Ceramics & Sanitaryware -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/ceramics.webp" alt="Ceramics &amp; Sanitaryware Mineral Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Ceramics &amp; Sanitaryware</h3>
-                  <p class="ind-matrix-desc">High-silica minerals, refractory fluxes, and plastic clays for sanitaryware bodies, ceramic tile glazes, and vitrified ware.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Quartz Powder &bull; Silica Sand &bull; Kaoline &bull; China Clay &bull; Dolomite</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=ceramics" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 5. Rubber & Footwear -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/rubber-footwear.webp" alt="Rubber &amp; Footwear Mineral Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Rubber &amp; Footwear</h3>
-                  <p class="ind-matrix-desc">Vulcanization activators, anti-tack dusting agents, and reinforcing fillers for automotive rubber goods and footwear soles.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Zinc Oxide &bull; Magnesium Carbonate &bull; Barytes &bull; French Chalk &bull; Talc</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=rubber-footwear" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 6. Paper & Stationery -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/paper-stationery.webp" alt="Paper &amp; Stationery Mineral Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Paper &amp; Stationery</h3>
-                  <p class="ind-matrix-desc">Pitch control talcs, high-brightness surface coating clays, and corrugation adhesive starches for paperboard and printing paper.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Levigated China Clay &bull; Talc Powder &bull; Maize Starch &bull; Calcium Carbonate</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=paper-stationery" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 7. FRP & Composite Applications -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/frp-composites.webp" alt="FRP &amp; Composite Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">FRP &amp; Composites</h3>
-                  <p class="ind-matrix-desc">Polyester resin matrices, structural gel coat extenders, and dimensional stabilizers for fiberglass composite mouldings.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Polyester Resin &bull; Talc Powder &bull; Calcium Carbonate &bull; Quartz Powder</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=frp-composites" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 8. Foundry & Industrial Applications -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/foundry.webp" alt="Foundry &amp; Industrial Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Foundry &amp; Metallurgy</h3>
-                  <p class="ind-matrix-desc">High-fusion silica sand, metallurgical fluxing lime, and refractory dusting powders for metal casting and core moulds.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Silica Sand (Graded) &bull; Hydrated Lime &bull; French Chalk &bull; Soap Stone</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=foundry-industrial" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 9. Agriculture & Allied Applications -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/agriculture-allied.webp" alt="Agriculture &amp; Allied Applications" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Agriculture &amp; Allied</h3>
-                  <p class="ind-matrix-desc">Soil pH conditioners, fertilizer anti-caking inert carriers, and micronutrient mineral powders for crop health and livestock feed.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Hydrated Lime &bull; Dolomite Powder &bull; Chalk Powder &bull; Calcium Carbonate</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=agriculture-allied" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-
-            <!-- 10. Detergents & Household Products -->
-            <div class="industry-matrix-card">
-              <div class="industry-matrix-img-box">
-                <img src="${root}/assets/images/industries/detergents-household.webp" alt="Detergents &amp; Household Products" class="industry-matrix-img" loading="lazy" />
-              </div>
-              <div class="industry-matrix-body">
-                <div>
-                  <h3 class="ind-matrix-title" style="color: #123E70;">Detergents &amp; Household</h3>
-                  <p class="ind-matrix-desc">Free-flowing mild abrasive scourers, bulk density builders, and particulate carriers for detergent powders and bars.</p>
-                  <div class="ind-matrix-minerals-list">
-                    <span class="ind-matrix-mineral-text">Natural Chalk &bull; Dolomite Powder &bull; China Clay &bull; Soap Stone</span>
-                  </div>
-                </div>
-                <a href="${industriesUrl}?industry=detergents-household" class="ind-matrix-action">Explore Industry Applications &rarr;</a>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top: 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <a href="${industriesUrl}" class="button" style="background: #123E70; color: #FFFFFF;">Explore All 18 Canonical Manufacturing Sectors &rarr;</a>
-            <a href="${productsUrl}" class="text-link" style="color: #1769AA; font-weight: 700;">View Full 22-Product Catalogue &rarr;</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           6. WHY CHOOSE DEEPALI MINERALS — STRENGTHS SHOWROOM SECTION
-           ==================================================================== -->
-      <section class="showroom-section" id="why" style="padding: 5.5rem 0; background: #123E70; color: #FFFFFF; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-        <div class="shell">
-          <div id="quality" style="scroll-margin-top: 100px;"></div>
-          <div class="section-head" style="margin-bottom: 2.5rem;">
-            <div>
-              <span class="eyebrow" style="color: #D5A43A;">CORPORATE CAPABILITIES &bull; TECHNICAL DIFFERENTIATORS</span>
-              <h2 class="section-title" style="color: #FFFFFF;">Why Leading Manufacturers Partner with Deepali Minerals</h2>
-            </div>
-            <p class="lede" style="color: #D5E7F6;">Direct mine linkages, custom particle sizing, and auditable batch quality parameters eliminate production disruptions.</p>
-          </div>
-
-          <div class="strengths-showroom-layout">
-            <div class="strengths-hero-card" style="background: #0C2B50; border: 1px solid rgba(213, 164, 58, 0.35); color: #FFFFFF;">
-              <div class="strengths-hero-img-box">
-                <img src="${root}/assets/images/industries/corporate-intro-banner.webp" alt="Deepali Minerals processing infrastructure" class="strengths-hero-img" loading="lazy" />
-              </div>
-              <div class="strengths-hero-content">
-                <span class="strengths-hero-badge" style="background: rgba(213, 164, 58, 0.15); border: 1px solid rgba(213, 164, 58, 0.4); color: #F8DF8A;">ESTABLISHED 2004 &bull; OVER TWO DECADES OF TRUST</span>
-                <h3 class="strengths-hero-title" style="color: #FFFFFF;">Industrial Reliability Rooted in Technical Precision</h3>
-                <p class="strengths-hero-desc" style="color: #D5E7F6;">Over two decades of commercial operations have proven that manufacturing reliability is built on two pillars: batch-to-batch chemical consistency and prompt consignment logistics. We maintain rigorous quality controls at every step from pit-head extraction to final dispatch.</p>
-                <div class="strengths-stats-row">
-                  <div class="strengths-stat-item">
-                    <span class="strengths-stat-val" style="color: #F8DF8A;">20+</span>
-                    <span class="strengths-stat-lbl" style="color: #D5E7F6;">Years in Mineral Supply</span>
-                  </div>
-                  <div class="strengths-stat-item">
-                    <span class="strengths-stat-val" style="color: #F8DF8A;">22</span>
-                    <span class="strengths-stat-lbl" style="color: #D5E7F6;">Catalogued Materials</span>
-                  </div>
-                  <div class="strengths-stat-item">
-                    <span class="strengths-stat-val" style="color: #F8DF8A;">100%</span>
-                    <span class="strengths-stat-lbl" style="color: #D5E7F6;">Batch COA Assurance</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="strengths-matrix">
-              <div class="strength-pillar-card" style="background: #0E3560; border: 1px solid rgba(255, 255, 255, 0.14); border-left: 4px solid #D5A43A; color: #FFFFFF;">
-                <div class="strength-pillar-num" style="color: #F8DF8A;">01</div>
-                <div>
-                  <h4 class="strength-pillar-title" style="color: #FFFFFF;">Direct Mine Quarry Tie-Ups</h4>
-                  <p class="strength-pillar-desc" style="color: #D5E7F6;">Secured pit-head linkages across Rajasthan and Gujarat eliminate intermediate broker markups and guarantee steady feedstock delivery.</p>
-                </div>
-              </div>
-
-              <div class="strength-pillar-card" style="background: #0E3560; border: 1px solid rgba(255, 255, 255, 0.14); border-left: 4px solid #D5A43A; color: #FFFFFF;">
-                <div class="strength-pillar-num" style="color: #F8DF8A;">02</div>
-                <div>
-                  <h4 class="strength-pillar-title" style="color: #FFFFFF;">ISO 9001:2015 &amp; 14001:2015 Audited</h4>
-                  <p class="strength-pillar-desc" style="color: #D5E7F6;">Dual certified management systems guarantee auditable documentation, lot traceability, and environmentally compliant processing.</p>
-                </div>
-              </div>
-
-              <div class="strength-pillar-card" style="background: #0E3560; border: 1px solid rgba(255, 255, 255, 0.14); border-left: 4px solid #D5A43A; color: #FFFFFF;">
-                <div class="strength-pillar-num" style="color: #F8DF8A;">03</div>
-                <div>
-                  <h4 class="strength-pillar-title" style="color: #FFFFFF;">Calibrated Micron Sizing &amp; Screening</h4>
-                  <p class="strength-pillar-desc" style="color: #D5E7F6;">Controlled air-classification delivers tight particle size distribution (PSD), controlled top-cut, and high photometric whiteness.</p>
-                </div>
-              </div>
-
-              <div class="strength-pillar-card" style="background: #0E3560; border: 1px solid rgba(255, 255, 255, 0.14); border-left: 4px solid #D5A43A; color: #FFFFFF;">
-                <div class="strength-pillar-num" style="color: #F8DF8A;">04</div>
-                <div>
-                  <h4 class="strength-pillar-title" style="color: #FFFFFF;">Corporate Office &amp; Buffer Hub</h4>
-                  <p class="strength-pillar-desc" style="color: #D5E7F6;">Covered central dry warehouse at Lawrence Road, Delhi maintains critical buffer stock to safeguard clients against seasonal quarry delays.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           7. PACKAGING AND LOGISTICS — WAREHOUSE & FLEET DISPATCH
-           ==================================================================== -->
-      <section class="showroom-section" id="facilities" style="padding: 5rem 0; background: #EAF3FB; border-bottom: 1px solid var(--line);">
-        <div class="shell">
-          <div class="section-head" style="margin-bottom: 2rem;">
-            <div>
-              <span class="eyebrow" style="color: #1769AA;">CORPORATE OFFICE &bull; NEW DELHI</span>
-              <h2 class="section-title" style="color: #123E70;">Packaging Standards &amp; Corporate Logistics</h2>
-            </div>
-            <p class="lede" style="color: #252F3D;">Robust packaging options and buffer inventory managed from our Corporate Office ensuring seamless logistics without production downtime.</p>
-          </div>
-
-          <!-- Warehouse Photo Banner -->
-          <div style="margin-bottom: 2.5rem; border-radius: 8px; overflow: hidden; position: relative; box-shadow: 0 8px 24px rgba(18, 62, 112, 0.08); border: 1px solid #D5E7F6;">
-            <img src="${root}/assets/images/gallery/packaging_warehouse_bags.jpg" alt="Deepali Minerals Warehousing and Industrial Mineral Packaging Facility" style="width: 100%; height: 340px; object-fit: cover;" loading="lazy" />
-            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(11,28,48,0) 0%, rgba(11,28,48,0.92) 100%); padding: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
-              <div>
-                <span style="font-family: var(--mono); font-size: 0.72rem; color: #D5A43A; font-weight: 700; text-transform: uppercase;">CORPORATE OFFICE &bull; CENTRAL BUFFER WAREHOUSING</span>
-                <h3 style="margin: 0.25rem 0 0; color: #FFFFFF; font-size: 1.25rem;">Lawrence Road Industrial Area, Keshav Puram, New Delhi</h3>
-              </div>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <span style="background: rgba(255,255,255,0.2); color: #FFFFFF; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); font-weight: 700;">Pan-India FTL</span>
-                <span style="background: rgba(255,255,255,0.2); color: #FFFFFF; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); font-weight: 700;">Buffer Stock Security</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="facility-showcase-grid">
-            <div class="facility-card">
-              <div class="facility-card-head" style="background: #123E70;">
-                <h4 style="color: #FFFFFF;">25kg &amp; 50kg HDPE Bags</h4>
-                <span style="color: #F8DF8A;">RETAIL &amp; WHOLESALE BATCH FEEDING</span>
-              </div>
-              <div class="facility-card-body">
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>Multi-layer woven polypropylene with laminated moisture-barrier inner LDPE liner.</span>
-                </div>
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>UV-stabilized fabric preventing degradation during outdoor storage or yard staging.</span>
-                </div>
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>Tamper-evident double stitch closing with clear batch identification stenciling.</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="facility-card">
-              <div class="facility-card-head" style="background: #123E70;">
-                <h4 style="color: #FFFFFF;">1,000 kg (1 MT) Jumbo Bags</h4>
-                <span style="color: #F8DF8A;">AUTOMATED SILO CHARGING &amp; EXPORT</span>
-              </div>
-              <div class="facility-card-body">
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>Heavy-duty four-loop crane-liftable FIBC bulk bags with bottom discharge spouts.</span>
-                </div>
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>Designed for dust-free pneumatic conveying into industrial plant storage silos.</span>
-                </div>
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>Palletized and shrink-wrapped for safe long-distance transit and zero spillage.</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="facility-card">
-              <div class="facility-card-head" style="background: #123E70;">
-                <h4 style="color: #FFFFFF;">Corporate Office &amp; Facility</h4>
-                <span style="color: #F8DF8A;">CENTRAL BUFFER STOCK &bull; SAME-DAY DISPATCH</span>
-              </div>
-              <div class="facility-card-body">
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>Covered, elevated dry warehouse bays at Lawrence Road Industrial Area, Keshav Puram, New Delhi.</span>
-                </div>
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>Strategic buffer stock absorbing seasonal quarry delays and ensuring uninterrupted client supplies.</span>
-                </div>
-                <div class="facility-feature-item">
-                  <span style="color: #1769AA; font-weight: 800;">✓</span>
-                  <span>Equipped for rapid sample parcel dispatch and Full Truckload (FTL) transport coordination.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           8. BLOGS AND RESOURCES — TECHNICAL LITERATURE & GUIDES
-           ==================================================================== -->
-      <section class="showroom-section" id="updates" style="padding: 5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
-        <div class="shell">
-          <div class="section-head" style="margin-bottom: 2rem;">
-            <div>
-              <span class="eyebrow" style="color: #1769AA;">TECHNICAL FORMULATION GUIDES &bull; MINERAL SCIENCE</span>
-              <h2 class="section-title" style="color: #123E70;">Technical Updates &amp; Formulation Knowledge</h2>
-            </div>
-            <p class="lede" style="color: #526071;">Expert insights, particle size calibration guides, and mineral selection criteria for compounding engineers and procurement teams.</p>
-          </div>
-
-          <div class="blog-grid">
-            <article class="blog-card">
-              <div class="blog-img-box">
-                <img src="${root}/assets/images/industries/paints-coatings.webp" alt="Mesh size conversion guide for mineral fillers" class="blog-thumb-img" loading="lazy" />
-              </div>
-              <div class="blog-body">
-                <span class="blog-cat-badge">PARTICLE CALIBRATION</span>
-                <h3 class="blog-title" style="color: #123E70;">Sieve to Micron Calibration: Understanding Particle Grading in Mineral Fillers</h3>
-                <p class="blog-desc">A practical technical guide for paint and masterbatch formulators navigating sieve mesh sizes, D50/D97 laser diffraction metrics, and particle top-cut control.</p>
-                <div class="blog-meta-row">
-                  <span>Technical Reference</span>
-                  <a href="${root}/product.html?product=talc" class="blog-read-link">Read Guide &rarr;</a>
-                </div>
-              </div>
-            </article>
-
-            <article class="blog-card">
-              <div class="blog-img-box">
-                <img src="${root}/assets/images/industries/plastics-polymers.webp" alt="Calcite vs Dolomite in PVC and polymer compounding" class="blog-thumb-img" loading="lazy" />
-              </div>
-              <div class="blog-body">
-                <span class="blog-cat-badge">COMPOUNDING SCIENCE</span>
-                <h3 class="blog-title" style="color: #123E70;">Calcite vs Dolomite: Selecting the Right Carbonate for PVC &amp; Polymer Pipes</h3>
-                <p class="blog-desc">Comparative analysis of calcium carbonate (CaCO3) vs dolomite (CaMg(CO3)2) covering whiteness, abrasive index, bulk density, and cost-efficiency in rigid PVC.</p>
-                <div class="blog-meta-row">
-                  <span>Compounding Guide</span>
-                  <a href="${root}/product.html?product=calcium-carbonate" class="blog-read-link">Read Guide &rarr;</a>
-                </div>
-              </div>
-            </article>
-
-            <article class="blog-card">
-              <div class="blog-img-box">
-                <img src="${root}/assets/images/industries/frp-composites.webp" alt="Nucleating efficiency of micronized talc" class="blog-thumb-img" loading="lazy" />
-              </div>
-              <div class="blog-body">
-                <span class="blog-cat-badge">POLYMER ENGINEERING</span>
-                <h3 class="blog-title" style="color: #123E70;">Nucleating Efficiency of Lamellar Talc Powder in Polypropylene Compounding</h3>
-                <p class="blog-desc">How platy talc crystals enhance flexural modulus, heat deflection temperature (HDT), and dimensional stability in automotive thermoplastic mouldings.</p>
-                <div class="blog-meta-row">
-                  <span>Application Note</span>
-                  <a href="${root}/product.html?product=talc" class="blog-read-link">Read Guide &rarr;</a>
-                </div>
-              </div>
-            </article>
-
-            <article class="blog-card">
-              <div class="blog-img-box">
-                <img src="${root}/assets/images/industries/quality-assurance-lab.webp" alt="Industrial mineral Certificate of Analysis" class="blog-thumb-img" loading="lazy" />
-              </div>
-              <div class="blog-body">
-                <span class="blog-cat-badge">QUALITY ASSURANCE</span>
-                <h3 class="blog-title" style="color: #123E70;">How to Audit an Industrial Mineral COA: Key Chemical &amp; Physical Benchmarks</h3>
-                <p class="blog-desc">What procurement managers should scrutinize in a Certificate of Analysis: oil absorption values, acid insolubles, whiteness index, and moisture limits.</p>
-                <div class="blog-meta-row">
-                  <span>QA Standard</span>
-                  <a href="${root}/about.html#quality" class="blog-read-link">Read Guide &rarr;</a>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <!-- Technical Literature Downloads Strip -->
-          <div style="margin-top: 3rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-              <h4 style="margin: 0; font-size: 1.1rem; color: #123E70;">Corporate Brochure &amp; Technical Literature</h4>
-              <span style="font-family: var(--mono); font-size: 0.72rem; color: #526071;">PDF Documentation</span>
-            </div>
-            <div class="downloads-grid">
-              <a href="${root}/about.html" class="download-card">
-                <div class="download-info">
-                  <h5>Deepali Minerals Corporate Profile</h5>
-                  <span>Institutional Overview &bull; 20-Year Legacy</span>
-                </div>
-                <div class="download-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                </div>
-              </a>
-
-              <a href="${productsUrl}" class="download-card">
-                <div class="download-info">
-                  <h5>Master Mineral Portfolio Catalogue</h5>
-                  <span>All 22 Pulverized Powders &amp; Extenders</span>
-                </div>
-                <div class="download-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                </div>
-              </a>
-
-              <a href="${root}/about.html#quality" class="download-card">
-                <div class="download-info">
-                  <h5>ISO 9001:2015 &amp; 14001:2015 Certificates</h5>
-                  <span>Quality &amp; Environmental Accreditations</span>
-                </div>
-                <div class="download-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-              </a>
-
-              <a href="${root}/product.html?product=talc" class="download-card">
-                <div class="download-info">
-                  <h5>Particle Fineness Reference Guide</h5>
-                  <span>Micron &amp; Sieve Calibration Chart</span>
-                </div>
-                <div class="download-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           9. CONTACT AND ENQUIRY — COMMERCIAL SOURCING DESK
-           ==================================================================== -->
-      <section class="showroom-section" id="rfq" style="padding: 5.5rem 0; background: #123E70; color: #FFFFFF; border-top: 1px solid rgba(255,255,255,0.1);">
-        <div class="shell detail-grid">
-          <div>
-            <span class="eyebrow" style="color: #D5A43A;">COMMERCIAL SOURCING DESK</span>
-            <h2 class="section-title" style="color: #FFFFFF;">Looking for the Right Industrial Mineral for Your Application?</h2>
-            <p class="lede" style="color: #D5E7F6;">Submit your required mineral, target volume, and delivery destination for wholesale pricing and laboratory sample dispatch.</p>
-            
-            <div style="margin-top: 2rem; padding: 1.6rem; background: #0E325A; border: 1px solid rgba(213, 164, 58, 0.35); border-radius: 8px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);">
-              <span style="font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; color: #D5A43A; font-weight: 700; display: block; margin-bottom: 0.35rem;">Corporate Office</span>
-              <p style="font-size: 0.95rem; color: #FFFFFF; margin: 0 0 1rem; line-height: 1.55; font-weight: 600;">
-                Deepali Minerals<br>
-                C-2/29 C Lawrence Road, Rampura / Keshav Puram,<br>
-                New Delhi – 110035, India
+              <span class="dm-section-kicker">INDUSTRIAL APPLICATIONS &middot; 18 SECTORS</span>
+              <h2 class="dm-section-heading">Industries We Serve</h2>
+              <p class="dm-section-sub">
+                Tailored mineral grades and functional additives supplied across major manufacturing and compounding sectors.
               </p>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.6rem;">
+              <a href="${industriesUrl}" class="text-link" style="color: #1769AA; font-weight: 700;">View All 18 Industries &rarr;</a>
+              <button type="button" class="hero-visual-btn hero-visual-btn-restore" data-hero-toggle-global>Restore All Original Visuals</button>
+            </div>
+          </div>
 
-              <div style="font-size: 0.88rem; color: #D5E7F6; line-height: 1.65;">
-                <strong>CEO:</strong> Mr. Neeraj Monga<br>
-                <strong>Direct Sales Helplines:</strong> <a href="tel:+919810516065" style="color: #F8DF8A; font-weight: 700;">+91 9810516065</a>, <a href="tel:+919810715129" style="color: #F8DF8A; font-weight: 700;">9810715129</a><br>
-                <strong>Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #F8DF8A; font-weight: 700;">info@deepaliminerals.in</a><br>
-                <strong>GST Identification:</strong> 07AIMPM0458Q1ZL
+          <div class="dm-industry-grid">
+            ${featuredIndustries.map(item => `
+              <article class="dm-industry-card">
+                <a href="${industriesUrl}?industry=${item.slug}" class="dm-industry-photo">
+                  <img
+                    src="${root}/assets/images/industries/${item.img}.webp"
+                    data-photo-src="${root}/assets/images/industries/${item.img}.webp"
+                    data-backup-src="${root}/assets/images/industries/backup/${item.img}.webp"
+                    alt="${esc(item.title)} — Deepali Minerals"
+                    loading="lazy"
+                  />
+                </a>
+                <div class="dm-industry-body">
+                  <h3 class="dm-industry-title">${esc(item.title)}</h3>
+                  <ul class="dm-bullet-list dm-bullet-list--compact" style="margin-bottom: 1rem;">
+                    ${item.bullets.map(b => `<li>${esc(b)}</li>`).join('')}
+                  </ul>
+                  <a href="${industriesUrl}?industry=${item.slug}" class="dm-industry-link">
+                    Explore ${esc(item.title)} &rarr;
+                  </a>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+
+          <div style="margin-top: 2.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <a href="${industriesUrl}" class="button" style="padding: 0.82rem 1.65rem; font-size: 0.86rem;">Explore All 18 Industries &rarr;</a>
+            <a href="${productsUrl}" class="text-link" style="color: #1769AA; font-weight: 700;">Browse Product Catalogue &rarr;</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           F. QUALITY AND ASSURANCE
+           ==================================================================== -->
+      <section class="dm-band-offwhite" id="quality">
+        <div class="shell dm-quality-split">
+          <div>
+            <span class="dm-section-kicker">QUALITY &amp; ASSURANCE</span>
+            <h2 class="dm-section-heading">Consistent Sourcing &amp; Quality Processes</h2>
+            <p class="dm-section-sub" style="margin-bottom: 1.5rem;">
+              Deepali Minerals operates under audited ISO 9001:2015 and ISO 14001:2015 management systems covering the trading of mineral and chemical products.
+            </p>
+
+            <ul class="dm-bullet-list" style="margin-bottom: 1.75rem;">
+              <li><strong>Quality Checks:</strong> Material screening for particle fineness, optical brightness, moisture limits, and grade consistency.</li>
+              <li><strong>Product Inspection:</strong> Pre-dispatch verification of bag weight, clean lot separation, and moisture-barrier packaging integrity.</li>
+              <li><strong>Sourcing Standards:</strong> Multi-region supplier linkages across established mineral belts to reduce supply disruption risks.</li>
+              <li><strong>Technical Documentation:</strong> Batch Certificates of Analysis (COA), Technical Data Sheets (TDS), and MSDS shared on request.</li>
+              <li><strong>Audited Management Systems:</strong> Active ISO 9001:2015 (QMS) and ISO 14001:2015 (EMS) certifications subject to annual surveillance audits.</li>
+            </ul>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+              <a href="${root}/about.html#certifications" class="button" style="padding: 0.8rem 1.5rem; font-size: 0.85rem;">View Verified ISO Certificates &rarr;</a>
+              <a href="${root}/about.html#quality" class="button alt" style="padding: 0.8rem 1.35rem; font-size: 0.85rem;">Quality Workflow Details</a>
+            </div>
+          </div>
+
+          <div class="dm-about-media-frame">
+            <img
+              src="${root}/assets/images/industries/quality-assurance-lab.webp"
+              data-photo-src="${root}/assets/images/industries/quality-assurance-lab.webp"
+              data-backup-src="${root}/assets/images/industries/backup/quality-assurance-lab.webp"
+              alt="Industrial mineral quality inspection and testing workflow"
+              loading="lazy"
+            />
+            <div class="dm-about-caption">
+              <span>ISO 9001:2015 &middot; ISO 14001:2015 Trading Scope</span>
+              <span>Illustrative quality control image</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           G. OPERATIONS AND CAPABILITIES
+           ==================================================================== -->
+      <section class="dm-band-white" id="operations">
+        <div id="facilities" style="scroll-margin-top: 90px;"></div>
+        <div class="shell">
+          <div class="section-head" style="margin-bottom: 2rem;">
+            <div>
+              <span class="dm-section-kicker">OPERATIONS &amp; CAPABILITIES</span>
+              <h2 class="dm-section-heading">Sourcing, Handling &amp; Dispatch Coordination</h2>
+            </div>
+            <p class="dm-section-sub" style="margin: 0;">
+              Structured B2B trading operations coordinated from our corporate office in Lawrence Road, New Delhi.
+            </p>
+          </div>
+
+          <!-- Illustrative Industrial Visual Row -->
+          <div class="dm-ops-photo-row">
+            <div class="dm-ops-photo-card">
+              <img
+                src="${root}/assets/images/gallery/packaging_warehouse_bags.jpg"
+                alt="Industrial mineral bag packaging and covered dry storage"
+                loading="lazy"
+              />
+              <div class="dm-ops-photo-caption">
+                <strong>Packaging &amp; Dry Storage:</strong> Moisture-protected 25 kg &amp; 50 kg PP/HDPE bag handling (illustrative industrial image).
+              </div>
+            </div>
+            <div class="dm-ops-photo-card">
+              <img
+                src="${root}/assets/images/gallery/logistics_transit_network.jpg"
+                alt="Industrial freight transport and mineral dispatch logistics"
+                loading="lazy"
+              />
+              <div class="dm-ops-photo-caption">
+                <strong>Pan-India Logistics:</strong> Coordinated FTL and PTL road transport across industrial corridors (illustrative industrial image).
               </div>
             </div>
           </div>
+
+          <!-- 6 Verified Operational Activities in Concise Bullet Points -->
+          <div class="dm-ops-grid">
+            <div class="dm-ops-card">
+              <span class="dm-ops-step">01 / SOURCING</span>
+              <h3>Material Sourcing</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li>Upstream partnerships across Rajasthan and Gujarat mineral regions.</li>
+                <li>Selection aligned with required mineral composition and grade.</li>
+                <li>Multi-source availability for continuity of industrial supply.</li>
+              </ul>
+            </div>
+
+            <div class="dm-ops-card">
+              <span class="dm-ops-step">02 / PREPARATION</span>
+              <h3>Processing &amp; Preparation</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li>Pulverized, micronized, levigated, and screened granular grades.</li>
+                <li>Custom particle fineness coordinated to application requirements.</li>
+                <li>Grade matching for paints, plastics, rubber, ceramics, and construction.</li>
+              </ul>
+            </div>
+
+            <div class="dm-ops-card">
+              <span class="dm-ops-step">03 / INSPECTION</span>
+              <h3>Quality Inspection</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li>Verification of visual whiteness, cleanliness, and sieve parameters.</li>
+                <li>Batch-level COA and TDS provided on customer request.</li>
+                <li>Documented procedures aligned with ISO 9001:2015 QMS.</li>
+              </ul>
+            </div>
+
+            <div class="dm-ops-card">
+              <span class="dm-ops-step">04 / PACKAGING</span>
+              <h3>Packaging</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li>Standard 25 kg and 50 kg PP woven and HDPE industrial bags.</li>
+                <li>Moisture-barrier LDPE inner liners for hygroscopic powders.</li>
+                <li>Clear lot stenciling and palletized options on request.</li>
+              </ul>
+            </div>
+
+            <div class="dm-ops-card">
+              <span class="dm-ops-step">05 / STORAGE</span>
+              <h3>Storage</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li>Covered dry storage managed from Lawrence Road, New Delhi.</li>
+                <li>Clean lot segregation to prevent cross-contamination.</li>
+                <li>Buffer inventory maintained for recurring industrial requirements.</li>
+              </ul>
+            </div>
+
+            <div class="dm-ops-card">
+              <span class="dm-ops-step">06 / DISPATCH</span>
+              <h3>Dispatch</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li>Prompt local NCR dispatches and scheduled pan-India freight.</li>
+                <li>Support for trial sample lots, part-loads, and full truckloads.</li>
+                <li>Complete GST invoicing, e-way bills, and delivery documentation.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           H. WHY CHOOSE DEEPALI MINERALS
+           ==================================================================== -->
+      <section class="dm-band-offwhite" id="why">
+        <div class="shell">
+          <div class="section-head" style="margin-bottom: 2.25rem;">
+            <div>
+              <span class="dm-section-kicker">WHY CHOOSE DEEPALI MINERALS</span>
+              <h2 class="dm-section-heading">Built for Practical B2B Procurement</h2>
+            </div>
+            <p class="dm-section-sub" style="margin: 0;">
+              Focused on transparent specifications, steady multi-material availability, and direct commercial coordination.
+            </p>
+          </div>
+
+          <div class="dm-why-grid">
+            <div class="dm-why-card">
+              <span class="dm-why-num">01 / PORTFOLIO</span>
+              <h3>Diverse Product Range</h3>
+              <ul class="dm-bullet-list">
+                <li>22 industrial minerals, functional chemicals, and granular aggregates under one roof.</li>
+                <li>Suitable for paints, plastics, rubber, ceramics, paper, soaps, and construction.</li>
+                <li>Simplifies multi-material procurement with consolidated vendor coordination.</li>
+              </ul>
+            </div>
+
+            <div class="dm-why-card">
+              <span class="dm-why-num">02 / SOURCING</span>
+              <h3>Quality-Focused Sourcing</h3>
+              <ul class="dm-bullet-list">
+                <li>ISO 9001:2015 Quality and ISO 14001:2015 Environmental certified trading operations.</li>
+                <li>Established supplier relationships across key Indian mineral belts.</li>
+                <li>Transparent disclosure of verified technical specifications and batch documentation.</li>
+              </ul>
+            </div>
+
+            <div class="dm-why-card">
+              <span class="dm-why-num">03 / EXPERIENCE</span>
+              <h3>Industrial Materials Expertise</h3>
+              <ul class="dm-bullet-list">
+                <li>Continuous B2B trading presence in Delhi since 2004 under CEO Mr. Neeraj Monga.</li>
+                <li>Practical understanding of filler selection, whiteness, and particle fineness needs.</li>
+                <li>Guidance to match mineral grades with specific manufacturing formulations.</li>
+              </ul>
+            </div>
+
+            <div class="dm-why-card">
+              <span class="dm-why-num">04 / SUPPORT</span>
+              <h3>Customer Support</h3>
+              <ul class="dm-bullet-list">
+                <li>Direct commercial communication via phone, email, and WhatsApp Sales Desk.</li>
+                <li>Responsive quotations for both trial lots and recurring bulk requirements.</li>
+                <li>Coordinated dispatch tracking and statutory GST billing support.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           J. RESOURCES AND BLOGS
+           ==================================================================== -->
+      <section class="dm-band-white" id="resources">
+        <div id="updates" style="scroll-margin-top: 90px;"></div>
+        <div class="shell">
+          <div class="section-head" style="margin-bottom: 2rem;">
+            <div>
+              <span class="dm-section-kicker">RESOURCES &amp; GUIDES</span>
+              <h2 class="dm-section-heading">Technical Guides &amp; Material Insights</h2>
+            </div>
+            <p class="dm-section-sub" style="margin: 0;">
+              Practical references on mineral selection, particle grading, and quality documentation for industrial buyers.
+            </p>
+          </div>
+
+          <div class="dm-resource-grid">
+            <article class="dm-resource-card">
+              <div class="dm-resource-photo">
+                <img
+                  src="${root}/assets/images/industries/paints-coatings.webp"
+                  data-photo-src="${root}/assets/images/industries/paints-coatings.webp"
+                  data-backup-src="${root}/assets/images/industries/backup/paints-coatings.webp"
+                  alt="Particle fineness and sieve calibration reference"
+                  loading="lazy"
+                />
+              </div>
+              <div class="dm-resource-body">
+                <span class="dm-resource-cat">PARTICLE GRADING</span>
+                <h3>Understanding Sieve &amp; Micron Grading in Mineral Fillers</h3>
+                <ul class="dm-bullet-list dm-bullet-list--compact" style="margin-bottom: 1rem;">
+                  <li>How sieve mesh relates to micron particle size distribution.</li>
+                  <li>Impact of fineness on paint smoothness and polymer dispersion.</li>
+                </ul>
+                <a href="${root}/product.html?product=talc" class="dm-resource-link">Read More &rarr;</a>
+              </div>
+            </article>
+
+            <article class="dm-resource-card">
+              <div class="dm-resource-photo">
+                <img
+                  src="${root}/assets/images/industries/plastics-polymers.webp"
+                  data-photo-src="${root}/assets/images/industries/plastics-polymers.webp"
+                  data-backup-src="${root}/assets/images/industries/backup/plastics-polymers.webp"
+                  alt="Calcium Carbonate vs Dolomite selection guide"
+                  loading="lazy"
+                />
+              </div>
+              <div class="dm-resource-body">
+                <span class="dm-resource-cat">MATERIAL SELECTION</span>
+                <h3>Calcium Carbonate vs. Dolomite in Polymers &amp; Coatings</h3>
+                <ul class="dm-bullet-list dm-bullet-list--compact" style="margin-bottom: 1rem;">
+                  <li>Comparing optical whiteness, hardness, and oil absorption.</li>
+                  <li>Selecting the right carbonate for PVC, wall putty, and paints.</li>
+                </ul>
+                <a href="${root}/product.html?product=calcium-carbonate" class="dm-resource-link">Read More &rarr;</a>
+              </div>
+            </article>
+
+            <article class="dm-resource-card">
+              <div class="dm-resource-photo">
+                <img
+                  src="${root}/assets/images/industries/frp-composites.webp"
+                  data-photo-src="${root}/assets/images/industries/frp-composites.webp"
+                  data-backup-src="${root}/assets/images/industries/backup/frp-composites.webp"
+                  alt="Role of lamellar talc in polymer compounding"
+                  loading="lazy"
+                />
+              </div>
+              <div class="dm-resource-body">
+                <span class="dm-resource-cat">APPLICATIONS</span>
+                <h3>Role of Platy Talc in Polypropylene &amp; FRP Formulations</h3>
+                <ul class="dm-bullet-list dm-bullet-list--compact" style="margin-bottom: 1rem;">
+                  <li>Supports dimensional stability and surface smoothness.</li>
+                  <li>Key considerations when requesting industrial talc grades.</li>
+                </ul>
+                <a href="${root}/industries/?industry=frp-composites" class="dm-resource-link">Read More &rarr;</a>
+              </div>
+            </article>
+
+            <article class="dm-resource-card">
+              <div class="dm-resource-photo">
+                <img
+                  src="${root}/assets/images/industries/quality-assurance-lab.webp"
+                  data-photo-src="${root}/assets/images/industries/quality-assurance-lab.webp"
+                  data-backup-src="${root}/assets/images/industries/backup/quality-assurance-lab.webp"
+                  alt="Reviewing Certificate of Analysis documentation"
+                  loading="lazy"
+                />
+              </div>
+              <div class="dm-resource-body">
+                <span class="dm-resource-cat">QUALITY DOCUMENTATION</span>
+                <h3>Key Parameters to Check in an Industrial Mineral COA</h3>
+                <ul class="dm-bullet-list dm-bullet-list--compact" style="margin-bottom: 1rem;">
+                  <li>Reviewing brightness, moisture limits, and sieve residue.</li>
+                  <li>Requesting TDS and MSDS prior to plant trials.</li>
+                </ul>
+                <a href="${root}/about.html#quality" class="dm-resource-link">Read More &rarr;</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           K. CONTACT AND ENQUIRY
+           ==================================================================== -->
+      <section class="dm-band-offwhite" id="contact">
+        <div class="shell detail-grid" style="align-items: start;">
+          <div>
+            <span class="dm-section-kicker">COMMERCIAL DESK &middot; NEW DELHI</span>
+            <h2 class="dm-section-heading">Contact Us</h2>
+            <p class="dm-section-sub" style="margin-bottom: 1.5rem;">
+              Share your material, required grade, and delivery location to receive commercial pricing and documentation from our team.
+            </p>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E5E9; border-top: 2px solid #D8C3A5; border-radius: 6px; padding: 1.5rem; margin-bottom: 1.5rem;">
+              <ul class="dm-bullet-list">
+                <li><strong>Leadership:</strong> Mr. Neeraj Monga (CEO / Proprietor)</li>
+                <li><strong>Corporate Office:</strong> C-2/29 C Lawrence Road, Rampura / Keshav Puram, New Delhi &ndash; 110035, India</li>
+                <li><strong>Sales Helplines:</strong> <a href="tel:+919810516065" style="color: #1769AA; font-weight: 700;">+91 9810516065</a>, <a href="tel:+919810715129" style="color: #1769AA; font-weight: 700;">9810715129</a></li>
+                <li><strong>Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #1769AA; font-weight: 700;">info@deepaliminerals.in</a></li>
+                <li><strong>GSTIN:</strong> 07AIMPM0458Q1ZL</li>
+                <li><strong>Business Hours:</strong> Monday &ndash; Saturday, 9:00 AM &ndash; 7:30 PM IST</li>
+              </ul>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+              <a href="${getWhatsAppUrl('Hello Deepali Minerals, I would like to enquire about your industrial minerals and materials.')}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn" style="border-radius: 4px;">
+                ${whatsappIconSvg(16, 16)}
+                <span>Enquire on WhatsApp</span>
+              </a>
+              <a href="tel:+919810516065" class="button alt" style="padding: 0.75rem 1.25rem; font-size: 0.82rem;">
+                Call Sales Desk
+              </a>
+            </div>
+          </div>
+
           ${rfq()}
         </div>
       </section>
@@ -2115,7 +2031,7 @@
     const volumeSlider = document.querySelector('.hero-volume-slider');
     const volumeLabel = document.querySelector('.hero-volume-label');
     const videoWrap = document.querySelector('[data-hero-video-click]');
-    if (!video) return;
+    if (!video && !fullscreenTriggers.length) return;
 
     const mutedSvg = `
       <svg class="sound-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2153,48 +2069,37 @@
 
         const labelEl = btn.querySelector('.hero-audio-label');
         if (labelEl) {
-          if (btn.classList.contains('hero-sound-pill-btn')) {
-            labelEl.textContent = isMuted ? 'Tap to Unmute' : '🔊 Sound On (Mute)';
-          } else {
-            labelEl.textContent = isMuted ? 'Enable Video Sound' : 'Mute Video Sound';
-          }
+          labelEl.textContent = isMuted ? 'Enable Video Sound' : 'Mute Video Sound';
         }
-
-        btn.setAttribute('title', isMuted ? 'Click to play facility video sound' : 'Click to mute facility video sound');
-        btn.setAttribute('aria-label', isMuted ? 'Play facility video sound' : 'Mute facility video sound');
       });
 
       if (soundCard) {
         soundCard.classList.toggle('has-audio-on', !isMuted);
       }
 
-      if (volumeSlider) {
+      if (volumeSlider && video) {
         volumeSlider.value = isMuted ? 0 : (video.volume || 1);
       }
-      if (volumeLabel) {
+      if (volumeLabel && video) {
         const pct = isMuted ? 0 : Math.round((video.volume || 1) * 100);
         volumeLabel.textContent = `${pct}%`;
       }
     };
 
-    let userExplicitlyMuted = false;
-
     const enableSound = () => {
-      userExplicitlyMuted = false;
+      if (!video) return;
       video.muted = false;
       video.volume = 1.0;
       const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {});
-      }
+      if (playPromise !== undefined) playPromise.catch(() => {});
       syncUI(false);
     };
 
     const toggleAudio = () => {
+      if (!video) return;
       if (video.muted) {
         enableSound();
       } else {
-        userExplicitlyMuted = true;
         video.muted = true;
         syncUI(true);
       }
@@ -2208,7 +2113,7 @@
       });
     });
 
-    if (volumeSlider) {
+    if (volumeSlider && video) {
       volumeSlider.addEventListener('input', (e) => {
         e.stopPropagation();
         const val = parseFloat(e.target.value);
@@ -2228,25 +2133,23 @@
       volumeSlider.addEventListener('click', (e) => e.stopPropagation());
     }
 
-    if (videoWrap) {
+    if (videoWrap && video) {
       videoWrap.addEventListener('click', (e) => {
-        // Only trigger if not clicking buttons/links
         if (!e.target.closest('button, a, input, select, textarea, form')) {
           toggleAudio();
         }
       });
     }
 
-    video.addEventListener('volumechange', () => {
-      syncUI(video.muted);
-    });
+    if (video) {
+      video.addEventListener('volumechange', () => {
+        syncUI(video.muted);
+      });
+    }
 
-    // -----------------------------------------------------------------------
     // FULLSCREEN THEATER CONTROLLER
-    // -----------------------------------------------------------------------
     const openTheater = () => {
-      // Always ensure sound is enabled when opening fullscreen
-      enableSound();
+      if (video) enableSound();
 
       let theaterEl = document.querySelector('#hero-fullscreen-theater');
       if (!theaterEl) {
@@ -2255,7 +2158,7 @@
         theaterEl.className = 'video-fullscreen-theater';
         theaterEl.setAttribute('role', 'dialog');
         theaterEl.setAttribute('aria-modal', 'true');
-        theaterEl.setAttribute('aria-label', 'Deepali Minerals Facility Video Full Screen Theater');
+        theaterEl.setAttribute('aria-label', 'Deepali Minerals Overview Video');
 
         const rootPath = document.body.getAttribute('data-root') || '.';
         const videoSrc = `${rootPath}/hero%20video%20DM%20watermark%20(1).mp4`;
@@ -2263,14 +2166,14 @@
         theaterEl.innerHTML = `
           <div class="video-theater-header">
             <div class="video-theater-title">
-              <span style="background: rgba(213,164,58,0.2); border: 1px solid #D5A43A; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.68rem; font-weight: 700; color: #F8DF8A;">DEEPALI MINERALS</span>
+              <span style="background: rgba(216,195,165,0.2); border: 1px solid #D8C3A5; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.68rem; font-weight: 700; color: #E9DDC9;">DEEPALI MINERALS</span>
               <div>
-                <h3>Central Processing &amp; Dispatch Facility</h3>
-                <span>Corporate Office &bull; Keshav Puram, New Delhi</span>
+                <h3>Industrial Minerals</h3>
+                <span>Corporate Office &middot; Lawrence Road, New Delhi</span>
               </div>
             </div>
-            <button type="button" class="video-theater-close-btn" id="btn-close-theater" aria-label="Close Full Screen Theater">
-              ✕ Close Full Screen [Esc]
+            <button type="button" class="video-theater-close-btn" id="btn-close-theater" aria-label="Close Video">
+              ✕ Close [Esc]
             </button>
           </div>
           <div class="video-theater-body">
@@ -2279,25 +2182,21 @@
             </video>
           </div>
           <div class="video-theater-footer">
-            <div>High-Purity Pulverized Extenders &bull; Custom Sieve Grading &bull; Bulk Industrial Supply</div>
-            <div style="color: #D5A43A; font-weight: 700;">ISO 9001:2015 &amp; ISO 14001:2015 ACCREDITED</div>
+            <div>Industrial Minerals &middot; Pulverized Powders &middot; 22 Products</div>
+            <div style="color: #E9DDC9; font-weight: 700;">ISO 9001:2015 &amp; ISO 14001:2015 CERTIFIED</div>
           </div>
         `;
         document.body.appendChild(theaterEl);
 
         const closeBtn = theaterEl.querySelector('#btn-close-theater');
-        if (closeBtn) {
-          closeBtn.addEventListener('click', () => closeTheater());
-        }
+        if (closeBtn) closeBtn.addEventListener('click', () => closeTheater());
 
-        // Close on clicking backdrop outside player
         theaterEl.addEventListener('click', (e) => {
           if (!e.target.closest('.video-theater-player, .video-theater-header')) {
             closeTheater();
           }
         });
 
-        // Close on Escape key
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && theaterEl.classList.contains('is-open')) {
             closeTheater();
@@ -2307,9 +2206,8 @@
 
       const theaterVideo = theaterEl.querySelector('.video-theater-player');
       if (theaterVideo) {
-        // Sync current time from hero video
         try {
-          theaterVideo.currentTime = video.currentTime || 0;
+          theaterVideo.currentTime = video ? (video.currentTime || 0) : 0;
         } catch (_) {}
         theaterVideo.muted = false;
         theaterVideo.volume = 1.0;
@@ -2319,15 +2217,6 @@
 
       theaterEl.classList.add('is-open');
       document.body.style.overflow = 'hidden';
-
-      // Also attempt native fullscreen on the theater element or video if supported
-      try {
-        if (theaterVideo && theaterVideo.requestFullscreen) {
-          theaterVideo.requestFullscreen().catch(() => {});
-        } else if (theaterVideo && theaterVideo.webkitEnterFullscreen) {
-          theaterVideo.webkitEnterFullscreen();
-        }
-      } catch (_) {}
     };
 
     const closeTheater = () => {
@@ -2335,10 +2224,11 @@
       if (theaterEl) {
         const theaterVideo = theaterEl.querySelector('.video-theater-player');
         if (theaterVideo) {
-          // Sync current time back to hero video
-          try {
-            video.currentTime = theaterVideo.currentTime || 0;
-          } catch (_) {}
+          if (video) {
+            try {
+              video.currentTime = theaterVideo.currentTime || 0;
+            } catch (_) {}
+          }
           theaterVideo.pause();
         }
         theaterEl.classList.remove('is-open');
@@ -2357,44 +2247,12 @@
       });
     });
 
-    // Enable sound by default on load; gracefully handle browser autoplay policies
-    const attemptDefaultUnmutedPlay = () => {
-      video.muted = false;
-      video.volume = 1.0;
+    if (video) {
+      video.muted = true;
       const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          syncUI(false);
-        }).catch(() => {
-          // If browser blocks unmuted autoplay before interaction, keep video playing muted
-          // and automatically enable sound on first user interaction
-          video.muted = true;
-          video.play().catch(() => {});
-          syncUI(true);
-
-          const unlockAudioOnFirstGesture = (e) => {
-            ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(evt => {
-              document.removeEventListener(evt, unlockAudioOnFirstGesture, true);
-            });
-            // If user clicked the audio toggle button itself, let its own handler toggle audio once
-            if (e && e.target && e.target.closest && e.target.closest('[data-hero-audio-toggle]')) {
-              return;
-            }
-            if (!userExplicitlyMuted) {
-              enableSound();
-            }
-          };
-
-          ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(evt => {
-            document.addEventListener(evt, unlockAudioOnFirstGesture, { capture: true, once: true, passive: true });
-          });
-        });
-      } else {
-        syncUI(video.muted);
-      }
-    };
-
-    attemptDefaultUnmutedPlay();
+      if (playPromise !== undefined) playPromise.catch(() => {});
+      syncUI(true);
+    }
   }
 
   /* =========================================================================
@@ -2857,6 +2715,10 @@
 
     const otherSectors = allIndustries.filter(other => other.slug !== ind.slug);
 
+    const indHighlights = (ind.keyApplications && ind.keyApplications.length)
+      ? ind.keyApplications.slice(0, 3)
+      : [ind.subtitle];
+
     mainEl.innerHTML = `
       <!-- 1. INDUSTRY DETAIL HERO BANNER -->
       <section class="industry-detail-hero">
@@ -2868,7 +2730,7 @@
               <span>/</span>
               <a href="${industriesUrl}">Industries</a>
               <span>/</span>
-              <span style="color: #D5A43A; font-weight: 700;">${esc(ind.name)}</span>
+              <span style="color: #252F3D; font-weight: 700;">${esc(ind.name)}</span>
             </div>
             <a href="${industriesUrl}" class="industry-back-all-btn">
               &larr; View All 18 Industries
@@ -2879,55 +2741,51 @@
           <div class="industry-detail-header-grid">
             <div>
               <span class="industry-hub-badge">
-                ${getIndustryIconSvg(ind.slug, 16)}
-                <span>${esc(ind.badge)} &bull; ${ind.products.length} VERIFIED MINERAL GRADES</span>
+                ${getIndustryIconSvg(ind.slug, 15)}
+                <span>${esc(ind.badge)} &middot; ${ind.products.length} Verified Materials</span>
               </span>
 
               <h1 class="industry-detail-title">${esc(ind.name)}</h1>
               <div class="industry-detail-subtitle">${esc(ind.subtitle)}</div>
-              <p class="industry-detail-desc">${esc(ind.description)}</p>
+
+              <ul class="dm-bullet-list" style="margin: 0 0 1.75rem; max-width: 60ch;">
+                <li>${esc(ind.description)}</li>
+                ${indHighlights.slice(0, 2).map(item => `<li><strong>Application focus:</strong> ${esc(item)}</li>`).join('')}
+              </ul>
 
               <div class="industry-detail-actions">
                 <a href="#industry-rfq" class="button" style="padding: 0.85rem 1.65rem;">
-                  Submit Procurement RFQ &darr;
+                  Enquire Now &darr;
                 </a>
-                <a href="${waIndustryUrl}" target="_blank" rel="noopener noreferrer" class="canonical-btn-wa" style="padding: 0.85rem 1.35rem; font-size: 0.82rem;">
-                  ${whatsappIconSvg(18, 18)}
-                  <span>WhatsApp Commercial Desk</span>
+                <a href="${waIndustryUrl}" target="_blank" rel="noopener noreferrer" class="canonical-btn-wa" style="padding: 0.85rem 1.35rem; font-size: 0.84rem;">
+                  ${whatsappIconSvg(16, 16)}
+                  <span>WhatsApp Desk</span>
                 </a>
               </div>
             </div>
 
             <!-- Commercial Sourcing Summary Card -->
             <div class="industry-quick-procure-box">
-              <div class="industry-procure-title">Commercial Sourcing Profile</div>
-              <ul class="industry-procure-list">
-                <li class="industry-procure-item">
-                  <span class="industry-procure-lbl">Supply Portfolio:</span>
-                  <span class="industry-procure-val">${ind.products.length} Verified Minerals</span>
-                </li>
-                <li class="industry-procure-item">
-                  <span class="industry-procure-lbl">Dispatch Hub:</span>
-                  <span class="industry-procure-val">Lawrence Road, Delhi (Bulk &amp; FTL)</span>
-                </li>
-                <li class="industry-procure-item">
-                  <span class="industry-procure-lbl">Fineness Grading:</span>
-                  <span class="industry-procure-val">Custom Graded on Request</span>
-                </li>
-                <li class="industry-procure-item">
-                  <span class="industry-procure-lbl">Standard Packaging:</span>
-                  <span class="industry-procure-val">25kg, 50kg &amp; 1-Ton Jumbo Bags</span>
-                </li>
-                <li class="industry-procure-item">
-                  <span class="industry-procure-lbl">Quality Audit:</span>
-                  <span class="industry-procure-val" style="color: #22C55E;">ISO 9001:2015 &amp; 14001:2015</span>
-                </li>
+              <div class="industry-procure-title">Commercial Sourcing Summary</div>
+              <ul class="dm-bullet-list dm-bullet-list--compact" style="margin: 0 0 1.15rem;">
+                <li><strong>Mapped Materials:</strong> ${ind.products.length} verified catalogue grades</li>
+                <li><strong>Grading Options:</strong> Custom particle sizing on request</li>
+                <li><strong>Standard Packaging:</strong> 25 kg &amp; 50 kg HDPE / PP bags</li>
+                <li><strong>Management Systems:</strong> ISO 9001:2015 &amp; ISO 14001:2015</li>
               </ul>
-              <a href="tel:+919810516065" style="display: block; text-align: center; font: 700 0.78rem var(--mono); color: #D5A43A; text-decoration: none; padding: 0.6rem; border: 1px dashed rgba(213, 164, 58, 0.4); border-radius: 4px; background: rgba(213, 164, 58, 0.05);">
-                Direct Commercial Desk: +91 9810516065 (Mr. Neeraj Monga, CEO)
+              <a href="tel:+919810516065" style="display: block; text-align: center; font: 600 0.78rem var(--mono); color: #252F3D; text-decoration: none; padding: 0.65rem; border: 1px solid #D8C3A5; border-radius: 4px; background: #F8F9FA;">
+                Commercial Desk: +91 9810516065 (Mr. Neeraj Monga, CEO)
               </a>
             </div>
           </div>
+
+          ${renderHeroVisualBanner({
+            pageKey: 'industry:' + ind.slug,
+            imgSrc: getIndustryImageSrc(ind.slug),
+            backupSrc: getBackupImageSrc(ind.slug),
+            alt: `${ind.name} — Industrial Sector Applications | Deepali Minerals`,
+            caption: `Sector Visual · ${ind.name}`
+          })}
         </div>
       </section>
 
@@ -2949,14 +2807,14 @@
       ` : ''}
 
       <!-- 3. MATCHED VERIFIED MINERALS (PRODUCT LISTINGS GRID) -->
-      <section style="padding: 4rem 0 3.5rem; background: #F8FAFC; border-bottom: 1px solid var(--line);">
+      <section style="padding: 4rem 0 3.5rem; background: #F8F9FA; border-bottom: 1px solid #E2E5E9;">
         <div class="shell">
           <div class="section-head" style="margin-bottom: 2rem;">
             <div>
-              <span class="eyebrow" style="color: #A84E2B;">VERIFIED RAW MATERIAL PORTFOLIO (${ind.products.length} PRODUCTS)</span>
-              <h2 class="section-title">Mineral Extenders, Fillers &amp; Additives for ${esc(ind.name)}</h2>
+              <span class="eyebrow" style="color: #80664A;">VERIFIED RAW MATERIAL PORTFOLIO (${ind.products.length} PRODUCTS)</span>
+              <h2 class="section-title">Minerals &amp; Materials for ${esc(ind.name)}</h2>
             </div>
-            <p class="lede">Review all catalogued industrial minerals verified for ${esc(ind.name)} compounding, batch processing, and functional formulations.</p>
+            <p class="lede">Catalogued minerals and functional materials supplied for ${esc(ind.name)} formulations.</p>
           </div>
 
           <div class="industry-products-deck">
@@ -2966,28 +2824,24 @@
               return `
                 <article class="industry-product-card">
                   <div class="industry-product-img-wrap">
-                    <img src="${p.image}" alt="${esc(p.name)} for ${esc(ind.name)}" class="industry-product-img" loading="lazy" />
+                    <img src="${resolveProductImg(p.image)}" alt="${esc(p.name)} for ${esc(ind.name)}" class="industry-product-img" loading="lazy" />
                   </div>
 
                   <div class="industry-product-body">
                     <span class="industry-product-cat">${esc(p.category)}</span>
                     <h3 class="industry-product-name">${esc(p.name)}</h3>
 
-                    <div class="industry-product-role-highlight">
-                      <span class="industry-product-role-label">Compounding Role in ${esc(ind.name)}:</span>
-                      <p class="industry-product-role-text">${esc(roleText)}</p>
-                    </div>
-
-                    <div style="font-size: 0.82rem; color: #64748B; margin-bottom: 1rem; line-height: 1.45;">
-                      ${esc(p.shortDescription)}
-                    </div>
+                    <ul class="dm-bullet-list dm-bullet-list--compact" style="margin: 0.4rem 0 1rem; flex-grow: 1;">
+                      <li><strong>Role in ${esc(ind.name)}:</strong> ${esc(roleText)}</li>
+                      ${p.shortDescription && p.shortDescription !== roleText ? `<li>${esc(p.shortDescription)}</li>` : ''}
+                    </ul>
 
                     <div class="industry-product-actions">
                       <a href="${productUrl(p, ind.slug)}" class="canonical-btn-primary">
-                        View Details &rarr;
+                        View Product &rarr;
                       </a>
                       <button type="button" class="canonical-btn-rfq" onclick="prefillIndustryRfq('${esc(ind.name)}', '[Product: ${esc(p.name)}] Required specification: ; Estimated volume: ')">
-                        Enquire Now
+                        Enquire
                       </button>
                       <a href="${prodWaUrl}" target="_blank" rel="noopener noreferrer" class="canonical-btn-wa" title="WhatsApp Enquiry for ${esc(p.name)}">
                         ${whatsappIconSvg(13, 13)}
@@ -3003,14 +2857,14 @@
       </section>
 
       <!-- 4. TECHNICAL SPECIFICATIONS & QUALITY ASSURANCE -->
-      <section style="padding: 4.5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
+      <section style="padding: 4.5rem 0; background: #FFFFFF; border-bottom: 1px solid #E2E5E9;">
         <div class="shell">
           <div class="section-head">
             <div>
-              <span class="eyebrow" style="color: #174A70;">TECHNICAL FORMULATION CAPABILITIES</span>
-              <h2 class="section-title">Formulation Capabilities &amp; Quality Governance</h2>
+              <span class="eyebrow" style="color: #80664A;">TECHNICAL CAPABILITIES</span>
+              <h2 class="section-title">Application Scope &amp; Supply Assurance</h2>
             </div>
-            <p class="lede">How Deepali Minerals meets exacting technical thresholds for particle size distribution, chemical purity, and bulk consistency.</p>
+            <p class="lede">Structured application focus, technical highlights, and supply checks for ${esc(ind.name)}.</p>
           </div>
 
           <div class="industry-technical-grid">
@@ -3018,61 +2872,39 @@
             <div class="industry-technical-card">
               <div class="industry-technical-head">
                 <div class="canonical-card-icon-box">${getIndustryIconSvg(ind.slug, 20)}</div>
-                <h3 class="industry-technical-title">Key Formulation Sub-Sectors</h3>
+                <h3 class="industry-technical-title">Key Application Areas</h3>
               </div>
-              <ul class="industry-feature-list">
-                ${(ind.keyApplications || []).map(app => `
-                  <li class="industry-feature-item">
-                    <span class="industry-feature-bullet">&#10003;</span>
-                    <span>${esc(app)}</span>
-                  </li>
-                `).join('')}
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                ${(ind.keyApplications || []).map(app => `<li>${esc(app)}</li>`).join('')}
               </ul>
             </div>
 
             <!-- Card 2: Technical Highlights -->
             <div class="industry-technical-card">
               <div class="industry-technical-head">
-                <div class="canonical-card-icon-box" style="color: #D5A43A;">
+                <div class="canonical-card-icon-box" style="color: #80664A;">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 </div>
-                <h3 class="industry-technical-title">Technical Standards &amp; Fineness</h3>
+                <h3 class="industry-technical-title">Technical Highlights</h3>
               </div>
-              <ul class="industry-feature-list">
-                ${(ind.technicalHighlights || []).map(high => `
-                  <li class="industry-feature-item">
-                    <span class="industry-feature-bullet">&#10003;</span>
-                    <span>${esc(high)}</span>
-                  </li>
-                `).join('')}
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                ${(ind.technicalHighlights || []).map(high => `<li>${esc(high)}</li>`).join('')}
               </ul>
             </div>
 
             <!-- Card 3: Deepali Minerals Supply Assurance -->
             <div class="industry-technical-card">
               <div class="industry-technical-head">
-                <div class="canonical-card-icon-box" style="color: #A84E2B;">
+                <div class="canonical-card-icon-box" style="color: #252F3D;">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
                 <h3 class="industry-technical-title">Deepali Minerals Assurance</h3>
               </div>
-              <ul class="industry-feature-list">
-                <li class="industry-feature-item">
-                  <span class="industry-feature-bullet">&#10003;</span>
-                  <span><strong>Direct Mine Partnerships:</strong> Rajasthan &amp; Gujarat mineral belts.</span>
-                </li>
-                <li class="industry-feature-item">
-                  <span class="industry-feature-bullet">&#10003;</span>
-                  <span><strong>Lab Batch Verification:</strong> Mesh, whiteness &amp; oil absorption verified per consignment.</span>
-                </li>
-                <li class="industry-feature-item">
-                  <span class="industry-feature-bullet">&#10003;</span>
-                  <span><strong>Rapid Logistics:</strong> Centralized warehouse in Lawrence Road, Delhi for instant FTL dispatches.</span>
-                </li>
-                <li class="industry-feature-item">
-                  <span class="industry-feature-bullet">&#10003;</span>
-                  <span><strong>ISO Audited:</strong> Certified ISO 9001:2015 &amp; ISO 14001:2015 management systems.</span>
-                </li>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li><strong>Sourcing Network:</strong> Established quarry partnerships across Rajasthan and Gujarat.</li>
+                <li><strong>Quality Checks:</strong> Particle fineness, whiteness, and batch suitability reviewed per order.</li>
+                <li><strong>Commercial Coordination:</strong> Managed from Lawrence Road, Keshav Puram, New Delhi.</li>
+                <li><strong>Certified Systems:</strong> ISO 9001:2015 &amp; ISO 14001:2015 (Trading of Mineral &amp; Chemical Products).</li>
               </ul>
             </div>
           </div>
@@ -3080,25 +2912,28 @@
       </section>
 
       <!-- 5. DIRECT PROCUREMENT RFQ FOR THIS INDUSTRY -->
-      <section id="industry-rfq" style="background: #F8FAFC; padding: 4.5rem 0; border-bottom: 1px solid var(--line);">
+      <section id="industry-rfq" style="background: #F8F9FA; padding: 4.5rem 0; border-bottom: 1px solid #E2E5E9;">
         <div class="shell detail-grid">
           <div>
-            <span class="eyebrow" style="color: #A84E2B;">DIRECT COMMERCIAL DESK</span>
-            <h2 class="section-title">Request Quotation &amp; Material Samples for ${esc(ind.name)}</h2>
-            <p class="lede">Our technical commercial desk handles custom particle gradations, bulk truckload deliveries, and specialized packaging for high-throughput manufacturing plants.</p>
-            
-            <div style="margin-top: 2rem; font-size: 0.9rem; color: #475569; line-height: 1.65; background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px; padding: 1.5rem;">
-              <p style="margin: 0 0 0.5rem;"><strong>CEO Desk:</strong> Mr. Neeraj Monga</p>
-              <p style="margin: 0 0 0.5rem;"><strong>Direct Commercial Hotline:</strong> <a href="tel:+919810516065" style="color: #174A70; font-weight: 700;">+91 9810516065</a> / <a href="tel:+919810715129" style="color: #174A70; font-weight: 700;">+91 9810715129</a></p>
-              <p style="margin: 0 0 0.5rem;"><strong>Sales Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #174A70;">info@deepaliminerals.in</a></p>
-              <p style="margin: 0 0 0.5rem;"><strong>Corporate Office:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</p>
-              <p style="margin: 0;"><strong>GST Registration:</strong> 07AIMPM0458Q1ZL</p>
+            <span class="eyebrow" style="color: #80664A;">COMMERCIAL ENQUIRY DESK</span>
+            <h2 class="section-title">Enquire for ${esc(ind.name)}</h2>
+            <p class="lede">Share your target grade, packaging requirement, and volume for commercial pricing and sample coordination.</p>
+
+            <div class="dm-detail-block" style="margin-top: 1.5rem;">
+              <h3>Direct Commercial Contact</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li><strong>CEO Desk:</strong> Mr. Neeraj Monga</li>
+                <li><strong>Phone:</strong> <a href="tel:+919810516065" style="color: #1769AA; font-weight: 600;">+91 9810516065</a> / <a href="tel:+919810715129" style="color: #1769AA; font-weight: 600;">+91 9810715129</a></li>
+                <li><strong>Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #1769AA;">info@deepaliminerals.in</a></li>
+                <li><strong>Office:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</li>
+                <li><strong>GSTIN:</strong> 07AIMPM0458Q1ZL</li>
+              </ul>
             </div>
 
-            <div style="margin-top: 1.5rem;">
-              <a href="${waIndustryUrl}" target="_blank" rel="noopener noreferrer" class="canonical-btn-wa" style="padding: 0.85rem 1.65rem; font-size: 0.88rem;">
-                ${whatsappIconSvg(18, 18)}
-                <span>Chat Instantly on WhatsApp Regarding ${esc(ind.name)}</span>
+            <div style="margin-top: 1.25rem;">
+              <a href="${waIndustryUrl}" target="_blank" rel="noopener noreferrer" class="canonical-btn-wa" style="padding: 0.85rem 1.5rem; font-size: 0.86rem;">
+                ${whatsappIconSvg(16, 16)}
+                <span>WhatsApp Regarding ${esc(ind.name)}</span>
               </a>
             </div>
           </div>
@@ -3113,9 +2948,9 @@
       <section style="background: #FFFFFF; padding: 3.5rem 0 4.5rem;">
         <div class="shell">
           <div class="other-industries-box">
-            <span class="eyebrow" style="color: #174A70;">CENTRALIZED APPLICATION DIRECTORY</span>
-            <h3 class="other-industries-title">Explore Other Manufacturing Sectors (${otherSectors.length})</h3>
-            <p style="font-size: 0.88rem; color: #64748B; margin: 0 0 1rem;">Seamlessly browse mineral raw material specifications mapped to other manufacturing processes.</p>
+            <span class="eyebrow" style="color: #80664A;">APPLICATION DIRECTORY</span>
+            <h3 class="other-industries-title">Explore Other Industries (${otherSectors.length})</h3>
+            <p style="font-size: 0.9rem; color: #526071; margin: 0 0 1rem;">Browse verified material mappings for other industrial sectors.</p>
 
             <div class="other-industries-pills">
               ${otherSectors.map(other => `
@@ -3156,14 +2991,16 @@
       <section class="industry-hub-hero">
         <div class="shell">
           <span class="industry-hub-badge">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-            <span>Centralized B2B Application Directory &bull; 18 Manufacturing Sectors</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+            <span>Application Directory &middot; 18 Manufacturing Sectors</span>
           </span>
 
-          <h1 class="industry-hub-title">Industrial Minerals by Manufacturing Industry</h1>
-          <p class="industry-hub-lede">
-            Every industrial compound and manufacturing line demands precise mineral particle morphology, chemical purity, and mesh sizing. Discover our comprehensive directory of 18 manufacturing sectors mapped to verified Deepali Minerals raw materials.
-          </p>
+          <h1 class="industry-hub-title">Industries We Serve</h1>
+          <ul class="dm-bullet-list" style="max-width: 64ch; margin: 0 0 1.75rem;">
+            <li>Browse 18 verified manufacturing sectors mapped directly to our 22 catalogued industrial minerals.</li>
+            <li>Compare compounding roles, key application areas, and relevant grades for each industrial sector.</li>
+            <li>Submit sector-specific quotations or sample inquiries directly to our New Delhi commercial desk.</li>
+          </ul>
 
           <div class="industry-hub-stats">
             <div class="industry-hub-stat">
@@ -3183,29 +3020,36 @@
               <div class="industry-hub-stat-lbl">B2B Industrial Supply Track Record</div>
             </div>
           </div>
+
+          ${renderHeroVisualBanner({
+            pageKey: 'industries-hub',
+            imgSrc: `${root}/assets/images/industries/industries-hub-hero.webp`,
+            alt: 'Industrial Manufacturing Sectors Supplied by Deepali Minerals',
+            caption: 'Directory Visual · 18 Manufacturing Sectors'
+          })}
         </div>
       </section>
 
       <!-- 2. INSTANT SEARCH & QUICK FILTER BAR -->
-      <section style="background: #FFFFFF; padding: 0 0 2rem;">
+      <section style="background: #FFFFFF; padding: 0 0 2.5rem;">
         <div class="shell">
           <div class="industry-discovery-bar">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
               <div style="flex: 1; min-width: 280px;">
-                <label for="canonical-industry-search" style="display: block; font: 700 0.72rem var(--mono); text-transform: uppercase; color: #475569; margin-bottom: 0.35rem;">Search All 18 Manufacturing Sectors:</label>
+                <label for="canonical-industry-search" style="display: block; font: 700 0.72rem var(--mono); text-transform: uppercase; color: #526071; margin-bottom: 0.35rem;">Search All 18 Manufacturing Sectors:</label>
                 <div class="industry-search-input-wrap">
                   <svg class="industry-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                   <input id="canonical-industry-search" type="search" class="industry-search-input" placeholder="Type an industry or mineral (e.g., Paints, Rubber, Putty, Cattle Feed, Talc, Calcite, Foundry)..." />
                 </div>
               </div>
-              <div style="font: 600 0.8rem var(--mono); color: #174A70;">
-                Showing <span id="visible-sector-count" style="font-weight: 800; color: #0A1E34;">${allIndustries.length}</span> of ${allIndustries.length} Sectors
+              <div style="font: 600 0.8rem var(--mono); color: #526071;">
+                Showing <span id="visible-sector-count" style="font-weight: 800; color: #252F3D;">${allIndustries.length}</span> of ${allIndustries.length} Sectors
               </div>
             </div>
 
             <!-- Quick Category Pill Filters -->
             <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: center;">
-              <span style="font: 700 0.7rem var(--mono); color: #64748B; text-transform: uppercase; margin-right: 0.35rem;">Sector Groups:</span>
+              <span style="font: 700 0.7rem var(--mono); color: #526071; text-transform: uppercase; margin-right: 0.35rem;">Sector Groups:</span>
               <button type="button" class="pill active sector-group-btn" data-group="all">All Sectors (18)</button>
               <button type="button" class="pill sector-group-btn" data-group="coatings">Coatings &amp; Construction (4)</button>
               <button type="button" class="pill sector-group-btn" data-group="polymers">Polymers &amp; Rubber (3)</button>
@@ -3218,19 +3062,27 @@
           <div class="canonical-industry-grid" id="canonical-industry-cards-container">
             ${allIndustries.map((ind, idx) => {
               const waUrl = `https://wa.me/${(data.company.whatsappNumber || '919810516065').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(ind.whatsappPrefill || `Hello Deepali Minerals, I would like to enquire about mineral materials for ${ind.name}.`)}`;
-              
-              // Group classification
+
               let group = 'specialty';
               if (['paints-coatings', 'construction-building-materials', 'wall-putty-nc-putty', 'tile-adhesives'].includes(ind.slug)) group = 'coatings';
               else if (['plastics-polymers', 'rubber-footwear', 'frp-composites'].includes(ind.slug)) group = 'polymers';
               else if (['ceramics', 'foundry-industrial'].includes(ind.slug)) group = 'ceramics';
 
+              const indPhotoSrc = getIndustryImageSrc(ind.slug);
+              const indBackupSrc = getBackupImageSrc(ind.slug);
+              const cardPoints = (ind.keyApplications && ind.keyApplications.length)
+                ? ind.keyApplications.slice(0, 3)
+                : [ind.subtitle];
+
               return `
                 <article class="canonical-industry-card" data-slug="${ind.slug}" data-name="${esc(ind.name.toLowerCase())}" data-group="${group}" data-materials="${esc(ind.products.map(p => p.name.toLowerCase()).join(' '))}">
                   <div>
+                    <div class="canonical-card-photo-wrap">
+                      <img src="${indPhotoSrc}" data-photo-src="${indPhotoSrc}" ${indBackupSrc ? `data-backup-src="${indBackupSrc}"` : ''} alt="${esc(ind.name)} industrial applications" loading="lazy" />
+                    </div>
                     <div class="canonical-card-header">
                       <div class="canonical-card-icon-box">
-                        ${getIndustryIconSvg(ind.slug, 22)}
+                        ${getIndustryIconSvg(ind.slug, 20)}
                       </div>
                       <span class="canonical-card-index">SECTOR ${String(idx + 1).padStart(2, '0')} / 18</span>
                     </div>
@@ -3238,11 +3090,13 @@
                     <span class="canonical-card-badge">${esc(ind.badge)}</span>
                     <h3 class="canonical-card-title">${esc(ind.name)}</h3>
                     <div class="canonical-card-subtitle">${esc(ind.subtitle)}</div>
-                    <p class="canonical-card-desc">${esc(ind.description)}</p>
 
-                    <!-- Regulatory Caution Pill if applicable -->
+                    <ul class="dm-bullet-list dm-bullet-list--compact" style="margin: 0.45rem 0 0.85rem;">
+                      ${cardPoints.map(pt => `<li>${esc(pt)}</li>`).join('')}
+                    </ul>
+
                     ${ind.regulatoryNotice ? `
-                      <div style="margin: 0.65rem 0 0.85rem; padding: 0.45rem 0.65rem; background: #FFFBEB; border: 1px solid #FDE68A; border-left: 3px solid #D97706; font-size: 0.72rem; line-height: 1.35; color: #92400E; border-radius: 0 4px 4px 0;">
+                      <div style="margin: 0.5rem 0 0.85rem; padding: 0.45rem 0.65rem; background: #FFFBEB; border: 1px solid #FDE68A; font-size: 0.74rem; line-height: 1.4; color: #92400E; border-radius: 4px;">
                         <strong>Notice:</strong> ${ind.id === 'cattle-feed' ? 'Mandatory feed-grade qualification required.' : (ind.id === 'fire-safety' ? 'Finished fire ratings formulation dependent.' : 'Technical specification qualification required.')}
                       </div>
                     ` : ''}
@@ -3250,8 +3104,8 @@
                     <!-- Matched Minerals Box -->
                     <div class="canonical-card-minerals-wrap">
                       <div class="canonical-card-minerals-head">
-                        <span>Mapped Raw Minerals:</span>
-                        <span style="color: #174A70; font-weight: 800;">${ind.products.length} Products</span>
+                        <span>Mapped Materials:</span>
+                        <span style="color: #252F3D; font-weight: 700;">${ind.products.length} Products</span>
                       </div>
                       <div class="canonical-card-pills">
                         ${ind.products.slice(0, 6).map(p => `
@@ -3260,7 +3114,7 @@
                           </a>
                         `).join('')}
                         ${ind.products.length > 6 ? `
-                          <span class="canonical-mineral-pill" style="background: #F1F5F9; color: #475569;">
+                          <span class="canonical-mineral-pill" style="background: #F1F3F5; color: #526071;">
                             +${ind.products.length - 6} more
                           </span>
                         ` : ''}
@@ -3289,19 +3143,25 @@
       </section>
 
       <!-- 4. DIRECT PROCUREMENT RFQ FOR GENERAL INDUSTRIAL ENQUIRIES -->
-      <section style="background: #F8FAFC; padding: 4.5rem 0; border-top: 1px solid var(--line);">
+      <section style="background: #F8F9FA; padding: 4.5rem 0; border-top: 1px solid #E2E5E9;">
         <div class="shell detail-grid">
           <div>
-            <span class="eyebrow" style="color: #A84E2B;">DIRECT SOURCING DESK</span>
-            <h2 class="section-title">Can't Find Your Exact Manufacturing Application?</h2>
-            <p class="lede">Our technical commercial team evaluates custom particle gradations, surface treatments, and tailored packaging for high-throughput compounding and manufacturing plants.</p>
-            
-            <div style="margin-top: 2rem; font-size: 0.9rem; color: #475569; line-height: 1.65; background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px; padding: 1.5rem;">
-              <p style="margin: 0 0 0.5rem;"><strong>CEO Commercial Desk:</strong> Mr. Neeraj Monga</p>
-              <p style="margin: 0 0 0.5rem;"><strong>Direct Phone:</strong> <a href="tel:+919810516065" style="color: #174A70; font-weight: 700;">+91 9810516065</a> / <a href="tel:+919810715129" style="color: #174A70; font-weight: 700;">+91 9810715129</a></p>
-              <p style="margin: 0 0 0.5rem;"><strong>Official Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #174A70;">info@deepaliminerals.in</a></p>
-              <p style="margin: 0 0 0.5rem;"><strong>Dispatch Hub:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</p>
-              <p style="margin: 0;"><strong>GST:</strong> 07AIMPM0458Q1ZL</p>
+            <span class="eyebrow" style="color: #80664A;">DIRECT SOURCING DESK</span>
+            <h2 class="section-title">Need Guidance for Your Application?</h2>
+            <ul class="dm-bullet-list" style="margin: 0.75rem 0 1.5rem;">
+              <li>Share your target manufacturing process and performance requirements.</li>
+              <li>Discuss custom particle sizing, packaging formats, and bulk dispatch schedules.</li>
+              <li>Receive prompt quotations from our Lawrence Road commercial desk.</li>
+            </ul>
+
+            <div class="dm-detail-block">
+              <h3>Commercial Desk Details</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li><strong>CEO Commercial Desk:</strong> Mr. Neeraj Monga</li>
+                <li><strong>Phone:</strong> <a href="tel:+919810516065" style="color: #1769AA; font-weight: 600;">+91 9810516065</a> / <a href="tel:+919810715129" style="color: #1769AA; font-weight: 600;">+91 9810715129</a></li>
+                <li><strong>Official Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #1769AA;">info@deepaliminerals.in</a></li>
+                <li><strong>GSTIN:</strong> 07AIMPM0458Q1ZL</li>
+              </ul>
             </div>
           </div>
 
@@ -3439,51 +3299,61 @@
     ]);
 
     const commonApps = data.getCommonApplications ? data.getCommonApplications() : [];
+    const mineralPowderCount = data.products.filter(p => p.category === 'Mineral Powders').length;
+    const functionalChemCount = data.products.filter(p => p.category === 'Functional Chemicals').length;
+    const aggregateCount = data.products.filter(p => p.category === 'Industrial Materials' || ['silica', 'quartz-sand', 'marble-chips'].includes(p.slug)).length;
 
     mainEl.innerHTML = `
-      <!-- Premium Industrial Catalogue Hero -->
-      <section class="page-hero" style="background: linear-gradient(135deg, #0A1E34 0%, #0F2B48 100%); color: #FFFFFF; padding: 4.5rem 0 3.75rem; border-bottom: 3px solid #D5A43A;">
+      <!-- Natural Mineral Catalogue Hero -->
+      <section class="page-hero" style="background: #FFFFFF; color: #252F3D; padding: 3.5rem 0 3rem; border-bottom: 1px solid #E2E5E9;">
         <div class="shell">
-          <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(213, 164, 58, 0.15); border: 1px solid rgba(213, 164, 58, 0.4); padding: 0.35rem 0.75rem; border-radius: 4px; font-family: var(--mono); font-size: 0.72rem; font-weight: 700; color: #F8DF8A; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.08em;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span>B2B INDUSTRIAL DIRECTORY &bull; ESTD. 2004</span>
+          <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #F8F9FA; border: 1px solid #D8C3A5; padding: 0.35rem 0.75rem; border-radius: 4px; font-family: var(--mono); font-size: 0.72rem; font-weight: 600; color: #80664A; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.08em;">
+            <span>B2B Product Catalogue &middot; Estd. 2004</span>
           </div>
 
-          <h1 class="display" style="color: #FFFFFF; font-size: clamp(2.2rem, 4.2vw, 3.6rem); margin: 0 0 1rem; line-height: 1.05;">
-            Master Industrial Minerals &amp; Chemicals Portfolio
+          <h1 class="display" style="color: #252F3D; font-size: clamp(2.15rem, 4.2vw, 3.4rem); margin: 0 0 1rem; line-height: 1.08;">
+            Our Industrial Minerals
           </h1>
 
-          <p class="lede" style="color: #CBD5E1; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; margin: 0 0 1.75rem;">
-            Explore all 22 processed non-metallic minerals, pulverized functional extenders, and inorganic pigments. Filter by classification or manufacturing sector to identify exact mesh grading and formulation compatibility.
-          </p>
+          <ul class="dm-bullet-list" style="max-width: 66ch; margin: 0 0 1.65rem;">
+            <li>Browse all ${data.products.length} catalogued non-metallic mineral powders, functional chemicals, and granular materials.</li>
+            <li>Filter by material category, compounding application, or manufacturing industry sector.</li>
+            <li>Open any product page for verified technical specifications, packaging formats, and quotation requests.</li>
+          </ul>
 
-          <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.12); font-family: var(--mono); font-size: 0.76rem; color: #E2E8F0;">
-            <span><strong style="color: #D5A43A;">22</strong> Verified Materials</span>
-            <span style="color: rgba(255,255,255,0.25);">&bull;</span>
-            <span><strong style="color: #D5A43A;">38+</strong> Manufacturing Sectors</span>
-            <span style="color: rgba(255,255,255,0.25);">&bull;</span>
-            <span>ISO 9001:2015 &amp; ISO 14001:2015 Accredited</span>
-            <span style="color: rgba(255,255,255,0.25);">&bull;</span>
-            <span>Lawrence Road, Delhi Corporate Office</span>
+          <div style="display: flex; align-items: center; gap: 1.35rem; flex-wrap: wrap; padding-top: 1.15rem; border-top: 1px solid #E2E5E9; font-family: var(--mono); font-size: 0.75rem; color: #526071;">
+            <span><strong style="color: #252F3D;">${data.products.length}</strong> Verified Materials</span>
+            <span style="color: #D8C3A5;">&bull;</span>
+            <span><strong style="color: #252F3D;">18</strong> Industry Sectors</span>
+            <span style="color: #D8C3A5;">&bull;</span>
+            <span>ISO 9001:2015 &amp; ISO 14001:2015 Certified</span>
+            <span style="color: #D8C3A5;">&bull;</span>
+            <span>Lawrence Road, New Delhi</span>
           </div>
+
+          ${renderHeroVisualBanner({
+            pageKey: 'products-catalogue',
+            imgSrc: `${root}/assets/images/gallery/hero_industrial_minerals.jpg`,
+            alt: 'Industrial Minerals Quarry & Processing Portfolio — Deepali Minerals',
+            caption: 'Catalogue Visual · 22 Industrial Minerals & Materials'
+          })}
         </div>
       </section>
 
       <section class="catalogue" style="padding: 3rem 0 5rem; background: #FFFFFF;">
         <div class="shell">
-          
-          <!-- Category Filter Bar (Segmented Controls) -->
+          <!-- Category Filter Bar (Dynamic Counts) -->
           <div class="filter-bar" id="category-filter-bar" style="margin-bottom: 1.5rem;">
-            <button type="button" class="filter-btn active" data-cat="all">All Materials (22)</button>
-            <button type="button" class="filter-btn" data-cat="Mineral Powders">Mineral Powders (12)</button>
-            <button type="button" class="filter-btn" data-cat="Functional Chemicals">Functional Chemicals (7)</button>
-            <button type="button" class="filter-btn" data-cat="Grains & Aggregates">Grains &amp; Aggregates (3)</button>
+            <button type="button" class="filter-btn active" data-cat="all">All Materials (${data.products.length})</button>
+            <button type="button" class="filter-btn" data-cat="Mineral Powders">Mineral Powders (${mineralPowderCount})</button>
+            <button type="button" class="filter-btn" data-cat="Functional Chemicals">Functional Chemicals (${functionalChemCount})</button>
+            <button type="button" class="filter-btn" data-cat="Grains & Aggregates">Grains &amp; Aggregates (${aggregateCount})</button>
           </div>
 
           <!-- Search & Count Bar -->
-          <div class="catalogue-top" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: #F8FAFC; border: 1px solid var(--line); border-radius: 6px; padding: 1rem 1.25rem;">
-            <span class="result-count" style="font-family: var(--mono); font-size: 0.82rem; font-weight: 700; color: #1E293B;">
-              SHOWING <b id="product-count" style="color: #A84E2B;">${data.products.length}</b> OF 22 MATERIALS
+          <div class="catalogue-top" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: #F8F9FA; border: 1px solid #E2E5E9; border-radius: 6px; padding: 1rem 1.25rem;">
+            <span class="result-count" style="font-family: var(--mono); font-size: 0.8rem; font-weight: 700; color: #252F3D;">
+              SHOWING <b id="product-count" style="color: #1769AA;">${data.products.length}</b> OF ${data.products.length} MATERIALS
             </span>
             <div style="flex: 1; max-width: 520px; min-width: 280px; position: relative;">
               <input 
@@ -3491,40 +3361,115 @@
                 type="search" 
                 placeholder="Search by mineral name, application, or industry (e.g. Talc, PVC, Putty, Rubber)..." 
                 aria-label="Search materials"
-                style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--line); border-radius: 4px; font-family: var(--sans); font-size: 0.88rem; background: #FFFFFF; color: var(--ink);"
+                style="width: 100%; padding: 0.72rem 1rem; border: 1px solid #D1D5DB; border-radius: 4px; font-family: var(--sans); font-size: 0.88rem; background: #FFFFFF; color: #252F3D;"
               >
             </div>
           </div>
 
-          <!-- Application Quick Filter Strip -->
-          <div style="margin: 1rem 0; padding: 1.15rem; background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; margin-bottom: .6rem;">
-              <span class="eyebrow" style="margin-bottom: 0; color: #174A70;">DISCOVER BY COMPOUND APPLICATION</span>
+          <!-- Application Quick Filter Strip (Images + Text) -->
+          <div style="margin: 1.25rem 0; padding: 1.25rem; background: #FFFFFF; border: 1px solid #E2E5E9; border-radius: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; margin-bottom: .9rem;">
+              <span class="eyebrow" style="margin-bottom: 0; color: #80664A;">DISCOVER BY APPLICATION</span>
+              <span style="font: 500 0.74rem var(--mono); color: #526071;">Select an application to filter materials</span>
             </div>
-            <div class="pill-list" id="application-quick-pills">
-              ${commonApps.map(app => `
-                <button type="button" class="pill" data-app="${esc(app.term)}">${esc(app.label)}</button>
-              `).join('')}
+            <div class="dm-visual-filter-grid" id="application-quick-pills">
+              ${commonApps.map(app => {
+                const appImgMap = {
+                  'Fire Safety': 'fire-safety.webp',
+                  'Gym Powder': 'gym-powder.webp',
+                  'PVC': 'rigid-pvc-profiles.jpg',
+                  'Wall Putty': 'wall-putty-nc-putty.webp',
+                  'Cosmetic': 'cosmetics-personal-care.jpg',
+                  'Rubber': 'rubber-footwear.webp',
+                  'Ceramic': 'ceramics.webp',
+                  'Cable': 'cables-wires.jpg',
+                  'Master Batch': 'plastics-polymers.webp',
+                  'Primers': 'paints-coatings.webp',
+                  'Foundry': 'foundry-industrial.webp',
+                  'Effluent': 'effluent-water-treatment.jpg'
+                };
+                const appImgFile = appImgMap[app.term] || 'industries-hub-hero.webp';
+                const appImgSrc = `${root}/assets/images/industries/${appImgFile}`;
+                return `
+                  <button type="button" class="pill dm-visual-filter-card" data-app="${esc(app.term)}" aria-label="Filter by ${esc(app.label)}">
+                    <span class="dm-vfc-media">
+                      <img src="${appImgSrc}" alt="${esc(app.label)}" loading="lazy" />
+                      <span class="dm-vfc-check" aria-hidden="true">&#10003;</span>
+                    </span>
+                    <span class="dm-vfc-label">${esc(app.label)}</span>
+                  </button>
+                `;
+              }).join('')}
             </div>
           </div>
 
-          <!-- "What Are You Manufacturing?" Industry Quick Selector -->
-          <div style="margin: 1rem 0 2.25rem; padding: 1.25rem; background: #F8FAFC; border: 1px solid var(--line); border-radius: 6px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem;">
-              <span class="eyebrow" style="margin-bottom: 0; color: #A84E2B;">WHAT ARE YOU MANUFACTURING? (FILTER BY SECTOR)</span>
-              <button type="button" id="clear-filters-btn" style="font: 700 .72rem var(--mono); color: #174A70; cursor: pointer; text-decoration: underline; background: none; border: 0; text-transform: uppercase;">Clear All Filters &times;</button>
+          <!-- Industry Quick Selector (Images + Text) -->
+          <div style="margin: 1.25rem 0 2.25rem; padding: 1.25rem; background: #F8F9FA; border: 1px solid #E2E5E9; border-radius: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; margin-bottom: .9rem;">
+              <span class="eyebrow" style="margin-bottom: 0; color: #80664A;">FILTER BY INDUSTRY SECTOR</span>
+              <button type="button" id="clear-filters-btn" style="font: 700 .72rem var(--mono); color: #1769AA; cursor: pointer; text-decoration: underline; background: none; border: 0; text-transform: uppercase;">Clear All Filters &times;</button>
             </div>
-            <div class="pill-list" id="industry-pills">
-              ${data.industries.map(ind => `
-                <button type="button" class="pill" data-industry="${esc(ind)}">${esc(ind)}</button>
-              `).join('')}
+            <div class="dm-visual-filter-grid dm-visual-filter-grid--sectors" id="industry-pills">
+              ${data.industries.map(ind => {
+                const sectorImgMap = {
+                  'Home / Household Applications': 'detergents-household.webp',
+                  'Agriculture': 'agriculture-allied.webp',
+                  'Plastic': 'plastics-polymers.webp',
+                  'Putty': 'wall-putty-nc-putty.webp',
+                  'Soap': 'detergents-household.webp',
+                  'Footwear': 'rubber-footwear.webp',
+                  'Pesticides': 'agriculture-allied.webp',
+                  'Detergent': 'detergents-household.webp',
+                  'Construction': 'construction-building-materials.webp',
+                  'EVA': 'rubber-footwear.webp',
+                  'Biofertilizers': 'agriculture-allied.webp',
+                  'Cattle Feed': 'cattle-feed.webp',
+                  'Rigid PVC': 'rigid-pvc-profiles.jpg',
+                  'Wall Putty': 'wall-putty-nc-putty.webp',
+                  'Ceramics': 'ceramics.webp',
+                  'Colors': 'gulal-rangoli.webp',
+                  'Mould Release': 'plastics-polymers.webp',
+                  'Anti-Corrosive Primer': 'paints-coatings.webp',
+                  'Foundry': 'foundry-industrial.webp',
+                  'FRP': 'frp-composites.webp',
+                  'Paints': 'paints-coatings.webp',
+                  'Dal Polish Mills': 'agriculture-allied.webp',
+                  'Fire Safety': 'fire-safety.webp',
+                  'Gym Powder': 'gym-powder.webp',
+                  'Fibre Murti': 'fibre-murti.webp',
+                  'Tile Adhesives': 'tile-adhesives.webp',
+                  'Plywood': 'plywood.webp',
+                  'Gulal / Rangoli': 'gulal-rangoli.webp',
+                  'NC Putty': 'wall-putty-nc-putty.webp',
+                  'Stationery': 'paper-stationery.webp',
+                  'Cosmetics': 'cosmetics-personal-care.jpg',
+                  'Pharmaceutical': 'pharma-ayurvedic.jpg',
+                  'Ayurvedic Medicines': 'pharma-ayurvedic.jpg',
+                  'Cables': 'cables-wires.jpg',
+                  'Rubber': 'rubber-footwear.webp',
+                  'Paper': 'paper-stationery.webp',
+                  'Master Batch': 'plastics-polymers.webp',
+                  'Automobile Paints': 'automobile-paints.jpg'
+                };
+                const indImgFile = sectorImgMap[ind] || 'industries-hub-hero.webp';
+                const indImgSrc = `${root}/assets/images/industries/${indImgFile}`;
+                return `
+                  <button type="button" class="pill dm-visual-filter-card" data-industry="${esc(ind)}" aria-label="Filter by ${esc(ind)}">
+                    <span class="dm-vfc-media">
+                      <img src="${indImgSrc}" alt="${esc(ind)}" loading="lazy" />
+                      <span class="dm-vfc-check" aria-hidden="true">&#10003;</span>
+                    </span>
+                    <span class="dm-vfc-label">${esc(ind)}</span>
+                  </button>
+                `;
+              }).join('')}
             </div>
           </div>
 
           <!-- Active Filter Notice -->
-          <div id="filter-status" style="display: none; font: 600 .8rem var(--mono); color: #174A70; margin-bottom: 1.25rem; padding: 0.75rem 1rem; background: rgba(23, 74, 112, 0.06); border-left: 3px solid #174A70; border-radius: 0 4px 4px 0;"></div>
+          <div id="filter-status" style="display: none; font: 600 .8rem var(--mono); color: #252F3D; margin-bottom: 1.25rem; padding: 0.75rem 1rem; background: #F8F9FA; border: 1px solid #D8C3A5; border-radius: 4px;"></div>
 
-          <!-- Product Grid: 22 Products with Consistent Photography & Dual CTAs -->
+          <!-- Product Grid: All 22 Products (Zero Mesh Captions) -->
           <div class="product-grid" id="catalogue-grid">
             ${data.products.map(p => productCard(p)).join('')}
           </div>
@@ -3552,13 +3497,17 @@
 
     const p = data.getProductBySlug(slug) || data.products[0];
 
+    const absProductImg = p.image
+      ? 'https://www.deepaliminerals.com/' + p.image.replace(/^\/+/, '')
+      : '';
+
     // SEO Dynamic Update & Structured Data
     updateSeoMeta({
       title: `${p.name} - Technical Specifications & B2B Supply | Deepali Minerals`,
       description: `${p.name} technical specifications, manufacturing applications, mesh classification, and B2B wholesale supply from Deepali Minerals, Delhi.`,
       canonical: `https://www.deepaliminerals.com/product.html?product=${p.slug}`,
       ogType: 'product',
-      ogImage: 'https://www.deepaliminerals.com' + resolveProductImg(p.image)
+      ogImage: absProductImg
     });
 
     setBreadcrumbsJsonLd([
@@ -3579,7 +3528,7 @@
       "@context": "https://schema.org/",
       "@type": "Product",
       "name": p.name,
-      "image": "https://www.deepaliminerals.com" + resolveProductImg(p.image),
+      "image": absProductImg,
       "description": p.description || p.shortDescription,
       "category": p.category,
       "sku": `DM-${p.slug.toUpperCase()}`,
@@ -3640,74 +3589,136 @@
       `Hello Deepali Minerals, I would like to request commercial pricing and specifications for ${p.name}${industryCtx ? ' for ' + industryCtx + ' application' : (reqText ? ' for requirement: ' + reqText : '')}.`
     )}`;
 
+    // Build verified Product Overview bullet points (no fabricated claims)
+    const isVerifiedSpecVal = (val) => {
+      if (!val) return false;
+      const s = String(val).trim().toLowerCase();
+      return s !== '' && !s.includes('available on request') && s !== 'n/a' && s !== 'na';
+    };
+
+    const overviewBullets = [];
+    overviewBullets.push(`<strong>Classification:</strong> ${esc(p.category)}${p.composition ? ` (${esc(p.composition)})` : ''}`);
+    if (p.shortDescription) {
+      overviewBullets.push(`<strong>Industrial Purpose:</strong> ${esc(p.shortDescription)}`);
+    }
+    if (p.description) {
+      const sentences = p.description.split(/(?<=\.)\s+/).map(s => s.trim()).filter(Boolean);
+      sentences.slice(0, 2).forEach(sent => {
+        if (sent !== p.shortDescription) {
+          overviewBullets.push(esc(sent));
+        }
+      });
+    }
+
+    // Build verified Key Features bullet points strictly from verified fields
+    const keyFeatureBullets = [];
+    if (isVerifiedSpecVal(specs.grade)) {
+      keyFeatureBullets.push(`<strong>Available Grade:</strong> ${esc(specs.grade)}`);
+    }
+    if (isVerifiedSpecVal(specs.whiteness)) {
+      keyFeatureBullets.push(`<strong>Whiteness / Optical Profile:</strong> ${esc(specs.whiteness)}`);
+    }
+    if (isVerifiedSpecVal(specs.moisture)) {
+      keyFeatureBullets.push(`<strong>Moisture Control:</strong> ${esc(specs.moisture)}`);
+    }
+    if (isVerifiedSpecVal(specs.asbestosStatus)) {
+      keyFeatureBullets.push(`<strong>Safety Verification:</strong> ${esc(specs.asbestosStatus)}`);
+    }
+    if (isVerifiedSpecVal(specs.ph)) {
+      keyFeatureBullets.push(`<strong>Aqueous Slurry pH:</strong> ${esc(specs.ph)}`);
+    }
+    if (isVerifiedSpecVal(specs.oilAbsorption)) {
+      keyFeatureBullets.push(`<strong>Oil Absorption:</strong> ${esc(specs.oilAbsorption)}`);
+    }
+    keyFeatureBullets.push('<strong>Quality Systems:</strong> Supplied under ISO 9001:2015 &amp; ISO 14001:2015 certified trading operations.');
+    keyFeatureBullets.push('<strong>Technical Documentation:</strong> Grade-specific TDS, COA, and MSDS shared upon business enquiry.');
+
+    const verifiedApplications = (p.applications && p.applications.length)
+      ? p.applications
+      : ['Application details can be confirmed on technical enquiry.'];
+
+    const verifiedPackaging = (p.packaging && p.packaging.length)
+      ? p.packaging
+      : ['Standard moisture-resistant industrial packaging options can be confirmed on request.'];
+
+    const verifiedSectors = (p.canonicalIndustries && p.canonicalIndustries.length)
+      ? p.canonicalIndustries
+      : (p.industries && p.industries.length ? p.industries : []);
+
     mainEl.innerHTML = `
-      <!-- Breadcrumbs & Product Hero -->
-      <section style="background: #FFFFFF; padding: 2.5rem 0 3.5rem; border-bottom: 1px solid var(--line);">
+      <!-- 1. PRODUCT NAME & HERO IMAGE GALLERY (ZERO MESH CAPTIONS NEAR IMAGE) -->
+      <section style="background: #FFFFFF; padding: 2.5rem 0 3.5rem; border-bottom: 1px solid #E2E5E9;">
         <div class="shell">
-          <div class="breadcrumbs" style="margin-bottom: 1.5rem; font-size: 0.76rem;">
-            <a href="${root}/" style="color: #174A70;">Home</a> / <a href="${productsUrl}" style="color: #174A70;">Products</a> ${industryCtx ? `/ <a href="${productsUrl}?industry=${encodeURIComponent(industryCtx)}" style="color: #174A70;">${esc(industryCtx)}</a>` : ''} ${appCtx ? `/ <span style="color:var(--slate);">${esc(appCtx)}</span>` : ''} / <strong>${esc(p.name)}</strong>
+          <div class="breadcrumbs" style="margin-bottom: 1.5rem; font-size: 0.78rem; color: #526071;">
+            <a href="${root}/" style="color: #1769AA;">Home</a> / <a href="${productsUrl}" style="color: #1769AA;">Products</a> ${industryCtx ? `/ <a href="${productsUrl}?industry=${encodeURIComponent(industryCtx)}" style="color: #1769AA;">${esc(industryCtx)}</a>` : ''} ${appCtx ? `/ <span>${esc(appCtx)}</span>` : ''} / <strong style="color: #252F3D;">${esc(p.name)}</strong>
           </div>
 
           <div class="detail-intro">
             <div>
-              <span class="eyebrow" style="color: #174A70; margin-bottom: 0.5rem;">
-                DEEPALI MINERALS &bull; ${esc(p.category.toUpperCase())}
+              <span class="eyebrow" style="color: #80664A; margin-bottom: 0.45rem;">
+                DEEPALI MINERALS &middot; ${esc(p.category.toUpperCase())}
               </span>
 
-              <h1 class="display" style="margin-top: 0.35rem; margin-bottom: 0.5rem; font-size: clamp(2.2rem, 4vw, 3.25rem); color: #0A1E34;">
+              <h1 class="display" style="margin-top: 0.25rem; margin-bottom: 0.65rem; font-size: clamp(2.1rem, 4vw, 3.2rem); color: #252F3D;">
                 ${esc(p.name)}
               </h1>
 
               ${p.composition ? `
-                <div class="detail-composition">
+                <div class="detail-composition" style="margin-bottom: 1.1rem;">
                   ${esc(p.composition)}
                 </div>
               ` : ''}
 
-              <p class="lede" style="font-size: 1rem; line-height: 1.6; color: var(--slate); margin-bottom: 1.25rem;">
-                ${esc(p.description)}
-              </p>
+              <!-- 2. PRODUCT OVERVIEW (CONCISE BULLET POINTS) -->
+              <div style="margin: 0 0 1.45rem;">
+                <h2 style="font: 600 0.78rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: #80664A; margin: 0 0 0.6rem;">
+                  Product Overview
+                </h2>
+                <ul class="dm-bullet-list dm-bullet-list--compact">
+                  ${overviewBullets.slice(0, 4).map(b => `<li>${b}</li>`).join('')}
+                </ul>
+              </div>
 
-              <!-- Quick Parameters Strip -->
+              <!-- Verified Supply Strip (No Mesh Size Captions Here) -->
               <div class="product-spec-quick-strip">
                 <div class="product-spec-quick-item">
-                  <span class="product-spec-quick-label">Particle Mesh</span>
-                  <span class="product-spec-quick-val">${(specs.mesh && specs.mesh !== 'Available on request') ? esc(specs.mesh) : 'Graded on request'}</span>
+                  <span class="product-spec-quick-label">Category</span>
+                  <span class="product-spec-quick-val">${esc(p.category)}</span>
                 </div>
                 <div class="product-spec-quick-item">
-                  <span class="product-spec-quick-label">Quality Standard</span>
-                  <span class="product-spec-quick-val">ISO 9001:2015 &bull; 14001</span>
+                  <span class="product-spec-quick-label">Quality Systems</span>
+                  <span class="product-spec-quick-val">ISO 9001:2015 &middot; 14001</span>
                 </div>
                 <div class="product-spec-quick-item">
                   <span class="product-spec-quick-label">Corporate Office</span>
                   <span class="product-spec-quick-val">Lawrence Road, Delhi</span>
                 </div>
               </div>
-              
+
               <!-- Primary Buyer Actions -->
-              <div class="detail-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.75rem;">
-                <a class="button" href="#rfq" style="padding: 0.85rem 1.65rem; font-size: 0.84rem;">
-                  Enquire Now / Get Quote &rarr;
+              <div class="detail-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.65rem;">
+                <a class="button" href="#rfq" style="padding: 0.85rem 1.65rem; font-size: 0.86rem;">
+                  Enquire Now &rarr;
                 </a>
-                <a class="button alt" href="${whatsappProductUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.85rem 1.35rem; font-size: 0.84rem; color: #15803D; border-color: #86EFAC; background: rgba(34, 197, 94, 0.05);">
+                <a class="button alt" href="${whatsappProductUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.85rem 1.35rem; font-size: 0.86rem; color: #166534; border-color: #BBF7D0; background: #F0FDF4;">
                   ${whatsappIconSvg(16, 16)}
                   <span>WhatsApp Enquiry</span>
                 </a>
-                <a href="tel:+919810516065" class="button alt" style="padding: 0.85rem 1.25rem; font-size: 0.84rem;">
+                <a href="tel:+919810516065" class="button alt" style="padding: 0.85rem 1.25rem; font-size: 0.86rem;">
                   Call: +91 9810516065
                 </a>
               </div>
             </div>
 
-            <!-- Product Visual Gallery Card -->
+            <!-- Product Hero Image Gallery -->
             <div class="product-gallery-container">
-              <div class="product-gallery-frame" style="border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); height: 380px;">
+              <div class="product-gallery-frame" style="border-radius: 6px; border: 1px solid #E2E5E9; background: #F8F9FA; box-shadow: 0 8px 24px rgba(37, 47, 61, 0.06); height: 380px;">
                 ${p.image ? `
                   <img 
                     id="main-product-img"
                     src="${resolveProductImg(p.image)}" 
                     alt="${esc(p.alt || `${p.name} - Deepali Minerals Industrial Supply`)}" 
-                    class="product-gallery-img" 
+                    class="product-gallery-img ${p.gallery && p.gallery.length > 1 ? 'product-gallery-img--contain' : ''}" 
                     onerror="this.style.display='none'; var fb = this.parentElement.querySelector('.product-gallery-fallback'); if (fb) fb.style.display='flex';"
                   />
                 ` : ''}
@@ -3718,16 +3729,11 @@
                     </div>
                     <h3 class="gallery-fallback-title">${esc(p.name)}</h3>
                     <p class="gallery-fallback-desc">
-                      ${p.slug === 'starch' 
-                        ? 'Natural polymeric carbohydrate material derived from plant sources (corn/cassava). Non-mineral biological starch formulation.' 
-                        : (p.composition || 'Controlled industrial mineral grade with verified physical and chemical parameters.')}
+                      ${p.slug === 'starch'
+                        ? 'Natural polymeric carbohydrate material derived from plant sources.'
+                        : (p.composition || 'Industrial material grade supplied by Deepali Minerals.')}
                     </p>
-                    <span class="gallery-fallback-tag">${p.slug === 'starch' ? 'Plant-Derived Industrial Grade' : 'Laboratory Inspected Specimen'}</span>
                   </div>
-                </div>
-                <div class="product-gallery-pill-overlay">
-                  <span class="gallery-pill">${esc(p.category)}</span>
-                  ${p.slug === 'starch' ? '<span class="gallery-pill plant">Plant-Derived Polymer</span>' : '<span class="gallery-pill iso">ISO 9001:2015 QA</span>'}
                 </div>
               </div>
 
@@ -3737,26 +3743,27 @@
                     <button 
                       type="button" 
                       class="product-thumb-btn ${idx === 0 ? 'active' : ''}" 
-                      onclick="var m = document.getElementById('main-product-img'); if (m) { m.src = '${resolveProductImg(g.src)}'; m.alt = '${esc(g.alt)}'; } document.querySelectorAll('.product-thumb-btn').forEach(function(b){ b.style.borderColor = 'var(--line)'; b.style.boxShadow = 'none'; }); this.style.borderColor = 'var(--blue)'; this.style.boxShadow = '0 0 0 2px rgba(11,83,148,0.3)';" 
-                      style="cursor: pointer; border: 2px solid ${idx === 0 ? 'var(--blue)' : 'var(--line)'}; border-radius: 6px; overflow: hidden; width: 68px; height: 68px; padding: 0; background: #fff; transition: all .2s; box-shadow: ${idx === 0 ? '0 0 0 2px rgba(11,83,148,0.3)' : 'none'};"
-                      title="${esc(g.alt)}"
+                      data-gallery-src="${resolveProductImg(g.src)}"
+                      data-gallery-alt="${esc(g.alt)}"
+                      data-gallery-caption="${esc(g.caption || g.alt)}"
+                      style="cursor: pointer; border: 2px solid ${idx === 0 ? '#1769AA' : '#E2E5E9'}; border-radius: 5px; overflow: hidden; width: 68px; height: 68px; padding: 0; background: #F8F9FA; transition: all .2s; box-shadow: ${idx === 0 ? '0 0 0 2px rgba(23,105,170,0.22)' : 'none'};"
+                      title="${esc(g.caption || g.alt)}"
                     >
                       <img src="${resolveProductImg(g.src)}" alt="${esc(g.alt)}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
                     </button>
                   `).join('')}
-                  <span style="font-size: 0.75rem; color: var(--slate); margin-left: 0.35rem;">
-                    Click thumbnail to switch photo angle (${p.gallery.length} verified photos)
+                  <span id="product-gallery-active-caption" style="font-size: 0.76rem; color: #526071; margin-left: 0.25rem;">
+                    ${esc((p.gallery[0] && p.gallery[0].caption) || `${p.gallery.length} product photos`)}
                   </span>
                 </div>
               ` : ''}
 
-              <div class="product-gallery-toolbar" style="margin-top: 0.75rem; padding: 0.65rem 0.85rem; background: #F8FAFC; border: 1px solid var(--line); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                <div class="toolbar-item" style="font-family: var(--mono); font-size: 0.72rem; color: #1E293B; display: flex; align-items: center; gap: 0.4rem;">
-                  <span class="toolbar-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block;"></span>
-                  <span>Verified B2B Industrial Supply Grade</span>
-                </div>
-                <a href="${whatsappProductUrl}" target="_blank" rel="noopener noreferrer" class="toolbar-link" style="font-family: var(--mono); font-size: 0.72rem; color: #174A70; font-weight: 700; text-decoration: none;">
-                  Request Batch Analysis Report &amp; Samples &rarr;
+              <div class="product-gallery-toolbar" style="margin-top: 0.75rem; padding: 0.7rem 0.9rem; background: #F8F9FA; border: 1px solid #E2E5E9; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                <span style="font-family: var(--mono); font-size: 0.72rem; color: #35424E;">
+                  ${esc(p.category)} &middot; B2B Industrial Supply
+                </span>
+                <a href="${whatsappProductUrl}" target="_blank" rel="noopener noreferrer" style="font-family: var(--mono); font-size: 0.72rem; color: #1769AA; font-weight: 600; text-decoration: none;">
+                  Request TDS &amp; Samples &rarr;
                 </a>
               </div>
             </div>
@@ -3764,93 +3771,133 @@
         </div>
       </section>
 
-      <!-- Key Applications & Industries Served -->
-      <section style="background: #F8FAFC; padding: 4.5rem 0; border-bottom: 1px solid var(--line);">
-        <div class="shell detail-grid">
-          <div>
-            <span class="eyebrow" style="color: #174A70;">MANUFACTURING APPLICATIONS</span>
-            <h2 class="section-title" style="font-size: clamp(1.85rem, 3vw, 2.5rem); margin-bottom: 0.5rem;">
-              Where is ${esc(p.name)} Applied?
-            </h2>
-            <p class="lede" style="margin-bottom: 1.5rem;">Verified compounding functions and industrial production uses supported by this material grade.</p>
-            
-            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.85rem;">
-              ${(p.applications && p.applications.length ? p.applications : ['Applications data to be updated after technical verification.']).map(app => `
-                <li style="display: flex; gap: 0.65rem; font-size: 0.92rem; color: var(--ink); line-height: 1.5; background: #FFFFFF; border: 1px solid var(--line); border-radius: 4px; padding: 0.75rem 1rem;">
-                  <span style="color: #15803D; font-weight: 800; font-family: var(--mono);">&#10003;</span>
-                  <span>${esc(app)}</span>
-                </li>
+      ${p.gallery && p.gallery.length > 1 ? `
+        <!-- 2B. PRODUCT & PACKAGING PHOTO GALLERY -->
+        <section class="dm-product-gallery-section" id="product-photos">
+          <div class="shell">
+            <div class="section-head" style="margin-bottom: 1.5rem; align-items: flex-end;">
+              <div>
+                <span class="eyebrow" style="color: #80664A;">PRODUCT &amp; PACKAGING GALLERY</span>
+                <h2 style="font-family: var(--serif); font-size: 1.75rem; margin: 0.25rem 0 0; color: #252F3D;">
+                  ${esc(p.name)} Mineral &amp; Branded Packaging Views
+                </h2>
+              </div>
+              <span style="font: 600 0.75rem var(--mono); color: #526071;">
+                Click any photo to view full size
+              </span>
+            </div>
+            <div class="dm-product-gallery-grid">
+              ${p.gallery.slice(1).map(g => `
+                <button
+                  type="button"
+                  class="dm-product-gallery-card"
+                  data-lightbox-src="${resolveProductImg(g.src)}"
+                  data-lightbox-alt="${esc(g.alt)}"
+                  data-lightbox-caption="${esc(g.caption || g.alt)}"
+                  aria-label="View full size photo: ${esc(g.caption || g.alt)}"
+                >
+                  <span class="dm-product-gallery-media">
+                    <img src="${resolveProductImg(g.src)}" alt="${esc(g.alt)}" loading="lazy" />
+                  </span>
+                  <span class="dm-product-gallery-caption">
+                    <span>${esc(g.caption || g.alt)}</span>
+                    <span class="dm-product-gallery-zoom">View</span>
+                  </span>
+                </button>
               `).join('')}
+            </div>
+          </div>
+        </section>
+
+        <div class="dm-gallery-lightbox" id="dm-gallery-lightbox" role="dialog" aria-modal="true" aria-label="${esc(p.name)} photo preview">
+          <div class="dm-gallery-lightbox-inner">
+            <div class="dm-gallery-lightbox-stage">
+              <img id="dm-gallery-lightbox-img" src="" alt="" />
+            </div>
+            <div class="dm-gallery-lightbox-bar">
+              <span class="dm-gallery-lightbox-caption" id="dm-gallery-lightbox-caption"></span>
+              <button type="button" class="dm-gallery-lightbox-close" id="dm-gallery-lightbox-close">Close &times;</button>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- 3. KEY FEATURES & 4. INDUSTRIAL APPLICATIONS (BULLET POINTS) -->
+      <section style="background: #F8F9FA; padding: 4rem 0; border-bottom: 1px solid #E2E5E9;">
+        <div class="shell detail-grid">
+          <div class="dm-detail-block">
+            <span class="eyebrow" style="color: #80664A;">KEY FEATURES</span>
+            <h2 style="font-family: var(--serif); font-size: 1.65rem; margin: 0.25rem 0 1rem; color: #252F3D;">
+              Verified Material Highlights
+            </h2>
+            <ul class="dm-bullet-list">
+              ${keyFeatureBullets.slice(0, 6).map(f => `<li>${f}</li>`).join('')}
             </ul>
           </div>
 
-          <div>
-            <span class="eyebrow" style="color: #A84E2B;">COMPATIBLE MANUFACTURING SECTORS</span>
-            <h2 class="section-title" style="font-size: clamp(1.85rem, 3vw, 2.5rem); margin-bottom: 0.5rem;">
-              Industries Served
+          <div class="dm-detail-block">
+            <span class="eyebrow" style="color: #80664A;">INDUSTRIAL APPLICATIONS</span>
+            <h2 style="font-family: var(--serif); font-size: 1.65rem; margin: 0.25rem 0 1rem; color: #252F3D;">
+              Where ${esc(p.name)} Is Used
             </h2>
-            <p class="lede" style="margin-bottom: 1.25rem;">Manufacturing sectors utilizing ${esc(p.name)} in formulation batches.</p>
-            
-            <div class="pill-list" style="margin-bottom: 1.75rem;">
-              ${(p.canonicalIndustries && p.canonicalIndustries.length ? p.canonicalIndustries : (p.industries && p.industries.length ? p.industries : ['Sectors pending verification'])).map(ind => {
-                const cInd = (data.getCanonicalIndustryByName && data.getCanonicalIndustryByName(ind)) ||
-                             (data.getCanonicalIndustryBySlug && data.getCanonicalIndustryBySlug(ind));
-                const targetUrl = cInd ? `${industriesUrl}?industry=${encodeURIComponent(cInd.slug)}` : `${productsUrl}?industry=${encodeURIComponent(ind)}`;
-                return `
-                  <a href="${targetUrl}" class="pill ${ind.toLowerCase() === industryCtx.toLowerCase() ? 'active' : ''}" title="Explore all minerals for ${esc(ind)}">${esc(ind)} &rarr;</a>
-                `;
-              }).join('')}
-            </div>
+            <ul class="dm-bullet-list">
+              ${verifiedApplications.map(app => `<li>${esc(app)}</li>`).join('')}
+            </ul>
 
-            <div style="padding: 1.35rem; background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px;">
-              <h3 style="font: 700 1.15rem var(--serif); margin: 0 0 0.6rem; color: #0A1E34;">Industrial Packaging Standards</h3>
-              <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.86rem; color: var(--slate); display: flex; flex-direction: column; gap: 0.45rem;">
-                ${(p.packaging && p.packaging.length ? p.packaging : ['Standard moisture-proof industrial packaging specifications available on request.']).map(pkg => `
-                  <li style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="color: #174A70;">&#9642;</span>
-                    <span>${esc(pkg)}</span>
-                  </li>
-                `).join('')}
-              </ul>
-            </div>
+            ${verifiedSectors.length ? `
+              <div style="margin-top: 1.35rem; padding-top: 1.15rem; border-top: 1px solid #E2E5E9;">
+                <span style="display: block; font: 600 0.72rem var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: #526071; margin-bottom: 0.6rem;">
+                  Related Industry Pages
+                </span>
+                <div class="pill-list">
+                  ${verifiedSectors.map(ind => {
+                    const cInd = (data.getCanonicalIndustryByName && data.getCanonicalIndustryByName(ind)) ||
+                                 (data.getCanonicalIndustryBySlug && data.getCanonicalIndustryBySlug(ind));
+                    const targetUrl = cInd ? `${industriesUrl}?industry=${encodeURIComponent(cInd.slug)}` : `${productsUrl}?industry=${encodeURIComponent(ind)}`;
+                    return `
+                      <a href="${targetUrl}" class="pill ${ind.toLowerCase() === industryCtx.toLowerCase() ? 'active' : ''}" title="Explore materials for ${esc(ind)}">${esc(ind)} &rarr;</a>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            ` : ''}
           </div>
         </div>
       </section>
 
-      <!-- Technical Specifications Section (Table Layout) -->
-      <section class="featured" id="specs" style="padding: 4.5rem 0; background: #FFFFFF; border-bottom: 1px solid var(--line);">
+      <!-- 5. TECHNICAL SPECIFICATIONS TABLE & 6. PACKAGING INFORMATION -->
+      <section class="featured" id="specs" style="padding: 4.25rem 0; background: #FFFFFF; border-bottom: 1px solid #E2E5E9;">
         <div class="shell detail-grid">
-          
-          <div class="spec-box" style="background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px; padding: 1.75rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-              <span class="eyebrow" style="margin-bottom: 0; color: #174A70;">LABORATORY ASSAY PARAMETERS</span>
-              <span style="font-family: var(--mono); font-size: 0.7rem; color: #15803D; font-weight: 700; background: #DCFCE7; padding: 0.2rem 0.5rem; border-radius: 3px;">
-                ISO 9001:2015 AUDITED
+          <div class="spec-box" style="background: #FFFFFF; border: 1px solid #E2E5E9; border-radius: 6px; padding: 1.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.45rem;">
+              <span class="eyebrow" style="margin-bottom: 0; color: #80664A;">TECHNICAL SPECIFICATIONS</span>
+              <span style="font-family: var(--mono); font-size: 0.7rem; color: #35424E; font-weight: 600;">
+                ISO 9001:2015 Certified Operations
               </span>
             </div>
 
-            <h2 style="font-family: var(--serif); font-size: 1.75rem; margin: 0 0 1.25rem; color: #0A1E34;">
-              Technical Specifications
+            <h2 style="font-family: var(--serif); font-size: 1.75rem; margin: 0 0 1.25rem; color: #252F3D;">
+              Approved Technical Parameters
             </h2>
 
             <div class="table-wrap">
               <table class="spec-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
-                  <tr style="border-bottom: 2px solid #0A1E34;">
-                    <th style="padding: 0.75rem 0.5rem; text-align: left; font-family: var(--mono); font-size: 0.74rem; text-transform: uppercase; color: #0A1E34;">Parameter</th>
-                    <th style="padding: 0.75rem 0.5rem; text-align: right; font-family: var(--mono); font-size: 0.74rem; text-transform: uppercase; color: #0A1E34;">Value / Specification</th>
+                  <tr style="border-bottom: 2px solid #252F3D;">
+                    <th style="padding: 0.75rem 0.5rem; text-align: left; font-family: var(--mono); font-size: 0.74rem; text-transform: uppercase; color: #252F3D;">Parameter</th>
+                    <th style="padding: 0.75rem 0.5rem; text-align: right; font-family: var(--mono); font-size: 0.74rem; text-transform: uppercase; color: #252F3D;">Value / Specification</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${specRows.map(([k, v]) => {
                     const isReq = v === UNAVAILABLE_MSG;
                     return `
-                      <tr style="border-bottom: 1px solid var(--line);">
-                        <td style="padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.85rem; color: #1E293B;">${k}</td>
-                        <td style="padding: 0.75rem 0.5rem; text-align: right; font-size: 0.85rem;">
+                      <tr style="border-bottom: 1px solid #E2E5E9;">
+                        <td style="padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.86rem; color: #252F3D;">${k}</td>
+                        <td style="padding: 0.75rem 0.5rem; text-align: right; font-size: 0.86rem; font-variant-numeric: tabular-nums;">
                           ${isReq
                             ? `<span class="spec-val-unverified">${v}</span>`
-                            : `<strong style="color: #0A1E34; font-family: var(--mono);">${esc(v)}</strong>`
+                            : `<strong style="color: #252F3D; font-family: var(--mono);">${esc(v)}</strong>`
                           }
                         </td>
                       </tr>
@@ -3861,72 +3908,82 @@
             </div>
           </div>
 
-          <div>
-            <div class="data-note" style="background: #F8FAFC; border: 1px solid var(--line); border-left: 3px solid #174A70; border-radius: 0 6px 6px 0; padding: 1.25rem; font-size: 0.84rem; line-height: 1.55; color: var(--slate);">
-              <strong style="color: #0A1E34; display: block; margin-bottom: 0.35rem; font-size: 0.9rem;">
-                Controlled Technical Information Notice
-              </strong>
-              Deepali Minerals adheres to strict commercial accuracy standards: technical parameters, certified assays, and test values are published only when verified from source laboratory testing. Where technical specifications are marked as available on request, grade certificates and lot analysis can be provided upon business inquiry.
+          <div style="display: flex; flex-direction: column; gap: 1.35rem;">
+            <!-- 6. Packaging Information -->
+            <div class="dm-detail-block">
+              <span class="eyebrow" style="color: #80664A;">PACKAGING</span>
+              <h3 style="font: 600 1.3rem var(--serif); margin: 0.25rem 0 0.85rem; color: #252F3D;">
+                Verified Packaging Options
+              </h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                ${verifiedPackaging.map(pkg => `<li>${esc(pkg)}</li>`).join('')}
+              </ul>
             </div>
 
-            <div style="margin-top: 1.5rem; background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px; padding: 1.5rem;">
-              <span class="eyebrow" style="color: #D5A43A; margin-bottom: 0.4rem;">TECHNICAL MATERIAL LIBRARY</span>
-              <h3 style="font: 700 1.2rem var(--serif); margin: 0 0 0.45rem; color: #0A1E34;">Quality Documentation</h3>
-              <p style="font-size: .84rem; color: var(--slate); margin: 0 0 1rem; line-height: 1.5;">Official data sheets and certificates provided for client formulation validation.</p>
-              
-              <ul class="doc-list">
-                <li class="doc-item" style="border-radius: 4px;">
-                  <span class="doc-name">Technical Data Sheet (TDS)</span>
-                  <span class="doc-status" style="color: #174A70;">Available on request</span>
-                </li>
-                <li class="doc-item" style="border-radius: 4px;">
-                  <span class="doc-name">Certificate of Analysis (COA)</span>
-                  <span class="doc-status" style="color: #15803D;">Supplied with batch</span>
-                </li>
-                <li class="doc-item" style="border-radius: 4px;">
-                  <span class="doc-name">Material Safety Data Sheet (MSDS)</span>
-                  <span class="doc-status" style="color: #174A70;">Available on request</span>
-                </li>
+            <!-- Technical Documentation -->
+            <div class="dm-detail-block">
+              <span class="eyebrow" style="color: #80664A;">DOCUMENTATION</span>
+              <h3 style="font: 600 1.25rem var(--serif); margin: 0.25rem 0 0.85rem; color: #252F3D;">
+                Quality Documentation
+              </h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li><strong>Technical Data Sheet (TDS):</strong> Shared on enquiry for target grades.</li>
+                <li><strong>Certificate of Analysis (COA):</strong> Supplied with commercial consignments.</li>
+                <li><strong>Material Safety Data Sheet (MSDS):</strong> Available on request.</li>
+              </ul>
+            </div>
+
+            <!-- Controlled Technical Information Notice -->
+            <div class="dm-detail-block" style="background: #F8F9FA;">
+              <h3 style="font: 600 0.95rem var(--sans); margin: 0 0 0.6rem; color: #252F3D;">
+                Controlled Technical Information
+              </h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li>Only verified technical parameters are published on product pages.</li>
+                <li>Values marked as available on request are confirmed against current grade availability upon enquiry.</li>
               </ul>
             </div>
           </div>
-
         </div>
       </section>
 
-      <!-- Related Mineral Products -->
-      <section style="padding: 4.5rem 0; background: #F8FAFC; border-bottom: 1px solid var(--line);">
+      <!-- 7. RELATED MINERAL PRODUCTS -->
+      <section style="padding: 4.25rem 0; background: #F8F9FA; border-bottom: 1px solid #E2E5E9;">
         <div class="shell">
           <div class="section-head" style="margin-bottom: 1.75rem;">
             <div>
-              <span class="eyebrow" style="color: #174A70;">FORMULATION ALTERNATIVES</span>
-              <h2 class="section-title">Related Mineral Products</h2>
+              <span class="eyebrow" style="color: #80664A;">RELATED MATERIALS</span>
+              <h2 class="section-title">Related Products</h2>
             </div>
-            <a class="text-link" href="${productsUrl}">View all 22 materials &rarr;</a>
+            <a class="text-link" href="${productsUrl}">View all ${data.products.length} products &rarr;</a>
           </div>
           <div class="product-grid">
-            ${relatedProds.map(p => productCard(p, industryCtx)).join('')}
+            ${relatedProds.map(rel => productCard(rel, industryCtx)).join('')}
           </div>
         </div>
       </section>
 
-      <!-- Commercial Quotation Desk (Prefilled for this Product) -->
-      <section style="padding: 4.5rem 0; background: #FFFFFF;">
+      <!-- 8. ENQUIRY FORM & COMMERCIAL DESK -->
+      <section style="padding: 4.25rem 0; background: #FFFFFF;">
         <div class="shell detail-grid">
           <div>
-            <span class="eyebrow" style="color: #A84E2B;">COMMERCIAL PROCUREMENT</span>
-            <h2 class="section-title">Request Quotation for ${esc(p.name)}</h2>
-            <p class="lede" style="margin-bottom: 1.5rem;">
-              Submit your required quantity, target packaging, and destination. Our Lawrence Road commercial team reviews specifications and provides competitive wholesale pricing.
-            </p>
+            <span class="eyebrow" style="color: #80664A;">PRODUCT ENQUIRY</span>
+            <h2 class="section-title">Enquire for ${esc(p.name)}</h2>
+            <ul class="dm-bullet-list" style="margin: 0.75rem 0 1.5rem;">
+              <li>Share required quantity, target grade, and delivery destination.</li>
+              <li>Request Technical Data Sheets (TDS), Certificates of Analysis (COA), or evaluation samples.</li>
+              <li>Inquiries are reviewed promptly during IST business hours (Mon–Sat).</li>
+            </ul>
 
-            <div style="padding: 1.5rem; background: #F8FAFC; border: 1px solid var(--line); border-radius: 6px; font-size: 0.88rem; color: var(--slate); line-height: 1.6;">
-              <p style="margin: 0 0 0.5rem;"><strong style="color: #0A1E34;">CEO &amp; Proprietor:</strong> Mr. Neeraj Monga</p>
-              <p style="margin: 0 0 0.5rem;"><strong style="color: #0A1E34;">Dispatch Hub:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</p>
-              <p style="margin: 0 0 0.5rem;"><strong style="color: #0A1E34;">Direct Sales Desk:</strong> <a href="tel:+919810516065" style="color: #174A70; font-weight: 700;">+91 9810516065</a>, <a href="tel:+919810715129" style="color: #174A70; font-weight: 700;">9810715129</a></p>
-              <p style="margin: 0 0 0.5rem;"><strong style="color: #0A1E34;">Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #174A70; font-weight: 700;">info@deepaliminerals.in</a></p>
-              <p style="margin: 0 0 0.5rem;"><strong style="color: #0A1E34;">GST Identification:</strong> 07AIMPM0458Q1ZL</p>
-              <p style="margin: 0; font-size: 0.82rem; color: #15803D;"><strong>Commercial Turnaround:</strong> Inquiries reviewed same-day during IST business hours.</p>
+            <div class="dm-detail-block">
+              <h3>Commercial Desk Details</h3>
+              <ul class="dm-bullet-list dm-bullet-list--compact">
+                <li><strong>CEO &amp; Proprietor:</strong> Mr. Neeraj Monga</li>
+                <li><strong>Phone:</strong> <a href="tel:+919810516065" style="color: #1769AA; font-weight: 600;">+91 9810516065</a>, <a href="tel:+919810715129" style="color: #1769AA; font-weight: 600;">+91 9810715129</a></li>
+                <li><strong>Email:</strong> <a href="mailto:info@deepaliminerals.in" style="color: #1769AA; font-weight: 600;">info@deepaliminerals.in</a></li>
+                <li><strong>Office:</strong> C2/29C Lawrence Road, Keshav Puram, Delhi-110035</li>
+                <li><strong>GSTIN:</strong> 07AIMPM0458Q1ZL</li>
+              </ul>
             </div>
           </div>
           ${rfq(p, { industry: industryCtx, application: appCtx, route: routeCtx, requirementText: reqText })}
@@ -3935,6 +3992,81 @@
     `;
 
     bindRfq();
+
+    // Interactive product hero thumbnails & full-size lightbox viewer
+    const mainProductImg = document.getElementById('main-product-img');
+    const activeCaptionEl = document.getElementById('product-gallery-active-caption');
+    const thumbBtns = document.querySelectorAll('.product-thumb-btn');
+    const lightbox = document.getElementById('dm-gallery-lightbox');
+    const lightboxImg = document.getElementById('dm-gallery-lightbox-img');
+    const lightboxCaption = document.getElementById('dm-gallery-lightbox-caption');
+    const lightboxClose = document.getElementById('dm-gallery-lightbox-close');
+
+    const openLightbox = (src, alt, caption) => {
+      if (!lightbox || !lightboxImg) return;
+      lightboxImg.src = src;
+      lightboxImg.alt = alt || caption || p.name;
+      if (lightboxCaption) lightboxCaption.textContent = caption || alt || p.name;
+      lightbox.classList.add('is-open');
+    };
+
+    const closeLightbox = () => {
+      if (!lightbox) return;
+      lightbox.classList.remove('is-open');
+    };
+
+    thumbBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.getAttribute('data-gallery-src');
+        const alt = btn.getAttribute('data-gallery-alt') || p.name;
+        const caption = btn.getAttribute('data-gallery-caption') || alt;
+        if (mainProductImg && src) {
+          mainProductImg.src = src;
+          mainProductImg.alt = alt;
+          mainProductImg.style.display = 'block';
+        }
+        if (activeCaptionEl) activeCaptionEl.textContent = caption;
+        thumbBtns.forEach(b => {
+          b.classList.remove('active');
+          b.style.borderColor = '#E2E5E9';
+          b.style.boxShadow = 'none';
+        });
+        btn.classList.add('active');
+        btn.style.borderColor = '#1769AA';
+        btn.style.boxShadow = '0 0 0 2px rgba(23,105,170,0.22)';
+      });
+    });
+
+    if (mainProductImg && lightbox) {
+      mainProductImg.style.cursor = 'zoom-in';
+      mainProductImg.addEventListener('click', () => {
+        const cap = (activeCaptionEl && activeCaptionEl.textContent) || mainProductImg.alt;
+        openLightbox(mainProductImg.src, mainProductImg.alt, cap);
+      });
+    }
+
+    document.querySelectorAll('.dm-product-gallery-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const src = card.getAttribute('data-lightbox-src');
+        const alt = card.getAttribute('data-lightbox-alt') || p.name;
+        const caption = card.getAttribute('data-lightbox-caption') || alt;
+        if (src) openLightbox(src, alt, caption);
+      });
+    });
+
+    if (lightboxClose) {
+      lightboxClose.addEventListener('click', closeLightbox);
+    }
+    if (lightbox) {
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
+    }
   }
 
   /* =========================================================================
@@ -4028,7 +4160,7 @@
                 extraInfo += `<div style="margin-top: .4rem; padding: .6rem .8rem; background: #FEF3C7; border: 1px solid #F59E0B; color: #92400E; font-size: .8rem; font-family: var(--sans); line-height: 1.4;"><strong>Technical Qualification Notice:</strong> ${esc(tax.safetyNotice)}</div>`;
               }
               if (tax.uncataloguedMaterials && tax.uncataloguedMaterials.length > 0) {
-                extraInfo += `<div style="margin-top: .4rem; padding: .6rem .8rem; background: #EFF6FF; border: 1px solid #3B82F6; color: #1E40AF; font-size: .8rem; font-family: var(--sans); line-height: 1.4;"><strong>Specialty Sourced Material:</strong> ${tax.uncataloguedMaterials.map(m => `<em>${esc(m.name)}</em>`).join(', ')} — Custom formulation grades available upon technical inquiry.</div>`;
+                extraInfo += `<div style="margin-top: .4rem; padding: .6rem .8rem; background: #EFF6FF; border: 1px solid #3B82F6; color: #1E40AF; font-size: .8rem; font-family: var(--sans); line-height: 1.4;"><strong>Additional Sourced Mineral:</strong> ${tax.uncataloguedMaterials.map(m => `<em>${esc(m.name)}</em>`).join(', ')} — Custom formulation grades available upon technical inquiry.</div>`;
               }
             }
           }
@@ -4077,14 +4209,15 @@
 
     if (industryPills) {
       industryPills.addEventListener('click', e => {
-        if (!e.target.classList.contains('pill')) return;
-        const targetInd = e.target.dataset.industry;
+        const clickedBtn = e.target.closest('.pill');
+        if (!clickedBtn) return;
+        const targetInd = clickedBtn.dataset.industry;
         if (activeIndustry === targetInd) {
           activeIndustry = 'all';
-          e.target.classList.remove('active');
+          clickedBtn.classList.remove('active');
         } else {
           industryPills.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
-          e.target.classList.add('active');
+          clickedBtn.classList.add('active');
           activeIndustry = targetInd;
         }
         applyFilters();
@@ -4093,15 +4226,16 @@
 
     if (appQuickPills) {
       appQuickPills.addEventListener('click', e => {
-        if (!e.target.classList.contains('pill')) return;
-        const appTerm = e.target.dataset.app;
+        const clickedBtn = e.target.closest('.pill');
+        if (!clickedBtn) return;
+        const appTerm = clickedBtn.dataset.app;
         if (currentSearch === appTerm) {
           currentSearch = '';
-          e.target.classList.remove('active');
+          clickedBtn.classList.remove('active');
           if (searchInput) searchInput.value = '';
         } else {
           appQuickPills.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
-          e.target.classList.add('active');
+          clickedBtn.classList.add('active');
           currentSearch = appTerm;
           if (searchInput) searchInput.value = appTerm;
         }
@@ -4265,6 +4399,7 @@ ${notesVal ? 'Notes: ' + notesVal : ''}`;
   if (page === 'products') products();
   if (page === 'product') product();
   if (page === 'about') about();
+  initVisualRestoreControls();
   initGlobalDMInteractiveLogos();
 
 })();

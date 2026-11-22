@@ -65,7 +65,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'Exceptional chemical resistance and high dielectric strength'
     ],
     applications: ['Cosmetics', 'Plastics & Polymers', 'Paints & Coatings', 'Rubber & EVA', 'Ceramics', 'Paper', 'Pharmaceuticals'],
-    packagingOptions: ['25 Kg Paper / HDPE Bags', '50 Kg HDPE Bags', '1000 Kg Jumbo Bags with moisture barrier', 'Custom Palletized with shrink wrap'],
+    packagingOptions: ['25 Kg Paper / HDPE Bags', '50 Kg HDPE Bags', 'Custom Palletized with shrink wrap'],
     minimumOrderQty: '1 Metric Ton',
     typicalPriceRange: '₹9,500 - ₹28,000 / MT',
     chemicalAnalysis: [
@@ -115,7 +115,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'Minimal abrasive silica content protects downstream extruders and molds'
     ],
     applications: ['Plastics & Polymers', 'Cables & Wiring', 'Paints & Coatings', 'Paper', 'Rubber & EVA', 'Food & Pharma', 'Construction'],
-    packagingOptions: ['25 Kg HDPE / Kraft Paper Bags', '50 Kg PP Woven Bags', '1000 Kg Big Bags / Jumbo Bags'],
+    packagingOptions: ['25 Kg HDPE / Kraft Paper Bags', '50 Kg PP Woven Bags'],
     minimumOrderQty: '3 Metric Tons',
     typicalPriceRange: '₹4,800 - ₹18,500 / MT',
     chemicalAnalysis: [
@@ -163,7 +163,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'Low abrasiveness prevents equipment wear'
     ],
     applications: ['Ceramics', 'Paints & Coatings', 'Rubber & EVA', 'Paper', 'Cables & Wiring', 'Agriculture'],
-    packagingOptions: ['25 Kg HDPE Laminated Bags', '50 Kg PP Bags', '1 MT Big Bags'],
+    packagingOptions: ['25 Kg HDPE Laminated Bags', '50 Kg PP Bags'],
     minimumOrderQty: '2 Metric Tons',
     typicalPriceRange: '₹5,500 - ₹22,000 / MT',
     chemicalAnalysis: [
@@ -208,7 +208,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'High weatherability and resistance to UV degradation'
     ],
     applications: ['Plastics & Polymers', 'Paints & Coatings', 'Cables & Wiring', 'Rubber & EVA', 'Construction'],
-    packagingOptions: ['25 Kg HDPE Laminated Bags', '50 Kg Bags', '1000 Kg Jumbo Bags'],
+    packagingOptions: ['25 Kg HDPE Laminated Bags', '50 Kg Bags'],
     minimumOrderQty: '3 Metric Tons',
     typicalPriceRange: '₹5,200 - ₹16,000 / MT',
     chemicalAnalysis: [
@@ -251,7 +251,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'Cost-effective performance extender for exterior architectural coatings'
     ],
     applications: ['Paints & Coatings', 'Construction', 'Ceramics', 'Plastics & Polymers', 'Rubber & EVA'],
-    packagingOptions: ['50 Kg HDPE Bags', '25 Kg Bags', '1 Metric Ton Jumbo Bags'],
+    packagingOptions: ['50 Kg HDPE Bags', '25 Kg Bags'],
     minimumOrderQty: '3 Metric Tons',
     typicalPriceRange: '₹3,800 - ₹9,500 / MT',
     chemicalAnalysis: [
@@ -334,7 +334,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'Imparts high compressive strength in polymer concretes and adhesives'
     ],
     applications: ['Paints & Coatings', 'Ceramics', 'Construction', 'Rubber & EVA', 'Plastics & Polymers'],
-    packagingOptions: ['50 Kg HDPE Bags', '1000 Kg Big Bags'],
+    packagingOptions: ['50 Kg HDPE Bags', '25 Kg HDPE Bags'],
     minimumOrderQty: '3 Metric Tons',
     typicalPriceRange: '₹3,500 - ₹14,000 / MT',
     chemicalAnalysis: [
@@ -415,7 +415,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'High X-ray and gamma radiation absorption for diagnostic and building shields'
     ],
     applications: ['Oil & Gas / Drilling', 'Paints & Coatings', 'Rubber & EVA', 'Plastics & Polymers', 'Automotive'],
-    packagingOptions: ['50 Kg HDPE Bags', '1000 Kg Jumbo Bags (Export standard)'],
+    packagingOptions: ['50 Kg HDPE Bags', '25 Kg HDPE Bags'],
     minimumOrderQty: '5 Metric Tons',
     typicalPriceRange: '₹7,500 - ₹24,000 / MT',
     chemicalAnalysis: [
@@ -569,7 +569,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'Low binder demand and high dispersion compatibility'
     ],
     applications: ['Paints & Coatings', 'Plastics & Masterbatches', 'Rubber Goods', 'Paper', 'Printing Inks'],
-    packagingOptions: ['25 Kg Bags', '50 Kg Bags', '1 MT Jumbo Bags'],
+    packagingOptions: ['25 Kg Bags', '50 Kg Bags'],
     minimumOrderQty: '1 Metric Ton',
     typicalPriceRange: 'Pricing available on request',
     chemicalAnalysis: [
@@ -601,7 +601,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'Controlled particle size distribution'
     ],
     applications: ['Glass Manufacturing', 'Foundry Casting', 'Construction Mortars', 'Ceramics', 'Water Filtration'],
-    packagingOptions: ['50 Kg HDPE Bags', '1 MT Jumbo Bags', 'Loose Bulk on request'],
+    packagingOptions: ['50 Kg HDPE Bags', 'Loose Bulk on request'],
     minimumOrderQty: '5 Metric Tons',
     typicalPriceRange: 'Pricing available on request',
     chemicalAnalysis: [
@@ -633,7 +633,7 @@ export const MINERALS_DATA: MineralProduct[] = [
       'Non-reactive with cementitious and epoxy resin matrixes'
     ],
     applications: ['Terrazzo Flooring', 'Exposed Aggregate Renders', 'Decorative Landscaping', 'Precast Concrete', 'Cast Stone'],
-    packagingOptions: ['50 Kg HDPE Bags', '1 MT Jumbo Bags'],
+    packagingOptions: ['50 Kg HDPE Bags', '25 Kg HDPE Bags'],
     minimumOrderQty: '5 Metric Tons',
     typicalPriceRange: 'Pricing available on request',
     chemicalAnalysis: [

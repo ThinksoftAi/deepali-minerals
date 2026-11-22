@@ -80,12 +80,33 @@
       id: 'talc',
       slug: 'talc',
       name: 'Talc',
-      image: '/assets/images/products/talc-powder.webp',
-      alt: 'Deepali Minerals Talc Powder and Natural Mineral Rocks Display',
+      image: '/assets/aistudio/Talc_Mineral_and_Branded_Sack_3758e580.png',
+      alt: 'Deepali Minerals Talc Mineral and DM Branded 50 Kg Sack',
       gallery: [
         {
-          src: '/assets/images/products/talc-powder.webp',
-          alt: 'Talc Powder and Natural Mineral Rocks'
+          src: '/assets/aistudio/Talc_Mineral_and_Branded_Sack_3758e580.png',
+          alt: 'Natural Talc Mineral & Deepali Minerals Branded 50 Kg Sack',
+          caption: 'Natural Talc Mineral & DM Branded 50 Kg Sack'
+        },
+        {
+          src: '/assets/aistudio/talc1_3c2aff71.webp',
+          alt: 'Raw Natural Crystalline Layered Talc Mineral',
+          caption: 'Raw Natural Crystalline Talc Mineral'
+        },
+        {
+          src: '/assets/aistudio/talc4_5a4be4ca.jpeg',
+          alt: 'DM Crown Talc 50 Kg Branded Sack',
+          caption: 'DM Crown Talc — 50 Kg Branded Sack'
+        },
+        {
+          src: '/assets/aistudio/talc1_63f64436.jpeg',
+          alt: 'Bhambhani Cosmo Super White Talc 50 Kg Sack',
+          caption: 'Cosmo Super White Talc — 50 Kg Sack'
+        },
+        {
+          src: '/assets/aistudio/Talc_2_bf14fc0c.jpeg',
+          alt: 'DM Polyfills Snow White Pure Talc 50 Kg Stacked Sacks',
+          caption: 'DM Polyfills Snow White Pure Talc — 50 Kg Stock'
         }
       ],
       category: 'Mineral Powders',
@@ -116,7 +137,7 @@
         bulkDensity: 'Available on request',
         asbestosStatus: 'Negative / Asbestos-Free tested for cosmetic batches'
       },
-      packaging: ['25 Kg Bags', '50 Kg PP Bags', '1 MT Jumbo Bags'],
+      packaging: ['25 Kg Bags', '50 Kg PP Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['soap-stone', 'chalk-powder', 'calcium-carbonate'],
       composition: "Primary composition: Hydrated Magnesium Silicate (Mg₃Si₄O₁₀(OH)₂)",
@@ -131,15 +152,16 @@
       alt: 'Soap Stone - Deepali Minerals Industrial Supply',
       category: 'Mineral Powders',
       status: 'source-catalogue',
-      shortDescription: 'Steatite talcose mineral powder valued for softness, thermal stability, and electrical insulation properties.',
-      description: 'Soapstone / Steatite mineral powder processed for industrial applications requiring high lubricity, thermal endurance, and anti-adhesion characteristics.',
+      shortDescription: 'Steatite talcose mineral powder valued for softness, lubricity, and structuring performance in soap manufacturing, ceramics, and cables.',
+      description: 'Soapstone / Steatite mineral powder processed for industrial applications requiring high lubricity, thermal endurance, anti-adhesion characteristics, and smooth bar structuring in toilet and laundry soap manufacturing.',
       applications: [
+        'Toilet soap, laundry soap bars, and detergent cake structuring filler & slip enhancer',
         'Cable sheathing lubricant and parting agent',
         'Foundry refractory mold wash and casting release dusting',
         'Ceramic insulators, spark plug bodies, and porcelain fixtures',
         'Functional filler for domestic cleaners and paints'
       ],
-      industries: ['Rubber', 'Foundary', 'Ceramics', 'Paints', 'Cables'],
+      industries: ['Soap', 'Detergent', 'Rubber', 'Foundary', 'Ceramics', 'Paints', 'Cables'],
       specifications: {
         grade: 'Commercial Soapstone Powder',
         purity: 'Technical data available on request.',
@@ -150,7 +172,7 @@
         moisture: 'Available on request',
         bulkDensity: 'Available on request'
       },
-      packaging: ['50 Kg PP Bags', '1 MT Jumbo Bags'],
+      packaging: ['50 Kg PP Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['talc', 'chalk-powder', 'marble-powder'],
       composition: "Primary composition: Steatite / Hydrated Magnesium Silicate (Mg₃Si₄O₁₀(OH)₂)",
@@ -261,7 +283,7 @@
         moisture: 'Technical data available on request.',
         bulkDensity: 'Available on request'
       },
-      packaging: ['25 Kg Bags', '50 Kg PP Bags', '1 MT Jumbo Bags'],
+      packaging: ['25 Kg Bags', '50 Kg PP Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['kaoline', 'silica', 'talc'],
       composition: "Primary composition: Hydrated Aluminum Silicate (Kaolinite: Al₂Si₂O₅(OH)₄)",
@@ -329,7 +351,7 @@
         moisture: '< 0.3% Max',
         bulkDensity: 'Available on request'
       },
-      packaging: ['50 Kg Bags', '1 MT Jumbo Bags'],
+      packaging: ['50 Kg Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['calcium-carbonate', 'dolomite-powder', 'quartz-powder'],
       composition: "Primary composition: Calcium Carbonate (CaCO₃)",
@@ -363,7 +385,7 @@
         moisture: '< 0.2% Max',
         bulkDensity: 'Available on request'
       },
-      packaging: ['50 Kg Bags', '1 MT Jumbo Bags'],
+      packaging: ['50 Kg Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['silica', 'marble-powder', 'china-clay'],
       composition: "Primary composition: Silicon Dioxide (SiO₂)",
@@ -404,7 +426,7 @@
         moisture: '< 0.3% Max',
         bulkDensity: 'Available on request'
       },
-      packaging: ['25 Kg Paper/HDPE Bags', '50 Kg PP Bags', '1 MT Jumbo Bags'],
+      packaging: ['25 Kg Paper/HDPE Bags', '50 Kg PP Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['talc', 'marble-powder', 'dolomite-powder'],
       composition: "Primary composition: Calcium Carbonate (CaCO₃)",
@@ -606,7 +628,7 @@
         moisture: '< 0.3% Max',
         bulkDensity: 'Available on request'
       },
-      packaging: ['50 Kg HDPE Bags', '1 MT Jumbo Bags'],
+      packaging: ['50 Kg HDPE Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['calcium-carbonate', 'marble-powder', 'hydrated-lime'],
       composition: "Primary composition: Calcium Magnesium Carbonate (CaMg(CO₃)₂)",
@@ -640,7 +662,7 @@
         moisture: '< 0.2% Max',
         bulkDensity: 'Available on request'
       },
-      packaging: ['50 Kg Bags', '1 MT Jumbo Bags'],
+      packaging: ['50 Kg Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['quartz-powder', 'quartz-sand', 'marble-powder'],
       synonyms: ['silica', 'silicon dioxide', 'sio2', 'silica powder'],
@@ -676,7 +698,7 @@
         moisture: 'Technical data available on request.',
         bulkDensity: 'Available on request'
       },
-      packaging: ['25 Kg Bags', '50 Kg Bags', '1 MT Jumbo Bags'],
+      packaging: ['25 Kg Bags', '50 Kg Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['calcium-carbonate', 'zinc-oxide', 'talc'],
       synonyms: ['titanium dioxide', 'titanium', 'tio2', 'tio2 pigment', 'white pigment', 'titanium di oxide'],
@@ -711,7 +733,7 @@
         moisture: '< 0.5% Max (Technical data available on request)',
         bulkDensity: 'Available on request'
       },
-      packaging: ['50 Kg HDPE Bags', '1 MT Jumbo Bags', 'Loose Bulk on request'],
+      packaging: ['50 Kg HDPE Bags', 'Loose Bulk on request'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['quartz-powder', 'silica', 'marble-chips'],
       synonyms: ['quartz sand', 'quartz', 'silica sand', 'sand', 'sio2', 'casting sand'],
@@ -746,7 +768,7 @@
         moisture: '< 0.5% Max',
         bulkDensity: 'Available on request'
       },
-      packaging: ['50 Kg HDPE Bags', '1 MT Jumbo Bags'],
+      packaging: ['50 Kg HDPE Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['marble-powder', 'calcium-carbonate', 'dolomite-powder'],
       synonyms: ['marble chips', 'marble', 'caco3', 'terrazzo chips', 'stone chips'],
@@ -781,7 +803,7 @@
         moisture: '< 0.5% Max',
         bulkDensity: 'High specific gravity (~ 4.2 - 4.4 g/cm³)'
       },
-      packaging: ['50 Kg HDPE Bags', '1 MT Jumbo Bags'],
+      packaging: ['50 Kg HDPE Bags'],
       documents: { tds: null, msds: null, testReport: null, certificate: null, brochure: null },
       related: ['calcium-carbonate', 'dolomite-powder', 'talc'],
       synonyms: ['barytes', 'barite', 'barium sulfate', 'baso4', 'heavy spar'],
@@ -1387,14 +1409,15 @@
     "subtitle": "Mild Abrasives, Soap Builders, Bulking Agents & Cleaning Scrubbers",
     "description": "Inert mineral builders, scrubbing abrasives, and anti-caking agents for detergent bars, laundry powders, dishwashing cakes, and industrial cleaners. Deepali Minerals supplies controlled-hardness clays, carbonates, and soapstones that provide effective cleaning power without scratching delicate surfaces, while ensuring uniform bar structure and dry powder flow.",
     "keyApplications": [
+      "Toilet soaps, laundry soap bars, and commercial soap manufacturing",
       "Laundry detergent bars, washing cakes, and synthetic detergent cakes",
       "Dry laundry detergent washing powders and industrial cleaning formulations",
       "Household scouring powders, abrasive cleaning pastes, and dishwashing bars",
       "Hard-surface cleansers, floor cleaning compounds, and grease-cutting pastes"
     ],
     "technicalHighlights": [
-      "Non-scratching Mohs hardness minerals (Talc, China Clay, Calcite) for gentle surface scouring",
-      "China clay and soapstone yielding smooth bar consistency, moisture retention, and binder integration",
+      "Non-scratching Mohs hardness minerals (Soap Stone, Talc, China Clay, Calcite) for gentle surface scouring and soap slip",
+      "Soapstone and china clay yielding smooth bar consistency, moisture retention, and binder integration",
       "Anti-caking flow aids ensuring free-flowing dry laundry detergent mixes even in humid conditions"
     ],
     "linkedProductSlugs": [
@@ -1408,7 +1431,7 @@
     ],
     "productRoles": {
       "china-clay": "Functional builder and plasticizer providing smooth bar texture, binding, and soil suspension in detergent cakes",
-      "soap-stone": "Mild abrasive and bulking filler for laundry detergent bars, scouring cakes, and cleaning pastes",
+      "soap-stone": "Structuring filler, slip enhancer, and mild abrasive for toilet soaps, laundry soap bars, detergent cakes, and scouring pastes",
       "talc": "Anti-caking flow agent for dry laundry powders and soft lubricant for smooth bar extrusion",
       "calcium-carbonate": "Economical abrasive filler providing scouring power and density in domestic scouring powders and pastes",
       "hydrated-lime": "Alkaline saponification agent, water softening additive in effluent treatment, and chemical builder",
@@ -1418,6 +1441,7 @@
     "searchAliases": [
       "detergent",
       "soap",
+      "soap industry",
       "household",
       "cleaning",
       "scouring powder",
